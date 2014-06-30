@@ -1,0 +1,5 @@
+include ':androidViewPagerIndicator', 'tVThailand2'
+include ':androidV2SDKLibrary'
+include ':facebookSDK'
+include ':vitamioBundle'
+include ':volley'

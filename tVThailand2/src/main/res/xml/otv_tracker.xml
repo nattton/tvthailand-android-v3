@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="ga_sessionTimeout">300</integer>
+    <bool name="ga_autoActivityTracking">true</bool>
+    <string name="ga_trackingId">UA-22403997-4</string>
+    <integer name="ga_dispatchPeriod">60</integer>
+    <string name="ga_sampleFrequency">50.0</string>
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+    
+    <!-- Player Activity -->
+    <screenName name="com.makathon.tvthailand.player.YoutubePlayerViewActivity">YoutubePlayer</screenName>
+    <screenName name="com.makathon.tvthailand.player.VideoPlayerActivity">VideoPlayer</screenName>
+    <screenName name="com.makathon.tvthailand.player.VastPlayerActivity">VastPlayerActivity</screenName>
+    <!-- OTV Activity -->
+    <screenName name="com.makathon.tvthailand.otv.OTVShowActivity">OTVShow</screenName>
+    <screenName name="com.makathon.tvthailand.otv.OTVPartActivity">OTVPart</screenName>
+    
+</resources>

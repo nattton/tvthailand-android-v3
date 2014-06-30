@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.makathon.tvthailand.SquareImageView
+            android:id="@+id/radio_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+<!-- 	<ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/grid_selector" /> -->
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/radio_textview"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal|top"
+        android:layout_height="40dp"
+        android:paddingBottom="2dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:paddingTop="2dp"
+        android:textSize="14sp"
+        android:maxLines="2"
+        android:textColor="#88000000" />
+
+</LinearLayout>

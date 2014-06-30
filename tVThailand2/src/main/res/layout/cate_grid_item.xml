@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#f3f3f3"
+        android:orientation="horizontal"
+        android:padding="5dp" >
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/thumb_cate"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="4dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/ic_cate_empty"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:orientation="vertical"
+            android:paddingRight="10dp" >
+
+            <TextView
+                android:id="@+id/tv_label_cate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="@string/title"
+                android:textSize="18sp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="1dp"
+        android:background="@drawable/grid_selector"
+        android:contentDescription="@null" />
+
+</FrameLayout>

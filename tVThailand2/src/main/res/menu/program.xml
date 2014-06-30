@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/play"
+          android:icon="@drawable/ic_watch_live"
+          android:title="@string/live"
+          android:orderInCategory="1"
+      	  android:showAsAction="never"
+      	  android:visible="false"  />
+    <item android:id="@+id/refresh"
+          android:icon="@drawable/ic_action_refresh"
+          android:title="@string/refresh"
+          android:orderInCategory="0"
+      	  android:showAsAction="always"  />
+</menu>

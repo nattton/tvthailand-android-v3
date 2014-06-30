@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="https://schemas.android.com/tools" tools:ignore="TypographyDashes">
+
+    <!-- Replace placeholder ID with your tracking ID -->
+    <string name="ga_trackingId">UA-22403997-3</string>
+
+    <!-- Enable automatic activity tracking -->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <!-- Enable automatic exception tracking -->
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <integer name="ga_dispatchPeriod">300</integer>
+
+    <string name="ga_sampleFrequency">50.0</string>
+
+    <bool name="ga_debug">true</bool>
+
+    <string name="com.makathon.tvthailand2.MainActivity">Main</string>
+    <string name="com.makathon.tvthailand2.ProgramActivity">Program</string>
+    <string name="com.makathon.tvthailand2.EpisodeActivity">EP</string>
+    <string name="com.makathon.tvthailand2.PartActivity">Part</string>
+    <string name="com.makathon.tvthailand2.SearchProgramActivity">Search</string>
+    <string name="com.makathon.tvthailand2.MoreDetailActivity">MoreDetail</string>
+    <string name="com.makathon.tvthailand2.LargeThumbnailActivity">LargeThumbnail</string>
+    <string name="com.makathon.tvthailand2.ProgramLoaderActivity">ProgramLoader</string>
+    <!-- Player Activity -->
+    <string name="com.makathon.tvthailand2.player.YoutubePlayerViewActivity">YoutubePlayer</string>
+    <string name="com.makathon.tvthailand2.player.VideoPlayerActivity">VideoPlayer</string>
+    <string name="com.makathon.tvthailand2.player.VastPlayerActivity">VastPlayerActivity</string>
+    <!-- OTV Activity -->
+    <string name="th.co.otv.OTVShowActivity">OTVShow</string>
+    <string name="th.co.otv.OTVShowListActivity">OTVShowList</string>
+    <string name="th.co.otv.OTVShowDetailActivity">OTVShowDetail</string>
+
+</resources>

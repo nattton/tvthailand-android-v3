@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.androidv2sdklibrary"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+	<!--
+    If you are using the Google Play Services Library you need to set 
+    minSdkVersion to 9, else you can set minSDKVersion to 8
+    -->
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="18" />
+
+    <application>
+		<!--
+        Remove this if your project or a library you are using already makes 
+        use of Google Play Services or Google Ads
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name="mobi.vserv.android.ads.VservAdManager"
+            android:configChanges="touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize"
+            android:launchMode="singleTop"
+			android:multiprocess="true"
+            android:process=":vserv"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="mobi.vserv.org.ormma.view.Browser"
+            android:configChanges="touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name="mobi.vserv.org.ormma.view.OrmmaActionHandler"
+            android:configChanges="touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+    </application>
+
+</manifest>
