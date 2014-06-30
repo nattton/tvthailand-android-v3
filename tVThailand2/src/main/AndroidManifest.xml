@@ -14,6 +14,7 @@
         android:name=".TVThailandApp"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
+        android:icon="@drawable/ic_launcher"
         android:theme="@style/TVThailandTheme">
         <activity
             android:name="com.makathon.tvthailand.MainActivity"

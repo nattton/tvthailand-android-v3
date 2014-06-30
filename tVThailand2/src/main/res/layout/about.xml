@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:src="@drawable/ic_launcher_tvthailand"
+        android:src="@drawable/ic_launcher"
         android:textSize="18sp" />
 
     <TextView
