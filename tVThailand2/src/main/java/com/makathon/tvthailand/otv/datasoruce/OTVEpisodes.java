@@ -78,7 +78,7 @@ public class OTVEpisodes {
 					}
 					
 					if (jObjPart.has("media_code") && jObjPart.getString("media_code").equals("1001")) {
-						part.setVastUrl(jObjPart.has("stream_url") ? jObjPart.getString("stream_url") : EMPTY_STRING);
+						part.setVastUrl(jObjPart.has("stream_url") ? jObjPart.getString("stream_url") : null);
 					}
 					else if (jObjPart.has("media_code")) {
 						part.setPartId(jObjPart.has("id") ? jObjPart.getString("id") : EMPTY_STRING);

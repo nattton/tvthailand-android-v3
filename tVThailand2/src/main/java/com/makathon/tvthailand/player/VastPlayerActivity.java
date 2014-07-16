@@ -2,11 +2,8 @@ package com.makathon.tvthailand.player;
 
 //import io.vov.vitamio.LibsChecker;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,7 +19,6 @@ import com.google.ads.interactivemedia.v3.api.AdsLoader.AdsLoadedListener;
 import com.google.ads.interactivemedia.v3.api.AdDisplayContainer;
 import com.google.ads.interactivemedia.v3.api.AdsManager;
 import com.google.ads.interactivemedia.v3.api.AdsManagerLoadedEvent;
-import com.google.ads.interactivemedia.v3.api.AdsRenderingSettings;
 import com.google.ads.interactivemedia.v3.api.AdsRequest;
 import com.google.ads.interactivemedia.v3.api.ImaSdkFactory;
 import com.google.ads.interactivemedia.v3.api.ImaSdkSettings;
@@ -128,9 +124,11 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 		initUi();
 
 		sdkFactory = ImaSdkFactory.getInstance();
-		creatAdsLoader();
-
-		adsLoader.requestAds(buildAdsRequest());
+		createAdsLoader();
+        if (tagUrl != null)
+            adsLoader.requestAds(buildAdsRequest());
+        else
+            playVideo();
 
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			videoPlayer
@@ -191,21 +189,21 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 
 		videoHolder.addView(videoPlayer);
 
-		LayoutParams videoLayouyParams = new RelativeLayout.LayoutParams(
+		LayoutParams videoLayoutParams = new RelativeLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		videoLayouyParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		videoLayouyParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-		videoLayouyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-		videoLayouyParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		videoLayouyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		videoLayouyParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-		videoHolder.addView(webViewPlayer, videoLayouyParams);
+		videoLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		videoLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+		videoLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+		videoLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		videoLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		videoLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		videoHolder.addView(webViewPlayer, videoLayoutParams);
 
 		buttonSkip.setOnClickListener(this);
 		txtSkipCount.setOnClickListener(this);
 	}
 
-	private void creatAdsLoader() {
+	private void createAdsLoader() {
 		adsLoader = sdkFactory.createAdsLoader(this, getImgSdkSettings());
 		adsLoader.addAdErrorListener(this);
 		adsLoader.addAdsLoadedListener(this);
@@ -285,9 +283,12 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 				contentStarted = false;
 				updateValue(position);
 				titleBarTV.setText(titleString + " - " + part.getNameTh());
-				adsLoader.requestAds(buildAdsRequest());
+                if(tagUrl != null)
+                    adsLoader.requestAds(buildAdsRequest());
+                else
+                    playVideo();
 
-				sendTracker();
+                sendTracker();
 			}
 		}
 
