@@ -158,9 +158,10 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 		part = mParts.get(position);
 		titleString = mEpisode.getNameTh() + " " + mEpisode.getDate();
 		mediaCode = part.getMediaCode();
-		tagUrl = part.getVastUrl();
-		// Log.e("tagUrl", tagUrl);
-		contentUrl = part.getStreamUrl();
+        tagUrl = part.getVastUrl();
+//        tagUrl = "http://th-otv.videoplaza.tv/proxy/distributor/v2?s=147b5982-ee47-483a-8150-7c435731ea7d&tt=p&rt=vast_2.0&rnd={random}&xgid=78676601-3bfc-415d-a3bf-c8ddcaa2eeb7&pf=fl_11";
+        // Log.e("tagUrl", tagUrl);
+        contentUrl = part.getStreamUrl();
 	}
 
 	private void initUi() {
@@ -387,6 +388,13 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 	@Override
 	public void onAdError(AdErrorEvent event) {
 		Log.e("VAST Activity", event.getError().getMessage());
+
+        contentStarted = false;
+
+        playVideo();
+
+        sendTracker();
+
 	}
 
 	@Override
