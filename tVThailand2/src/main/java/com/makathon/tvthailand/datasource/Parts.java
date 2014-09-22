@@ -154,14 +154,14 @@ public class Parts {
 		} else if (srcType.equals("12")) {
 			playVideo(videos[position]);
 		} else if (srcType.equals("13")) {
-//			loadMThaiVideo(videos[position]);
-            openMThaiVideo(videos[position]);
+			loadMThaiVideo(videos[position]);
+//            openMThaiVideo(videos[position]);
 		} else if (srcType.equals("14")) {
-//			loadMThaiVideoFromWeb(videos[position]);
-            openMThaiVideo(videos[position]);
+			loadMThaiVideoFromWeb(videos[position]);
+//            openMThaiVideo(videos[position]);
 		} else if (srcType.equals("15")) {
-//			loadMThaiVideoWithPassword(videos[position], password);
-            openMThaiVideoPassword(videos[position], password);
+			loadMThaiVideoWithPassword(videos[position], password);
+//            openMThaiVideoPassword(videos[position], password);
 		}
 	}
 

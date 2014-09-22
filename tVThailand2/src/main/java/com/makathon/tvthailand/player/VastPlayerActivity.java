@@ -321,24 +321,22 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 			isAdStarted = true;
 			isAdPlaying = true;
 
-//            Ad ad = event.getAd();
-//
-//	        //** Start countdown counter to skip ad **//
-//	        skipAdCounter = new CountDownTimer(7000, 1000);
-//	        skipAdCounter.Start();
-//	        RefreshTimer();
-//	        txtSkipCount.setVisibility(View.VISIBLE);
-//
-//	        final Handler handler = new Handler();
-//	        handler.postDelayed(new Runnable() {
-//	            @Override
-//	            public void run() {
-//	            	if (!contentStarted) {
-//	            		txtSkipCount.setVisibility(View.GONE);
-//	            		buttonSkip.setVisibility(View.VISIBLE);
-//					}
-//	            }
-//	        }, 7000);
+	        //** Start countdown counter to skip ad **//
+	        skipAdCounter = new CountDownTimer(7000, 1000);
+	        skipAdCounter.Start();
+	        RefreshTimer();
+	        txtSkipCount.setVisibility(View.VISIBLE);
+
+	        final Handler handler = new Handler();
+	        handler.postDelayed(new Runnable() {
+	            @Override
+	            public void run() {
+	            	if (!contentStarted) {
+	            		txtSkipCount.setVisibility(View.GONE);
+	            		buttonSkip.setVisibility(View.VISIBLE);
+					}
+	            }
+	        }, 7000);
 			
 			titleBarRL.setVisibility(View.GONE);
 
