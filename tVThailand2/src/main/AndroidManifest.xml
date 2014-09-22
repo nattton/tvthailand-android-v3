@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.makathon.tvthailand"
     android:installLocation="auto"
-    android:versionCode="105"
-    android:versionName="2.4.0">
+    android:versionCode="107"
+    android:versionName="2.4.3">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -127,6 +127,14 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden"></activity>
+        <activity
+            android:name="com.makathon.tvthailand.player.IMAPlayerActivity"
+            android:label="VAST Player"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+
         <activity
             android:name="com.makathon.tvthailand.PartYoutubePlayerViewActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />

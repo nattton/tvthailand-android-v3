@@ -30,7 +30,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.R;
+
 import com.makathon.tvthailand.TVThailandApp.TrackerName;
 import com.makathon.tvthailand.adapter.EpisodeAdapter;
 import com.makathon.tvthailand.contentprovider.MyProgramContentProvider;
@@ -47,8 +47,8 @@ import com.makathon.tvthailand.otv.OTVShowActivity;
 
 public class EpisodeActivity extends SherlockFragmentActivity implements OnClickListener,
 		OnItemClickListener, OnLoadListener, OnScrollListener {
-	static final String EXTRAS_PROGRAM = "EXTRAS_PROGRAM";
-	
+	public static final String EXTRAS_PROGRAM = "EXTRAS_PROGRAM";
+	public static final String EXTRAS_DISABLE_OTV = "EXTRAS_DISABLE_OTV";
 	private ImageLoader mImageLoader;
 	
 	private View header;
@@ -77,6 +77,8 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 	private Dao<MyProgramModel> mDaoMyProgram;
 	private MyProgramModel mMyProgram;
 	private MenuItem refreshMenu;
+
+    private Boolean isDisableOTV = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +86,9 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		setContentView(R.layout.episode_view);
 		
 		mImageLoader = MyVolley.getImageLoader();
-		
+
+        isDisableOTV = getIntent().getBooleanExtra(EXTRAS_DISABLE_OTV, false);
+
 		initiazeProgram();
 		
 		initiazeUI();
@@ -136,8 +140,8 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 			public void onProgramChange(Program program) {
 				setUpHeaderView(program);
 				mAdapter.notifyDataSetChanged();
-				
-				if (program.isOTV() == 1) {
+
+				if (!isDisableOTV && program.isOTV() == 1) {
 					Intent intent = new Intent(EpisodeActivity.this, OTVShowActivity.class);
 					intent.putExtra(EpisodeActivity.EXTRAS_PROGRAM, program);
 					startActivity(intent);

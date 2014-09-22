@@ -13,6 +13,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.internal.in;
 import com.makathon.tvthailand.MyVolley;
 import com.makathon.tvthailand.R;
 import com.makathon.tvthailand.TVThailandApp;
@@ -21,6 +22,7 @@ import com.makathon.tvthailand.datasource.AppUtility;
 import com.makathon.tvthailand.otv.datasoruce.OTVEpisode;
 import com.makathon.tvthailand.otv.datasoruce.OTVPart;
 import com.makathon.tvthailand.otv.datasoruce.OTVPartAdapter;
+import com.makathon.tvthailand.player.IMAPlayerActivity;
 import com.makathon.tvthailand.player.VastPlayerActivity;
 import com.makathon.tvthailand.player.VitamioVastPlayerActivity;
 
@@ -70,8 +72,6 @@ public class OTVPartActivity extends SherlockActivity implements OnItemClickList
 	public void onItemClick(AdapterView<?> parent, View v, int position,
 			long id) {
 		
-
-		
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
 		{
 			Intent intentVastPlayer = new Intent(OTVPartActivity.this, VastPlayerActivity.class);
@@ -86,6 +86,9 @@ public class OTVPartActivity extends SherlockActivity implements OnItemClickList
 			intentVastPlayer.putExtra(VitamioVastPlayerActivity.EXTRAS_OTV_PARTS, mParts);
 			startActivity(intentVastPlayer);
 		}
+
+//        Intent intent = new Intent(OTVPartActivity.this, IMAPlayerActivity.class);
+//        startActivity(intent);
 		
 	}
 }

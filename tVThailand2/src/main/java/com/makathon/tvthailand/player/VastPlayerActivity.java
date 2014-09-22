@@ -58,6 +58,8 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.ads.interactivemedia.v3.api.Ad;
+
 public class VastPlayerActivity extends Activity implements AdErrorListener,
 		AdsLoadedListener, AdEventListener, CompleteCallback, OnClickListener,
 		OnLongClickListener, OnTitleBarListener {
@@ -318,23 +320,25 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 		case STARTED:
 			isAdStarted = true;
 			isAdPlaying = true;
-			
-	        //** Start countdown counter to skip ad **//
-	        skipAdCounter = new CountDownTimer(7000, 1000);
-	        skipAdCounter.Start();
-	        RefreshTimer();
-	        txtSkipCount.setVisibility(View.VISIBLE);
-	        
-	        final Handler handler = new Handler();
-	        handler.postDelayed(new Runnable() {
-	            @Override
-	            public void run() {
-	            	if (!contentStarted) {
-	            		txtSkipCount.setVisibility(View.GONE);
-	            		buttonSkip.setVisibility(View.VISIBLE);
-					}
-	            }
-	        }, 7000);
+
+//            Ad ad = event.getAd();
+//
+//	        //** Start countdown counter to skip ad **//
+//	        skipAdCounter = new CountDownTimer(7000, 1000);
+//	        skipAdCounter.Start();
+//	        RefreshTimer();
+//	        txtSkipCount.setVisibility(View.VISIBLE);
+//
+//	        final Handler handler = new Handler();
+//	        handler.postDelayed(new Runnable() {
+//	            @Override
+//	            public void run() {
+//	            	if (!contentStarted) {
+//	            		txtSkipCount.setVisibility(View.GONE);
+//	            		buttonSkip.setVisibility(View.VISIBLE);
+//					}
+//	            }
+//	        }, 7000);
 			
 			titleBarRL.setVisibility(View.GONE);
 

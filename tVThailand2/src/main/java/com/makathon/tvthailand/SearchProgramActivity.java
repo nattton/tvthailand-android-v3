@@ -10,7 +10,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.R;
+
 import com.makathon.tvthailand.TVThailandApp.TrackerName;
 import com.makathon.tvthailand.adapter.ProgramAdapter;
 import com.makathon.tvthailand.contentprovider.ProgramSuggestionProvider;

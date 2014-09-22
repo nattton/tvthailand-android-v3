@@ -71,7 +71,7 @@ public class MyBannerView extends LinearLayout {
 		super(context, attrs);
 		TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.MyBannerView, 0, 0);
 		try {
-			autoLoad = a.getBoolean(R.styleable.MyBannerView_autoLoad, false);
+			autoLoad = a.getBoolean(R.styleable.MyBannerView_autoLoad, true);
 		} finally {
 			a.recycle();
 		}

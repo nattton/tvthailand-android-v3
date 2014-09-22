@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
@@ -41,9 +42,10 @@ import com.makathon.tvthailand.otv.datasoruce.OTVEpisode;
 import com.makathon.tvthailand.otv.datasoruce.OTVEpisodeAdapter;
 import com.makathon.tvthailand.otv.datasoruce.OTVEpisodes;
 import com.makathon.tvthailand.otv.datasoruce.OTVEpisodes.OnOTVEpisodesChangeListener;
+import com.makathon.tvthailand.EpisodeActivity;
 
 public class OTVShowActivity extends SherlockActivity implements
-		OnLoadDataListener, OnClickListener, OnItemClickListener {
+		OnLoadDataListener, OnClickListener, OnItemClickListener, OnLongClickListener {
 
 	private ImageLoader mImageLoader;
 	
@@ -178,6 +180,7 @@ public class OTVShowActivity extends SherlockActivity implements
 
 		// header.findViewById(R.id.vote_llayout).setOnClickListener(this);
 		header.findViewById(R.id.btn_more_detail).setOnClickListener(this);
+        header.findViewById(R.id.btn_more_detail).setOnLongClickListener(this);
 		 imb_fav.setOnClickListener(this);
 
 		// avg_rating_tv = (TextView) header
@@ -348,7 +351,20 @@ public class OTVShowActivity extends SherlockActivity implements
 		}
 	}
 
-	private void openMoreDetail() {
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_more_detail:
+                Intent intent = new Intent(OTVShowActivity.this, EpisodeActivity.class);
+                intent.putExtra(EpisodeActivity.EXTRAS_PROGRAM, program);
+                intent.putExtra(EpisodeActivity.EXTRAS_DISABLE_OTV, true);
+                startActivity(intent);
+                break;
+        }
+        return false;
+    }
+
+    private void openMoreDetail() {
 		Intent intentMoreDetail = new Intent(OTVShowActivity.this,
 				MoreDetailActivity.class);
 		intentMoreDetail.putExtra(MoreDetailActivity.EXTRAS_TITLE,

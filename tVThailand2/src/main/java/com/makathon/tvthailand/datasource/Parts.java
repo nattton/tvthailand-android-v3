@@ -154,11 +154,14 @@ public class Parts {
 		} else if (srcType.equals("12")) {
 			playVideo(videos[position]);
 		} else if (srcType.equals("13")) {
-			loadMThaiVideo(videos[position]);
+//			loadMThaiVideo(videos[position]);
+            openMThaiVideo(videos[position]);
 		} else if (srcType.equals("14")) {
-			loadMThaiVideoFromWeb(videos[position]);
+//			loadMThaiVideoFromWeb(videos[position]);
+            openMThaiVideo(videos[position]);
 		} else if (srcType.equals("15")) {
-			loadMThaiVideoWithPassword(videos[position], password);
+//			loadMThaiVideoWithPassword(videos[position], password);
+            openMThaiVideoPassword(videos[position], password);
 		}
 	}
 
@@ -287,64 +290,102 @@ public class Parts {
 		});
 	}
 
-	private void loadMThaiVideoFromWeb(final String videoKey) {
-		retryCount++;
-		if (retryCount > 3) {
-			retryCount = 0;
-			Toast.makeText(mContext, "Can't load video", Toast.LENGTH_LONG)
-					.show();
-			return;
-		}
+    private void openMThaiVideo(final String videoId) {
+        String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", videoId);
+        Uri uriVideo = Uri.parse(mthaiUrl);
+        mContext.startActivity(new Intent(Intent.ACTION_VIEW, uriVideo));
+    }
 
-		String mthaiUrl = String.format(
-				"http://video.mthai.com/cool/player/%s.html", videoKey);
-		AsyncHttpClient videoClient = new AsyncHttpClient();
-		videoClient.setUserAgent(AppUtility.getUserAgentiOS(mContext));
-		videoClient.get(mthaiUrl, new AsyncHttpResponseHandler() {
-			@Override
-			public void onSuccess(String content) {
-				try {
-					Document doc = Jsoup.parse(content);
-					Elements elSource = doc.getElementsByTag("source");
-					for (int i = 0; i < elSource.size(); i++) {
-						Element eSrc = elSource.get(i);
-						String videoUrl = eSrc.attr("src");
-						String[] seperateUrl = videoUrl.split("/");
-						if (seperateUrl.length == 0)
-							return;
-						if (seperateUrl[seperateUrl.length - 1]
-								.startsWith(videoKey)) {
-							playVideo(videoUrl);
-							return;
-						}
-					}
+    private void openMThaiVideoPassword(final String videoId, final String password) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("This video has password");
+        builder.setMessage("Password : " + password);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                openMThaiVideo(videoId);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
-					loadMThaiVideoFromWeb(videoKey);
+//	private void loadMThaiVideoFromWeb(final String videoKey) {
+//		retryCount++;
+//		if (retryCount > 3) {
+//			retryCount = 0;
+//			Toast.makeText(mContext, "Can't load video", Toast.LENGTH_LONG)
+//					.show();
+//			return;
+//		}
+//
+//		String mthaiUrl = String.format(
+//				"http://video.mthai.com/cool/player/%s.html", videoKey);
+//		AsyncHttpClient videoClient = new AsyncHttpClient();
+//		videoClient.setUserAgent(AppUtility.getUserAgentiOS(mContext));
+//		videoClient.get(mthaiUrl, new AsyncHttpResponseHandler() {
+//			@Override
+//			public void onSuccess(String content) {
+//				try {
+//					Document doc = Jsoup.parse(content);
+//					Elements elSource = doc.getElementsByTag("source");
+//					for (int i = 0; i < elSource.size(); i++) {
+//						Element eSrc = elSource.get(i);
+//						String videoUrl = eSrc.attr("src");
+//						String[] seperateUrl = videoUrl.split("/");
+//						if (seperateUrl.length == 0)
+//							return;
+//						if (seperateUrl[seperateUrl.length - 1]
+//								.startsWith(videoKey)) {
+//							playVideo(videoUrl);
+//							return;
+//						}
+//					}
+//
+//					loadMThaiVideoFromWeb(videoKey);
+//
+//				} catch (Exception e) {
+////					Log.e("loadMVideFromWeb", "Exception");
+//					Toast.makeText(mContext, "Video have problem!!!",
+//							Toast.LENGTH_LONG).show();
+//				}
+//			}
+//
+//			ProgressDialog dialog;
+//
+//			public void onStart() {
+//				dialog = ProgressDialog.show(mContext, "",
+//						"Loading, Please wait...", true);
+//			}
+//
+//			public void onFinish() {
+//				dialog.dismiss();
+//			}
+//
+//			public void onFailure(Throwable error) {
+//				Toast.makeText(mContext, "Loading fail!!!", Toast.LENGTH_LONG)
+//						.show();
+//			}
+//		});
+//	}
 
-				} catch (Exception e) {
-//					Log.e("loadMVideFromWeb", "Exception");
-					Toast.makeText(mContext, "Video have problem!!!",
-							Toast.LENGTH_LONG).show();
-				}
-			}
+    private void loadMThaiVideoFromWeb(final String videoId) {
+        selectedVideoId = videoId;
+        String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", videoId);
 
-			ProgressDialog dialog;
+        RequestQueue mRequestQueue = Volley.newRequestQueue(mContext);
+        StringRequest mthaiRequest = new StringRequest(Method.POST, mthaiUrl, createMthaiReqSuccessListener(), createMthaiReqErrorListener()) {
 
-			public void onStart() {
-				dialog = ProgressDialog.show(mContext, "",
-						"Loading, Please wait...", true);
-			}
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("User-Agent", AppUtility.getUserAgentChrome());
+                return params;
+            }
+        };
 
-			public void onFinish() {
-				dialog.dismiss();
-			}
-
-			public void onFailure(Throwable error) {
-				Toast.makeText(mContext, "Loading fail!!!", Toast.LENGTH_LONG)
-						.show();
-			}
-		});
-	}
+        mRequestQueue.add(mthaiRequest);
+    }
 
 	private void loadMThaiVideoWithPassword(final String videoId,
 			final String password) {
@@ -369,7 +410,7 @@ public class Parts {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
             	Map<String, String> params = new HashMap<String, String>();
-                params.put("User-Agent", AppUtility.getUserAgentiOS(mContext));
+                params.put("User-Agent", AppUtility.getUserAgentChrome());
             	return params;
             }
 		};
@@ -382,10 +423,10 @@ public class Parts {
 
 			@Override
 			public void onResponse(String response) {
-				String varKey = "defaultClip";
+				String varKey = "{ mp4:";
 				int indexStart = response.indexOf(varKey) + varKey.length();
-				int indexEnd = response.indexOf(";", indexStart);
-				String clipUrl = response.substring(indexStart, indexEnd).replace(" ", "").replace("=", "").replace("'", "");
+				int indexEnd = response.indexOf("}", indexStart);
+				String clipUrl = response.substring(indexStart, indexEnd).replace(" ", "").replace("=", "").replace("\"", "").replace("'", "");
 				
 				String[] seperateUrl = clipUrl.split("/");
 				if (seperateUrl[seperateUrl.length - 1]
