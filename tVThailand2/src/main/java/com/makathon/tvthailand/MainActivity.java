@@ -20,13 +20,13 @@ import com.facebook.Session;
 import com.facebook.UiLifecycleHelper;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.TVThailandApp.TrackerName;
+import com.makathon.tvthailand.Application.TrackerName;
 import com.makathon.tvthailand.account.AccountActivity;
 import com.makathon.tvthailand.datasource.AppUtility;
 import com.makathon.tvthailand.datasource.OnLoadDataListener;
 import com.makathon.tvthailand.datasource.Section;
 import com.viewpagerindicator.TabPageIndicator;
+
 
 public class MainActivity extends SherlockFragmentActivity implements
 		OnLoadDataListener {
@@ -127,12 +127,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 	
 	private void sendTracker() {
-		Tracker t = ((TVThailandApp)getApplication()).getTracker(
+		Tracker t = ((Application)getApplication()).getTracker(
                 TrackerName.APP_TRACKER);
         t.setScreenName("Main");
         t.send(new HitBuilders.AppViewBuilder().build());
         
-		Tracker otvTracker = ((TVThailandApp)getApplication()).getTracker(
+		Tracker otvTracker = ((Application)getApplication()).getTracker(
                 TrackerName.OTV_TRACKER);
 		otvTracker.setScreenName("Main");
 		otvTracker.send(new HitBuilders.AppViewBuilder().build());

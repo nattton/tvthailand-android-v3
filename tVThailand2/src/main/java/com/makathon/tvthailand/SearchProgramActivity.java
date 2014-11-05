@@ -11,7 +11,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import com.makathon.tvthailand.TVThailandApp.TrackerName;
+import com.makathon.tvthailand.Application.TrackerName;
 import com.makathon.tvthailand.adapter.ProgramAdapter;
 import com.makathon.tvthailand.contentprovider.ProgramSuggestionProvider;
 import com.makathon.tvthailand.datasource.OnLoadDataListener;
@@ -84,7 +84,7 @@ public class SearchProgramActivity extends SherlockActivity implements OnLoadDat
 				
 				Program program = mPrograms.get(position);
 				
-				 Tracker t = ((TVThailandApp)getApplication()).getTracker(
+				 Tracker t = ((Application)getApplication()).getTracker(
 				            TrackerName.APP_TRACKER);
 				 t.setScreenName("Program");
 				 t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());
@@ -126,7 +126,7 @@ public class SearchProgramActivity extends SherlockActivity implements OnLoadDat
 			setTitle("Search : " + query);
 			mPrograms.loadProgramBySearch(query, 0);
 			
-			Tracker t = ((TVThailandApp)getApplication()).getTracker(
+			Tracker t = ((Application)getApplication()).getTracker(
 		            TrackerName.APP_TRACKER);
 			t.setScreenName("Search");
 			t.send(new HitBuilders.AppViewBuilder().setCustomDimension(4, query).build());

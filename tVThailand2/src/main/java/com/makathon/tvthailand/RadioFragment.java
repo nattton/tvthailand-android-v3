@@ -14,8 +14,7 @@ import android.widget.GridView;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.TVThailandApp.TrackerName;
+import com.makathon.tvthailand.Application.TrackerName;
 import com.makathon.tvthailand.adapter.RadioCustomAdapter;
 import com.makathon.tvthailand.datasource.AppUtility;
 import com.makathon.tvthailand.datasource.Radio;
@@ -78,7 +77,7 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 					long id) {
 				Radio radio = mRadios.get(position);
 				
-				 Tracker t = ((TVThailandApp) getActivity().getApplication()).getTracker(
+				 Tracker t = ((Application) getActivity().getApplication()).getTracker(
 				            TrackerName.APP_TRACKER);
 				 t.setScreenName("Radio");
 				 t.send(new HitBuilders.AppViewBuilder().setCustomDimension(6, radio.getTitle()).build());

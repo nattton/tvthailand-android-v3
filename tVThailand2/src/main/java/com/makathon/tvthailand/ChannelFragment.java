@@ -13,8 +13,7 @@ import android.widget.GridView;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.TVThailandApp.TrackerName;
+import com.makathon.tvthailand.Application.TrackerName;
 import com.makathon.tvthailand.adapter.ChannelAdapter;
 import com.makathon.tvthailand.datasource.AppUtility;
 import com.makathon.tvthailand.datasource.Channel;
@@ -56,7 +55,7 @@ public class ChannelFragment extends Fragment {
 					long id) {
 				Channel channel = mChannels.get(position);
 				
-				 Tracker t = ((TVThailandApp) getActivity().getApplication()).getTracker(
+				 Tracker t = ((Application) getActivity().getApplication()).getTracker(
 				            TrackerName.APP_TRACKER);
 				 t.setScreenName("Channel");
 				 t.send(new HitBuilders.AppViewBuilder().setCustomDimension(5, channel.getTitle()).build());

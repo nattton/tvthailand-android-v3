@@ -34,6 +34,7 @@ import com.makathon.tvthailand.datasource.Program;
 import com.makathon.tvthailand.datasource.Programs;
 import com.makathon.tvthailand.datasource.Programs.OnProgramChangeListener;
 import com.makathon.tvthailand.otv.OTVShowActivity;
+import com.makathon.tvthailand.player.VastContentPlayerActivity;
 
 public class ProgramActivity extends SherlockActivity implements
 		OnLoadDataListener, OnItemClickListener, OnScrollListener {
@@ -231,6 +232,10 @@ public class ProgramActivity extends SherlockActivity implements
 	}
 
 	private void playVideo(String videoUrl) {
+//        Intent intentVideo = new Intent(ProgramActivity.this, VastContentPlayerActivity.class);
+//        intentVideo.putExtra(VastContentPlayerActivity.EXTRAS_CONTENT_URL, videoUrl);
+//        startActivity(intentVideo);
+
 		Intent intentVideo = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
 		intentVideo.putExtra(Intent.EXTRA_TITLE, title);
 		intentVideo.setDataAndType(Uri.parse(videoUrl), "video/*");

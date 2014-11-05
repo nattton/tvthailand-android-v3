@@ -45,14 +45,17 @@ public class VideoPlayerActivity extends Activity implements OnInfoListener,
 		super.onCreate(icicle);
 		
 		Bundle extras = getIntent().getExtras();
-		
-		mediaType = extras.getString(EXTRAS_MEDIA_TYPE);
-		
-		if(mediaType == null || mediaType.equalsIgnoreCase("video")){
-			start_buffer_rate = 80;
-		}else{
-			start_buffer_rate = 10;
-		}
+
+        try {
+            mediaType = extras.getString(EXTRAS_MEDIA_TYPE, null);
+            if(mediaType == null || mediaType.equalsIgnoreCase("video")){
+                start_buffer_rate = 80;
+            } else {
+                start_buffer_rate = 10;
+            }
+        } catch (Exception ex) {
+            start_buffer_rate = 80;
+        }
 
 		if (!LibsChecker.checkVitamioLibs(this)) {
 			return;

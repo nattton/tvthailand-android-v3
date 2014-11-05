@@ -219,18 +219,18 @@ public class VastPlayer extends RelativeLayout implements VideoAdPlayer,
 		video.removeCallback(callback);
 	}
 
-	@Override
-	public VideoProgressUpdate getProgress() {
-		long durationMs = video.getDuration();
+    @Override
+    public VideoProgressUpdate getAdProgress() {
+        long durationMs = video.getDuration();
 
-		if (durationMs <= 0) {
-			return VideoProgressUpdate.VIDEO_TIME_NOT_READY;
-		}
-		VideoProgressUpdate vpu = new VideoProgressUpdate(
-				video.getCurrentPosition(), durationMs);
-		// Log.i("PLAYER", vpu.toString());
-		return vpu;
-	}
+        if (durationMs <= 0) {
+            return VideoProgressUpdate.VIDEO_TIME_NOT_READY;
+        }
+        VideoProgressUpdate vpu = new VideoProgressUpdate(
+                video.getCurrentPosition(), durationMs);
+        // Log.i("PLAYER", vpu.toString());
+        return vpu;
+    }
 
 	@Override
 	public boolean onInfo(MediaPlayer mp, int what, int extra) {

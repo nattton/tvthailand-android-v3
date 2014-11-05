@@ -16,8 +16,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.TVThailandApp.TrackerName;
+import com.makathon.tvthailand.Application.TrackerName;
 import com.makathon.tvthailand.adapter.ProgramCursorAdapter;
 import com.makathon.tvthailand.contentprovider.MyProgramContentProvider;
 import com.makathon.tvthailand.database.MyProgramModel;
@@ -79,7 +78,7 @@ public class ProgramLoaderActivity extends SherlockFragmentActivity implements
 			
 			Program program = programLoader.toProgram();
 			
-			 Tracker t = ((TVThailandApp)getApplication()).getTracker(
+			 Tracker t = ((Application)getApplication()).getTracker(
 			            TrackerName.APP_TRACKER);
 			 t.setScreenName("ProgramLoader");
 			 t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());

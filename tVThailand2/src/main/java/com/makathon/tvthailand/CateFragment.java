@@ -11,8 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.TVThailandApp.TrackerName;
+import com.makathon.tvthailand.Application.TrackerName;
 import com.makathon.tvthailand.adapter.CategoryAdapter;
 import com.makathon.tvthailand.datasource.AppUtility;
 import com.makathon.tvthailand.datasource.Categories;
@@ -53,7 +52,7 @@ public class CateFragment extends SherlockFragment implements OnItemClickListene
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 		Category category = mCategories.get(position);
 		
-		 Tracker t = ((TVThailandApp) getActivity().getApplication()).getTracker(
+		 Tracker t = ((Application) getActivity().getApplication()).getTracker(
 		            TrackerName.APP_TRACKER);
 		 t.setScreenName("Category");
 		 t.send(new HitBuilders.AppViewBuilder().setCustomDimension(1, category.getTitle()).build());

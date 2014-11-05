@@ -14,13 +14,12 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.makathon.tvthailand.Application;
 import com.makathon.tvthailand.MyVolley;
-import com.makathon.tvthailand.TVThailandApp;
 
-import android.app.Application;
 import android.content.Context;
 
-public class OTVCategories extends Application {
+public class OTVCategories extends android.app.Application {
 	private RequestQueue mRequestQueue;
 	private static OTVCategories instance;
 	private ArrayList<OTVCategory> categories = new ArrayList<OTVCategory>();
@@ -36,7 +35,7 @@ public class OTVCategories extends Application {
 		mRequestQueue = MyVolley.getRequestQueue();
 		String url = String.format("%s/CategoryList/index/%s/%s/%s/",
 				OTVConfig.BASE_URL, OTVConfig.APP_ID,
-				TVThailandApp.getAppVersion(), OTVConfig.API_VERSION);
+				Application.getAppVersion(), OTVConfig.API_VERSION);
 		JsonObjectRequest loadEpisodeRequest = new JsonObjectRequest(
 				Method.GET, url, null, reqSuccessListener(), reqErrorListener());
 		mRequestQueue.add(loadEpisodeRequest);

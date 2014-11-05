@@ -31,7 +31,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import com.makathon.tvthailand.TVThailandApp.TrackerName;
+import com.makathon.tvthailand.Application.TrackerName;
 import com.makathon.tvthailand.adapter.EpisodeAdapter;
 import com.makathon.tvthailand.contentprovider.MyProgramContentProvider;
 import com.makathon.tvthailand.database.Dao;
@@ -167,7 +167,7 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		
 //		setUpAd();
 		
-		Tracker t = ((TVThailandApp) getApplication())
+		Tracker t = ((Application) getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("Episode");
 		t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());
@@ -354,7 +354,7 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		
 		Episode episode = mEpisodes.get(position - 1);
 
-		Tracker t = ((TVThailandApp) getApplication())
+		Tracker t = ((Application) getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("Episode");
 		t.send(new HitBuilders.AppViewBuilder().setCustomDimension(3,

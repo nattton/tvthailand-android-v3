@@ -13,7 +13,9 @@ public class OTVPart implements Parcelable {
 	private String streamUrl;
 	private String vastUrl;
 	private String mediaCode;
-	private static final String EMPTY_STRING = "";
+    private int skipad;
+
+    private static final String EMPTY_STRING = "";
 	
 	
 //	public OTVPart (String partId, String nameTh, String  nameEn, String thumbnail, String cover, String streamUrl, String vastUrl, String mediaCode) {
@@ -30,6 +32,7 @@ public class OTVPart implements Parcelable {
 	
 	public OTVPart() {
 		super();
+        setSkipad(8);
 	}
 
 	private String CheckNullString(String str) {
@@ -87,6 +90,7 @@ public class OTVPart implements Parcelable {
 	}
 
 	public String getVastUrl() {
+//        return "http://img.vserv.mobi/vast/6372f97c79807c85110999d2c7a9ae1b.xml";
 		return vastUrl;
 	}
 
@@ -101,6 +105,14 @@ public class OTVPart implements Parcelable {
 	public void setMediaCode(String mediaCode) {
 		this.mediaCode = CheckNullString(mediaCode);
 	}
+
+    public int getSkipad() {
+        return skipad;
+    }
+
+    public void setSkipad(int skipad) {
+        this.skipad = skipad * 1000;
+    }
 	
 	@Override
 	public int describeContents() {
@@ -117,6 +129,7 @@ public class OTVPart implements Parcelable {
 		dest.writeString(streamUrl);
 		dest.writeString(vastUrl);
 		dest.writeString(getMediaCode());
+        dest.writeInt(skipad);
 	}
 	
 	public static final Parcelable.Creator<OTVPart> CREATOR = new Parcelable.Creator<OTVPart>() {
@@ -142,6 +155,7 @@ public class OTVPart implements Parcelable {
 		this.streamUrl = source.readString();
 		this.vastUrl = source.readString();
 		this.setMediaCode(source.readString());
+        this.skipad = source.readInt();
 	}
 
 

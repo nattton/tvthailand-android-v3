@@ -26,11 +26,11 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.makathon.tvthailand.Application;
 import com.makathon.tvthailand.MoreDetailActivity;
 import com.makathon.tvthailand.MyVolley;
 import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.TVThailandApp;
-import com.makathon.tvthailand.TVThailandApp.TrackerName;
+import com.makathon.tvthailand.Application.TrackerName;
 import com.makathon.tvthailand.contentprovider.MyProgramContentProvider;
 import com.makathon.tvthailand.database.Dao;
 import com.makathon.tvthailand.database.MyProgramModel;
@@ -189,13 +189,13 @@ public class OTVShowActivity extends SherlockActivity implements
 	
 	private void sendTracker(Program show) {
 		if (show != null) {
-			Tracker t = ((TVThailandApp) getApplication())
+			Tracker t = ((Application) getApplication())
 					.getTracker(TrackerName.APP_TRACKER);
 			t.setScreenName("OTVShow");
 			t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2,
 					show.getTitle()).build());
 
-			Tracker t2 = ((TVThailandApp) getApplication())
+			Tracker t2 = ((Application) getApplication())
 					.getTracker(TrackerName.OTV_TRACKER);
 			t2.setScreenName("OTVShow");
 			t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(1,

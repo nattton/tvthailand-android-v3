@@ -49,6 +49,8 @@ public class Parts {
 
 	private String selectedVideoId;
 
+    private ProgressDialog progressDialog;
+
 	public interface OnLoadListener {
 		void onStart();
 
@@ -370,6 +372,8 @@ public class Parts {
 //	}
 
     private void loadMThaiVideoFromWeb(final String videoId) {
+        this.progressDialog = ProgressDialog.show(mContext, "",
+                "Loading, Please wait...", true);
         selectedVideoId = videoId;
         String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", videoId);
 
@@ -389,13 +393,9 @@ public class Parts {
 
 	private void loadMThaiVideoWithPassword(final String videoId,
 			final String password) {
-		retryCount++;
-		if (retryCount > 3) {
-			retryCount = 0;
-			Toast.makeText(mContext, "Can't load video", Toast.LENGTH_LONG)
-					.show();
-			return;
-		}
+        this.progressDialog = ProgressDialog.show(mContext, "",
+                "Loading, Please wait...", true);
+
 		selectedVideoId = videoId;
 		String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", videoId);
 		
@@ -423,10 +423,11 @@ public class Parts {
 
 			@Override
 			public void onResponse(String response) {
-				String varKey = "{ mp4:";
+                progressDialog.dismiss();
+				String varKey = "{ mp4:  \"http";
 				int indexStart = response.indexOf(varKey) + varKey.length();
 				int indexEnd = response.indexOf("}", indexStart);
-				String clipUrl = response.substring(indexStart, indexEnd).replace(" ", "").replace("=", "").replace("\"", "").replace("'", "");
+				String clipUrl = response.substring(indexStart - 4, indexEnd).replace(" ", "").replace("=", "").replace("\"", "").replace("'", "");
 				
 				String[] seperateUrl = clipUrl.split("/");
 				if (seperateUrl[seperateUrl.length - 1]
@@ -449,6 +450,24 @@ public class Parts {
 						return;
 					}
 				}
+
+                if (password.length() > 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setTitle("This video has password");
+                    builder.setMessage("Password : " + password);
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            openMThaiVideo(selectedVideoId);
+                        }
+                    });
+                    builder.setNegativeButton(R.string.cancel, null);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } else {
+                    String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", selectedVideoId);
+                    Uri uriVideo = Uri.parse(mthaiUrl);
+                    mContext.startActivity(new Intent(Intent.ACTION_VIEW, uriVideo));
+                }
 			}
 		};
 	}
@@ -458,6 +477,7 @@ public class Parts {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
 				Log.e("response", error.getMessage());
 				Toast.makeText(mContext, "Can't play video. please try again.", Toast.LENGTH_LONG).show();
 			}

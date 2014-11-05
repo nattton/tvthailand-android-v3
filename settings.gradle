@@ -1,4 +1,2 @@
-include ':androidViewPagerIndicator', 'tVThailand2'
+include ':androidViewPagerIndicator', 'tVThailand2', ':facebook', ':vitamio'
 include ':androidV2SDKLibrary'
-include ':facebookSDK'
-include ':vitamioBundle'

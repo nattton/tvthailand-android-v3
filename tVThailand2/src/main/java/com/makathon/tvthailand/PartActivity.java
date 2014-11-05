@@ -1,7 +1,6 @@
 package com.makathon.tvthailand;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -16,10 +15,8 @@ import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.TVThailandApp.TrackerName;
+import com.makathon.tvthailand.Application.TrackerName;
 import com.makathon.tvthailand.adapter.PartAdapter;
-import com.makathon.tvthailand.datasource.AppUtility;
 import com.makathon.tvthailand.datasource.Parts;
 
 public class PartActivity extends SherlockActivity{
@@ -90,7 +87,7 @@ public class PartActivity extends SherlockActivity{
 		
 //		setUpAd();
 		
-		Tracker t = ((TVThailandApp)getApplication())
+		Tracker t = ((Application)getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("Part");
 		t.send(new HitBuilders.AppViewBuilder().build());

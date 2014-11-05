@@ -244,7 +244,7 @@ public class VitamioVastPlayer extends RelativeLayout implements VideoAdPlayer,
 	}
 
 	@Override
-	public VideoProgressUpdate getProgress() {
+	public VideoProgressUpdate getAdProgress() {
 		long durationMs = video.getDuration();
 
 		if (durationMs <= 0) {

@@ -24,9 +24,9 @@ import com.google.ads.interactivemedia.v3.api.ImaSdkFactory;
 import com.google.ads.interactivemedia.v3.api.ImaSdkSettings;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.makathon.tvthailand.Application;
 import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.TVThailandApp;
-import com.makathon.tvthailand.TVThailandApp.TrackerName;
+import com.makathon.tvthailand.Application.TrackerName;
 import com.makathon.tvthailand.datasource.AppUtility;
 import com.makathon.tvthailand.otv.datasoruce.OTVEpisode;
 import com.makathon.tvthailand.otv.datasoruce.OTVPart;
@@ -132,7 +132,7 @@ public class VitamioVastPlayerActivity extends Activity implements AdErrorListen
 	
 	private void sendTracker()
 	{
-		Tracker t = ((TVThailandApp) getApplication())
+		Tracker t = ((Application) getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("VastPlayer");
 		t.send(new HitBuilders.AppViewBuilder().build());
@@ -206,7 +206,7 @@ public class VitamioVastPlayerActivity extends Activity implements AdErrorListen
 	}
 
 	protected void playVideo() {
-		Tracker t2 = ((TVThailandApp) getApplication())
+		Tracker t2 = ((Application) getApplication())
 				.getTracker(TrackerName.OTV_TRACKER);
 		t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(3, part.getNameTh()).build());
 		
@@ -323,7 +323,7 @@ public class VitamioVastPlayerActivity extends Activity implements AdErrorListen
 			
 			titleBarRL.setVisibility(View.GONE);
 
-			Tracker t = ((TVThailandApp) getApplication())
+			Tracker t = ((Application) getApplication())
 					.getTracker(TrackerName.OTV_TRACKER);
 			t.setScreenName("VastPlayer");
 			t.send(new HitBuilders.AppViewBuilder().setCustomDimension(4, tagUrl).build());
@@ -334,7 +334,7 @@ public class VitamioVastPlayerActivity extends Activity implements AdErrorListen
 			isAdPlaying = false;
 			break;
 		case ALL_ADS_COMPLETED:
-			Tracker t2 = ((TVThailandApp) getApplication())
+			Tracker t2 = ((Application) getApplication())
 					.getTracker(TrackerName.OTV_TRACKER);
 			t2.setScreenName("VastPlayer");
 			t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(5, tagUrl).build());

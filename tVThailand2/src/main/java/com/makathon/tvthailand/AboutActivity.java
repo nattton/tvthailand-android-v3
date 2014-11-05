@@ -8,8 +8,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.TVThailandApp.TrackerName;
+import com.makathon.tvthailand.Application.TrackerName;
 
 public class AboutActivity extends SherlockActivity {
 	@Override
@@ -27,7 +26,7 @@ public class AboutActivity extends SherlockActivity {
 			e.printStackTrace();
 		}
 		
-		Tracker t = ((TVThailandApp)getApplication())
+		Tracker t = ((Application)getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("About");
 		t.send(new HitBuilders.AppViewBuilder().build());

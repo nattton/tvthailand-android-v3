@@ -116,7 +116,10 @@ public class Program implements Parcelable {
 	}
 
 	public int isOTV() {
-		return isOTV;
+//		return isOTV;
+//      force no otv
+//      return 0;
+        return this.isOTV;
 	}
 
 	public String getOtvId() {

@@ -31,10 +31,7 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 	
 	public static final String EXTRAS_MEDIA_TYPE = "EXTRAS_MEDIA_TYPE";
 	public static final String EXTRAS_THUMBNAIL_URL = "EXTRAS_THUMBNAIL_URL";
-	
-	private ImageLoader imageLoader;
-	
-	private Uri uri;
+
 	private String title;
 	private VideoView mVideoView;
 	
@@ -42,9 +39,6 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 	
 	private ProgressBar pb;
 	private TextView downloadRateView, loadRateView;
-	private NetworkImageView thumbnaiStation;
-	private String mediaType;
-	private String thumbnailURL;
 	private int start_buffer_rate;
 
 	@Override
@@ -53,8 +47,8 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 		
 		Bundle extras = getIntent().getExtras();
 		
-		mediaType = extras.getString(EXTRAS_MEDIA_TYPE);
-		thumbnailURL = extras.getString(EXTRAS_THUMBNAIL_URL);
+		String mediaType = extras.getString(EXTRAS_MEDIA_TYPE);
+		String thumbnailURL = extras.getString(EXTRAS_THUMBNAIL_URL);
 		
 		if(mediaType == null || mediaType.equalsIgnoreCase("video")){
 			start_buffer_rate = 80;
@@ -72,9 +66,9 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 		pb = (ProgressBar) findViewById(R.id.probar);
 		downloadRateView = (TextView) findViewById(R.id.download_rate);
 		loadRateView = (TextView) findViewById(R.id.load_rate);
-		thumbnaiStation = (NetworkImageView) findViewById(R.id.thumbnail_station);
+        NetworkImageView thumbnaiStation = (NetworkImageView) findViewById(R.id.thumbnail_station);
 		
-		uri = getIntent().getData();
+		Uri uri = getIntent().getData();
 
 //		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		title = getIntent().getStringExtra(Intent.EXTRA_TITLE);
@@ -84,7 +78,7 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 		
 		if (mediaType != null && mediaType.equalsIgnoreCase("radio")) {
 			thumbnaiStation.setVisibility(View.VISIBLE);
-			imageLoader = MyVolley.getImageLoader();
+            ImageLoader imageLoader = MyVolley.getImageLoader();
 			thumbnaiStation.setImageUrl(thumbnailURL, imageLoader);
 		}
 

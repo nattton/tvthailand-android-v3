@@ -24,9 +24,9 @@ import com.google.ads.interactivemedia.v3.api.ImaSdkFactory;
 import com.google.ads.interactivemedia.v3.api.ImaSdkSettings;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.makathon.tvthailand.Application;
 import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.TVThailandApp;
-import com.makathon.tvthailand.TVThailandApp.TrackerName;
+import com.makathon.tvthailand.Application.TrackerName;
 import com.makathon.tvthailand.datasource.AppUtility;
 import com.makathon.tvthailand.otv.datasoruce.OTVEpisode;
 import com.makathon.tvthailand.otv.datasoruce.OTVPart;
@@ -57,8 +57,6 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.ads.interactivemedia.v3.api.Ad;
 
 public class VastPlayerActivity extends Activity implements AdErrorListener,
 		AdsLoadedListener, AdEventListener, CompleteCallback, OnClickListener,
@@ -144,7 +142,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 	
 	private void sendTracker()
 	{
-		Tracker t = ((TVThailandApp) getApplication())
+		Tracker t = ((Application) getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("VastPlayer");
 		t.send(new HitBuilders.AppViewBuilder().build());
@@ -219,7 +217,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 	}
 
 	protected void playVideo() {
-		Tracker t2 = ((TVThailandApp) getApplication())
+		Tracker t2 = ((Application) getApplication())
 				.getTracker(TrackerName.OTV_TRACKER);
 		t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(3, part.getNameTh()).build());
 		
@@ -322,7 +320,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 			isAdPlaying = true;
 
 	        //** Start countdown counter to skip ad **//
-	        skipAdCounter = new CountDownTimer(7000, 1000);
+	        skipAdCounter = new CountDownTimer(part.getSkipad(), 1000);
 	        skipAdCounter.Start();
 	        RefreshTimer();
 	        txtSkipCount.setVisibility(View.VISIBLE);
@@ -336,11 +334,11 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 	            		buttonSkip.setVisibility(View.VISIBLE);
 					}
 	            }
-	        }, 7000);
+	        }, part.getSkipad());
 			
 			titleBarRL.setVisibility(View.GONE);
 
-			Tracker t = ((TVThailandApp) getApplication())
+			Tracker t = ((Application) getApplication())
 					.getTracker(TrackerName.OTV_TRACKER);
 			t.setScreenName("VastPlayer");
 			t.send(new HitBuilders.AppViewBuilder().setCustomDimension(4, tagUrl).build());
@@ -351,7 +349,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 			isAdPlaying = false;
 			break;
 		case ALL_ADS_COMPLETED:
-			Tracker t2 = ((TVThailandApp) getApplication())
+			Tracker t2 = ((Application) getApplication())
 					.getTracker(TrackerName.OTV_TRACKER);
 			t2.setScreenName("VastPlayer");
 			t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(5, tagUrl).build());

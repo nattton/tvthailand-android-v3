@@ -13,16 +13,14 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.internal.in;
+import com.makathon.tvthailand.Application;
 import com.makathon.tvthailand.MyVolley;
 import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.TVThailandApp;
-import com.makathon.tvthailand.TVThailandApp.TrackerName;
+import com.makathon.tvthailand.Application.TrackerName;
 import com.makathon.tvthailand.datasource.AppUtility;
 import com.makathon.tvthailand.otv.datasoruce.OTVEpisode;
 import com.makathon.tvthailand.otv.datasoruce.OTVPart;
 import com.makathon.tvthailand.otv.datasoruce.OTVPartAdapter;
-import com.makathon.tvthailand.player.IMAPlayerActivity;
 import com.makathon.tvthailand.player.VastPlayerActivity;
 import com.makathon.tvthailand.player.VitamioVastPlayerActivity;
 
@@ -56,12 +54,12 @@ public class OTVPartActivity extends SherlockActivity implements OnItemClickList
 	
 	private void sendTracker(OTVEpisode episode) {
 		if (episode != null) {
-			Tracker t = ((TVThailandApp) getApplication())
+			Tracker t = ((Application) getApplication())
 					.getTracker(TrackerName.APP_TRACKER);
 			t.setScreenName("OTVPart");
 			t.send(new HitBuilders.AppViewBuilder().build());
 
-			Tracker t2 = ((TVThailandApp) getApplication())
+			Tracker t2 = ((Application) getApplication())
 					.getTracker(TrackerName.OTV_TRACKER);
 			t2.setScreenName("OTVPart");
 			t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, episode.getNameTh()).build());
@@ -87,8 +85,5 @@ public class OTVPartActivity extends SherlockActivity implements OnItemClickList
 			startActivity(intentVastPlayer);
 		}
 
-//        Intent intent = new Intent(OTVPartActivity.this, IMAPlayerActivity.class);
-//        startActivity(intent);
-		
 	}
 }

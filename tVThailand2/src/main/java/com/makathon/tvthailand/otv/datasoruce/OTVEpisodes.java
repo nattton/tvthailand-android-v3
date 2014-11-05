@@ -11,8 +11,8 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.makathon.tvthailand.Application;
 import com.makathon.tvthailand.MyVolley;
-import com.makathon.tvthailand.TVThailandApp;
 import com.makathon.tvthailand.datasource.OnLoadDataListener;
 import com.makathon.tvthailand.datasource.Program;
 
@@ -30,7 +30,7 @@ public class OTVEpisodes {
 	public void loadOTVEpisodes(Program show) {
 		notifyLoadStart();
 		String url = (show.getOtvApiName().equals("Ch7")) ? String.format("%s/Ch7/content/%s/%s", OTVConfig.BASE_URL, OTVConfig.APP_ID, show.getOtvId()) 
-				: String.format("%s/Content/index/%s/%s/%s/%s/", OTVConfig.BASE_URL, OTVConfig.APP_ID, TVThailandApp.getAppVersion(), OTVConfig.API_VERSION, show.getOtvId());
+				: String.format("%s/Content/index/%s/%s/%s/%s/", OTVConfig.BASE_URL, OTVConfig.APP_ID, Application.getAppVersion(), OTVConfig.API_VERSION, show.getOtvId());
 		JsonObjectRequest loadEpisodeRequest = new JsonObjectRequest(Method.GET, url, null, reqSuccessListener(), reqErrorListener());
 		loadEpisodeRequest.setShouldCache(false);
 		mRequestQueue.add(loadEpisodeRequest);
@@ -79,6 +79,7 @@ public class OTVEpisodes {
 					
 					if (jObjPart.has("media_code") && jObjPart.getString("media_code").equals("1001")) {
 						part.setVastUrl(jObjPart.has("stream_url") ? jObjPart.getString("stream_url") : null);
+                        part.setSkipad(jObjPart.has("skipad") ? jObjPart.getInt("skipad") : 8);
 					}
 					else if (jObjPart.has("media_code")) {
 						part.setPartId(jObjPart.has("id") ? jObjPart.getString("id") : EMPTY_STRING);
