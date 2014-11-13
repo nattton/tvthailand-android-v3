@@ -37,13 +37,15 @@ import com.makathon.tvthailand.R;
 import com.makathon.tvthailand.player.TrackingVideoView.CompleteCallback;
 import com.makathon.tvthailand.utils.CountDownTimer;
 
-import java.lang.reflect.InvocationTargetException;
 
 public class VastContentPlayerActivity extends Activity implements AdErrorListener, AdsLoadedListener, AdEventListener, CompleteCallback, OnClickListener {
 
+    public static final String EXTRAS_TAG_URL = "EXTRAS_TAG_URL";
+    public static final String EXTRAS_SKIP_TIME = "EXTRAS_SKIP_TIME";
     public static final String EXTRAS_CONTENT_URL = "EXTRAS_CONTENT_URL";
 
-    private String tagUrl = "http://img.vserv.mobi/vast/6372f97c79807c85110999d2c7a9ae1b.xml";
+    private String tagUrl;
+    private int skipTime;
     private String contentUrl;
 
     protected AdDisplayContainer container;
@@ -82,6 +84,8 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
         Intent i = getIntent();
 
         contentUrl = i.getStringExtra(EXTRAS_CONTENT_URL);
+        tagUrl = i.getStringExtra(EXTRAS_TAG_URL);
+        skipTime = i.getIntExtra(EXTRAS_SKIP_TIME, 7000);
 
         initUi();
 
@@ -160,8 +164,9 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
     }
 
     protected void playVideo() {
-        txtSkipCount.setVisibility(View.GONE);
+        titleBarRL.setVisibility(View.GONE);
         buttonSkip.setVisibility(View.GONE);
+        txtSkipCount.setVisibility(View.GONE);
         videoPlayer.playContent(contentUrl);
     }
 
@@ -213,7 +218,7 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
                 isAdPlaying = true;
 
                 //** Start countdown counter to skip ad **//
-                skipAdCounter = new CountDownTimer(7000, 1000);
+                skipAdCounter = new CountDownTimer(skipTime, 1000);
                 skipAdCounter.Start();
                 RefreshTimer();
                 txtSkipCount.setVisibility(View.VISIBLE);
@@ -227,7 +232,7 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
                             buttonSkip.setVisibility(View.VISIBLE);
                         }
                     }
-                }, 7000);
+                }, skipTime);
 
                 break;
             case COMPLETED:
@@ -247,7 +252,7 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
                 if (!contentStarted) {
                     buttonSkip.setVisibility(View.VISIBLE);
                 }
-
+                playVideo();
                 break;
             case PAUSED:
                 isAdPlaying = false;

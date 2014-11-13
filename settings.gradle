@@ -1,2 +1,1 @@
 include ':androidViewPagerIndicator', 'tVThailand2', ':facebook', ':vitamio'
-include ':androidV2SDKLibrary'

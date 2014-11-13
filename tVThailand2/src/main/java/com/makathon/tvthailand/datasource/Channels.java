@@ -19,7 +19,7 @@ import android.content.Context;
 
 public class Channels {
 	
-	private ArrayList<Channel> channels = new ArrayList<Channel>();
+	private ArrayList<Channel> channels = new ArrayList<>();
 	
 	public interface OnChannelChangeListener {
 		void onChannelChange(Channels channels);
@@ -34,6 +34,7 @@ public class Channels {
 	}
 	
 	public Channels getInstance(Context context) {
+        this.mContext = context;
 		return AppUtility.getInstance().getChannels(this.mContext);
 	}
 	

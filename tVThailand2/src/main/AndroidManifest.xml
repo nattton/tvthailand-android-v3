@@ -11,11 +11,6 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-
-    <!--
-      IMPORTANT: Change "com.parse.starter.permission.C2D_MESSAGE" in the lines below
-      to match your app's package name + ".permission.C2D_MESSAGE".
-    -->
     <permission android:protectionLevel="signature"
         android:name="com.makathon.tvthailand.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.makathon.tvthailand.permission.C2D_MESSAGE" />
@@ -239,6 +234,7 @@
                 <category android:name="com.makathon.tvthailand" />
             </intent-filter>
         </receiver>
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="3120d8f68ae38afbc965e336f679243187ec8cd9"/>
     </application>
 
 </manifest>

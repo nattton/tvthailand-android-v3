@@ -16,18 +16,18 @@
 
     <bool name="ga_debug">true</bool>
 
-    <string name="com.makathon.tvthailand2.MainActivity">Main</string>
-    <string name="com.makathon.tvthailand2.ProgramActivity">Program</string>
-    <string name="com.makathon.tvthailand2.EpisodeActivity">EP</string>
-    <string name="com.makathon.tvthailand2.PartActivity">Part</string>
-    <string name="com.makathon.tvthailand2.SearchProgramActivity">Search</string>
-    <string name="com.makathon.tvthailand2.MoreDetailActivity">MoreDetail</string>
-    <string name="com.makathon.tvthailand2.LargeThumbnailActivity">LargeThumbnail</string>
-    <string name="com.makathon.tvthailand2.ProgramLoaderActivity">ProgramLoader</string>
+    <string name="com.makathon.tvthailand.MainActivity">Main</string>
+    <string name="com.makathon.tvthailand.ProgramActivity">Program</string>
+    <string name="com.makathon.tvthailand.EpisodeActivity">EP</string>
+    <string name="com.makathon.tvthailand.PartActivity">Part</string>
+    <string name="com.makathon.tvthailand.SearchProgramActivity">Search</string>
+    <string name="com.makathon.tvthailand.MoreDetailActivity">MoreDetail</string>
+    <string name="com.makathon.tvthailand.LargeThumbnailActivity">LargeThumbnail</string>
+    <string name="com.makathon.tvthailand.ProgramLoaderActivity">ProgramLoader</string>
     <!-- Player Activity -->
-    <string name="com.makathon.tvthailand2.player.YoutubePlayerViewActivity">YoutubePlayer</string>
-    <string name="com.makathon.tvthailand2.player.VideoPlayerActivity">VideoPlayer</string>
-    <string name="com.makathon.tvthailand2.player.VastPlayerActivity">VastPlayerActivity</string>
+    <string name="com.makathon.tvthailand.player.YoutubePlayerViewActivity">YoutubePlayer</string>
+    <string name="com.makathon.tvthailand.player.VideoPlayerActivity">VideoPlayer</string>
+    <string name="com.makathon.tvthailand.player.VastPlayerActivity">VastPlayerActivity</string>
     <!-- OTV Activity -->
     <string name="th.co.otv.OTVShowActivity">OTVShow</string>
     <string name="th.co.otv.OTVShowListActivity">OTVShowList</string>

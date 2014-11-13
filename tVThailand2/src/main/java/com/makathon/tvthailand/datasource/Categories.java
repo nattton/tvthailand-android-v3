@@ -22,7 +22,7 @@ public class Categories {
 	
 	private RequestQueue mRequestQueue;
 	
-	private ArrayList<Category> categories = new ArrayList<Category>();
+	private ArrayList<Category> categories = new ArrayList<>();
 	
 	public interface OnCategoryChangeListener {
 		void onCategoryChange(Categories categories);
@@ -35,6 +35,7 @@ public class Categories {
 	}
 	
 	public Categories getInstance(Context context) {
+        this.mContext = context;
 		return AppUtility.getInstance().getCategories(this.mContext);
 	}
 	
@@ -45,7 +46,7 @@ public class Categories {
 	}
 	
 	public void loadCategory() {	
-		String url = String.format("%s/category?device=android", AppUtility.BASE_URL);
+		String url = String.format("%s/category?device=android&time=%s", AppUtility.BASE_URL, AppUtility.getCurrentTime());
 		JsonObjectRequest loadCategoryRequest = new JsonObjectRequest(Method.GET, url, null, reqSuccessListener(), reqErrorListener());
 		mRequestQueue.add(loadCategoryRequest);
 	}

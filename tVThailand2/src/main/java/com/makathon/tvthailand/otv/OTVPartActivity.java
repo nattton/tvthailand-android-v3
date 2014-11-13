@@ -39,6 +39,9 @@ public class OTVPartActivity extends SherlockActivity implements OnItemClickList
 		mImageLoader = MyVolley.getImageLoader();
 
 		episode = AppUtility.getEpisodeSelected();
+
+        if (episode == null) finish();
+
 		mParts = episode.getParts();
 		
 		setTitle(episode.getNameTh() + "  " + episode.getDate());

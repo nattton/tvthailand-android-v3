@@ -1,4 +1,14 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/repo' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 android {
 
@@ -9,8 +19,8 @@ android {
         applicationId "com.makathon.tvthailand"
         minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
-        versionCode 111
-        versionName "2.4.8"
+        versionCode 113
+        versionName "2.4.10"
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_7
             targetCompatibility JavaVersion.VERSION_1_7
@@ -28,13 +38,20 @@ android {
     }
 }
 
+repositories{
+    flatDir{
+        dirs 'libs'
+    }
+    maven { url 'https://maven.fabric.io/repo' }
+}
+
 dependencies {
     compile 'com.android.support:support-v4:21'
-    compile 'com.mcxiaoke.volley:library:1.0.6'
+    compile 'com.mcxiaoke.volley:library:1.0.8'
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     compile 'com.google.android.gms:play-services:6.1.71'
     compile 'com.parse.bolts:bolts-android:1.1.2'
-    compile project(':androidV2SDKLibrary')
+    compile(name: 'VservAdSDK', ext: 'aar')
     compile project(':androidViewPagerIndicator')
     compile project(':facebook')
     compile project(':vitamio')
@@ -46,4 +63,7 @@ dependencies {
     compile files('libs/YouTubeAndroidPlayerApi.jar')
     compile files('libs/Parse-1.7.1.jar')
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.0.1@aar') {
+        transitive = true;
+    }
 }

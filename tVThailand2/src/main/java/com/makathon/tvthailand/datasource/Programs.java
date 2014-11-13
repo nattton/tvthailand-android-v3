@@ -26,7 +26,7 @@ public class Programs {
 	private static final String TAG = "Programs";
 	private Context mContext;
 	private RequestQueue mRequestQueue;
-	private ArrayList<Program> programs = new ArrayList<Program>();
+	private ArrayList<Program> programs = new ArrayList<>();
 	private boolean loading = false;
 	private boolean last = false;
 
@@ -119,7 +119,7 @@ public class Programs {
 		loading = true;
 		
 		notifyLoadStart();
-		String url = String.format("%s/category/%s/%d?device=android&lr=1", AppUtility.BASE_URL, id, start);
+		String url = String.format("%s/category/%s/%d?device=android&time=%s", AppUtility.BASE_URL, id, start, AppUtility.getCurrentTime());
 		JsonObjectRequest loadProgramRequest = new JsonObjectRequest(Method.GET, url, null, 
 				reqSuccessListenner(), reqErrorListener());
 		mRequestQueue.add(loadProgramRequest);
@@ -134,7 +134,7 @@ public class Programs {
 		loading = true;
 		
 		notifyLoadStart();
-		String url = String.format("%s/channel/%s/%d?device=android&lr=1", AppUtility.BASE_URL, id, start);
+		String url = String.format("%s/channel/%s/%d?device=android&time=%s", AppUtility.BASE_URL, id, start, AppUtility.getCurrentTime());
 		JsonObjectRequest loadProgramRequest = new JsonObjectRequest(Method.GET, url, null, 
 				reqSuccessListenner(), reqErrorListener());
 		mRequestQueue.add(loadProgramRequest);
@@ -155,8 +155,8 @@ public class Programs {
 		}
 		
 		notifyLoadStart();
-		String url = String.format("%s/search/%d?&keyword=%s&device=android&lr=1",
-				AppUtility.BASE_URL, start, keyword);
+		String url = String.format("%s/search/%d?&keyword=%s&device=android&time=%s",
+				AppUtility.BASE_URL, start, keyword, AppUtility.getCurrentTime());
 		JsonObjectRequest loadProgramRequest = new JsonObjectRequest(Method.GET, url, null, 
 				reqSuccessListenner(), reqErrorListener());
 		mRequestQueue.add(loadProgramRequest);

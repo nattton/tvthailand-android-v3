@@ -125,7 +125,7 @@ public class AppUtility extends Application {
 
 	static final Time today = new Time(Time.getCurrentTimezone());
 
-	public String getCurrentTime() {
+	public static String getCurrentTime() {
 		today.setToNow();
 		return today.format("%Y%m%d%H%M");
 	}

@@ -37,7 +37,7 @@ import com.makathon.tvthailand.MyVolley;
 import com.makathon.tvthailand.datasource.AppUtility;
 
 public class InHouseAdView implements OnTouchListener, Handler.Callback {
-	private final String PREF_NAME = "com.makathon.tvthailand2.ads.InHouseAdView";
+	private final String PREF_NAME = "com.makathon.tvthailand.ads.InHouseAdView";
 	private static final int CLICK_ON_WEBVIEW = 1;
 	private static final int CLICK_ON_URL = 2;
 	

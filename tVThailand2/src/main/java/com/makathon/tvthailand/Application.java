@@ -1,5 +1,7 @@
 package com.makathon.tvthailand;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import java.util.HashMap;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -38,6 +40,7 @@ public class Application extends android.app.Application {
     @Override
     public void onCreate() {
     	super.onCreate();
+    	Fabric.with(this, new Crashlytics());
 
         Parse.initialize(this, "EaoAvSNJcTy2YYs9rpl3qVnWtODDl2PNW4FArdLI", "CBdebyTPRHrxRqQPWNm5kPrhbZLuuKAFMCDE0Fbz");
         ParseInstallation.getCurrentInstallation().saveInBackground();

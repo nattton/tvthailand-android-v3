@@ -28,12 +28,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
@@ -42,7 +44,7 @@ import android.widget.Toast;
 
 @SuppressLint({ "DefaultLocale", "SetJavaScriptEnabled" })
 public class MyBannerView extends LinearLayout {
-	private final String PREF_NAME = "com.makathon.tvthailand2.ads.KapookBannerView";
+	private final String PREF_NAME = "com.makathon.tvthailand.ads.KapookBannerView";
 //	private static final String UserAgentDesktop = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36";
 	
 	private final String adsApiUrl = "http://tv.makathon.com/api2/advertise?device=android";
@@ -98,8 +100,8 @@ public class MyBannerView extends LinearLayout {
 		webViewShow.setWebChromeClient(new WebChromeClient(){
 			@Override
 			public void onProgressChanged(WebView view, int newProgress) {
-				System.out.println(newProgress);
 				if (newProgress == 100) {
+                    Log.d("webViewShow", "load complete");
 					parentView.setVisibility(View.VISIBLE);
 				}
 				super.onProgressChanged(view, newProgress);
@@ -110,9 +112,20 @@ public class MyBannerView extends LinearLayout {
 		webViewShow.setHorizontalScrollBarEnabled(false);
 		webViewShow.getSettings().setJavaScriptEnabled(true);
 		webViewShow.getSettings().setAppCacheEnabled(true);
-		
-		webView1px.getSettings().setJavaScriptEnabled(true);
-		webView1px.getSettings().setUserAgentString(System.getProperty("http.agent"));
+
+        WebSettings webSettings1px = webView1px.getSettings();
+        webSettings1px.setJavaScriptEnabled(true);
+        webSettings1px.setAppCacheEnabled(false);
+        webSettings1px.setUserAgentString(System.getProperty("http.agent"));
+        webView1px.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                if (newProgress == 100) {
+                    Log.d("webView1px", "load complete");
+                }
+                super.onProgressChanged(view, newProgress);
+            }
+        });
 	}
 	
 	public void requestAds() {

@@ -20,7 +20,7 @@ import android.content.Context;
 
 public class Radios {
 	
-	private ArrayList<Radio> radios = new ArrayList<Radio>();
+	private ArrayList<Radio> radios = new ArrayList<>();
 	
 	public interface OnRadioChangeListener {
 		void onRadioChange(Radios radios);
@@ -35,6 +35,7 @@ public class Radios {
 	}
 	
 	public Radios getInstance(Context context) {
+        this.mContext = context;
 		return AppUtility.getInstance().getRadios(this.mContext);
 	}
 	
@@ -45,7 +46,7 @@ public class Radios {
 	}
 	
 	public void load() {
-		String url = String.format("%s/channel?device=android", AppUtility.BASE_URL);
+		String url = String.format("%s/channel?device=android&time=%s", AppUtility.BASE_URL, AppUtility.getCurrentTime());
 		JsonObjectRequest loadCategoryRequest = new JsonObjectRequest(Method.GET, url, null, reqSuccessListener(), reqErrorListener());
 		mRequestQueue.add(loadCategoryRequest);
 	}

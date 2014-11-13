@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.util.Log;
 
 public class Section {
-	private static final String PREF_NAME = "com.makathon.tvthailand2.datasource.Section";
+	private static final String PREF_NAME = "com.makathon.tvthailand.datasource.Section";
 	private static final String PREF_SECTION_TIME = "PREF_SECTION_TIME";
 	private static final String PREF_CAT_NAME = "PREF_CAT_NAME";
 	private static final String PREF_CH_NAME = "PREF_CH_NAME";
@@ -105,7 +105,7 @@ public class Section {
 	
 	private void loadSection(boolean shouldCache) {
 		notifyLoadStart();
-		String url = String.format("%s/section?device=android&lr=1", AppUtility.BASE_URL);
+		String url = String.format("%s/section?device=android&time=%s", AppUtility.BASE_URL, AppUtility.getCurrentTime());
 		JsonObjectRequest loadSectionRequest = new JsonObjectRequest(Method.GET, url, null, reqSuccessListener(), reqErrorListener());
 		loadSectionRequest.setShouldCache(shouldCache);
 		mRequestQueue.add(loadSectionRequest);

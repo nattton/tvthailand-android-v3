@@ -30,6 +30,8 @@ import com.makathon.tvthailand.R;
 import com.makathon.tvthailand.adapter.ProgramAdapter;
 import com.makathon.tvthailand.ads.InHouseAdView;
 import com.makathon.tvthailand.datasource.OnLoadDataListener;
+import com.makathon.tvthailand.datasource.PreRollAd;
+import com.makathon.tvthailand.datasource.PreRollAdFactory;
 import com.makathon.tvthailand.datasource.Program;
 import com.makathon.tvthailand.datasource.Programs;
 import com.makathon.tvthailand.datasource.Programs.OnProgramChangeListener;
@@ -231,15 +233,34 @@ public class ProgramActivity extends SherlockActivity implements
 		}
 	}
 
-	private void playVideo(String videoUrl) {
-//        Intent intentVideo = new Intent(ProgramActivity.this, VastContentPlayerActivity.class);
-//        intentVideo.putExtra(VastContentPlayerActivity.EXTRAS_CONTENT_URL, videoUrl);
-//        startActivity(intentVideo);
+	private void playVideo(final String videoUrl) {
+        final PreRollAdFactory preRollAdFactory = new PreRollAdFactory(this.getApplicationContext());
+        preRollAdFactory.setOnLoadListener(new PreRollAdFactory.OnLoadListener() {
+            @Override
+            public void onStart() {
 
-		Intent intentVideo = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
-		intentVideo.putExtra(Intent.EXTRA_TITLE, title);
-		intentVideo.setDataAndType(Uri.parse(videoUrl), "video/*");
-		startActivity(intentVideo);
+            }
+
+            @Override
+            public void onFinish() {
+                Intent intentVideo = new Intent(ProgramActivity.this, VastContentPlayerActivity.class);
+                intentVideo.putExtra(VastContentPlayerActivity.EXTRAS_CONTENT_URL, videoUrl);
+
+                PreRollAd ad = preRollAdFactory.getPreRollAd();
+                if (ad != null) {
+                    intentVideo.putExtra(VastContentPlayerActivity.EXTRAS_TAG_URL, ad.getUrl());
+                    intentVideo.putExtra(VastContentPlayerActivity.EXTRAS_SKIP_TIME, ad.getSkipTime());
+                }
+
+                startActivity(intentVideo);
+            }
+        });
+        preRollAdFactory.load();
+
+//		Intent intentVideo = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
+//		intentVideo.putExtra(Intent.EXTRA_TITLE, title);
+//		intentVideo.setDataAndType(Uri.parse(videoUrl), "video/*");
+//		startActivity(intentVideo);
 	}
 	
 	@Override

@@ -217,13 +217,16 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 	}
 
 	protected void playVideo() {
+        titleBarRL.setVisibility(View.GONE);
+        buttonSkip.setVisibility(View.GONE);
+        txtSkipCount.setVisibility(View.GONE);
+
 		Tracker t2 = ((Application) getApplication())
 				.getTracker(TrackerName.OTV_TRACKER);
 		t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(3, part.getNameTh()).build());
 		
 		if (mediaCode.equals("1000")) {
 			Log.e("VAST Activity", "Playing video");
-			buttonSkip.setVisibility(View.GONE);
 			videoPlayer.playContent(contentUrl);
 			videoPlayer.setTitle(part.getNameTh());
 			contentStarted = true;
@@ -236,7 +239,6 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 			String iframeData = Html.fromHtml(part.getStreamUrl()).toString();
 
 			webViewPlayer.loadDataWithIFrame(iframeData);
-			videoPlayer.setVisibility(View.GONE);
 			webViewPlayer.setVisibility(View.VISIBLE);
 			buttonSkip.setVisibility(View.GONE);
 			
@@ -353,7 +355,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 					.getTracker(TrackerName.OTV_TRACKER);
 			t2.setScreenName("VastPlayer");
 			t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(5, tagUrl).build());
-			
+
 		case SKIPPED:
 			isAdStarted = false;
 			isAdPlaying = false;

@@ -28,7 +28,7 @@ public class Episodes {
 
 	private String programId;
 	private Program program;
-	private ArrayList<Episode> episodes = new ArrayList<Episode>();
+	private ArrayList<Episode> episodes = new ArrayList<>();
 	private boolean loading = false;
 	private boolean last = false;
 
@@ -118,7 +118,7 @@ public class Episodes {
 		loading = true;
 		
 		notifyLoadStart();
-		String url = String.format("%s/episode/%s/%d?device=android", AppUtility.BASE_URL, programId, start);
+		String url = String.format("%s/episode/%s/%d?device=android&time=%s", AppUtility.BASE_URL, this.programId, start, AppUtility.getCurrentTime());
 		JsonObjectRequest loadEpisodeRequest = new JsonObjectRequest(Method.GET, url, null, reqSuccessListener(), reqErrorListener());
 		loadEpisodeRequest.setShouldCache(shouldCache);
 		mRequestQueue.add(loadEpisodeRequest);
