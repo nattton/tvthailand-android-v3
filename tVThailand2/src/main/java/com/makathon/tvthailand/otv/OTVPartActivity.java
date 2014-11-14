@@ -25,9 +25,10 @@ import com.makathon.tvthailand.player.VastPlayerActivity;
 import com.makathon.tvthailand.player.VitamioVastPlayerActivity;
 
 public class OTVPartActivity extends SherlockActivity implements OnItemClickListener {
-	private ImageLoader mImageLoader;
+	public static String EXTRAS_OTV_EPISODE = "EXTRAS_OTV_EPISODE";
+
+    private ImageLoader mImageLoader;
 	private OTVEpisode episode;
-	private ArrayList<OTVPart> mParts;
 	private OTVPartAdapter mAdapter;
 	
 	@Override
@@ -38,21 +39,17 @@ public class OTVPartActivity extends SherlockActivity implements OnItemClickList
 		
 		mImageLoader = MyVolley.getImageLoader();
 
-		episode = AppUtility.getEpisodeSelected();
+        Intent i = getIntent();
+        episode = i.getParcelableExtra(EXTRAS_OTV_EPISODE);
+        setTitle(episode.getNameTh() + "  " + episode.getDate());
 
-        if (episode == null) finish();
+        mAdapter = new OTVPartAdapter(this, episode.getParts(), R.layout.part_list_item, mImageLoader);
 
-		mParts = episode.getParts();
-		
-		setTitle(episode.getNameTh() + "  " + episode.getDate());
+        ListView listview = (ListView) findViewById(R.id.listView);
+        listview.setAdapter(mAdapter);
+        listview.setOnItemClickListener(this);
 
-		mAdapter = new OTVPartAdapter(this, mParts, R.layout.part_list_item, mImageLoader);
-		
-		ListView listview = (ListView) findViewById(R.id.listView);
-		listview.setAdapter(mAdapter);
-		listview.setOnItemClickListener(this);
-		
-		sendTracker(episode);
+        sendTracker(episode);
 	}
 	
 	private void sendTracker(OTVEpisode episode) {
@@ -72,21 +69,18 @@ public class OTVPartActivity extends SherlockActivity implements OnItemClickList
 	@Override
 	public void onItemClick(AdapterView<?> parent, View v, int position,
 			long id) {
-		
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
-		{
-			Intent intentVastPlayer = new Intent(OTVPartActivity.this, VastPlayerActivity.class);
-			intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_PART_POSITION, position);
-			intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_PARTS, mParts);
-			startActivity(intentVastPlayer);
-		}
-		else
-		{
-			Intent intentVastPlayer = new Intent(OTVPartActivity.this, VitamioVastPlayerActivity.class);
-			intentVastPlayer.putExtra(VitamioVastPlayerActivity.EXTRAS_OTV_PART_POSITION, position);
-			intentVastPlayer.putExtra(VitamioVastPlayerActivity.EXTRAS_OTV_PARTS, mParts);
-			startActivity(intentVastPlayer);
+
+        Intent intentVastPlayer;
+
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+			intentVastPlayer = new Intent(OTVPartActivity.this, VastPlayerActivity.class);
+
+		} else {
+			intentVastPlayer = new Intent(OTVPartActivity.this, VitamioVastPlayerActivity.class);
 		}
 
+        intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_EPISODE, episode);
+        intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_PART_POSITION, position);
+        startActivity(intentVastPlayer);
 	}
 }

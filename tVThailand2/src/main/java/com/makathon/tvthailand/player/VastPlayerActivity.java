@@ -62,7 +62,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 		AdsLoadedListener, AdEventListener, CompleteCallback, OnClickListener,
 		OnLongClickListener, OnTitleBarListener {
 
-	public static final String EXTRAS_OTV_PARTS = "EXTRAS_OTV_PARTS";
+    public static String EXTRAS_OTV_EPISODE = "EXTRAS_OTV_EPISODE";
 	public static final String EXTRAS_OTV_PART_POSITION = "EXTRAS_OTV_PART_POSITION";
 
 	private String mediaCode;
@@ -114,11 +114,9 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 				"WakeLockPlayer");
 		wakeLock.acquire();
 
-		
-		mEpisode = AppUtility.getEpisodeSelected();
+        Intent i = getIntent();
+        mEpisode = i.getParcelableExtra(EXTRAS_OTV_EPISODE);
 		mParts = mEpisode.getParts();
-
-		Intent i = getIntent();
 		position = i.getIntExtra(EXTRAS_OTV_PART_POSITION, 0);
 		updateValue(position);
 		initUi();

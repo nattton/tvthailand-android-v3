@@ -60,7 +60,7 @@ public class VitamioVastPlayerActivity extends Activity implements AdErrorListen
 		AdsLoadedListener, AdEventListener, CompleteCallback, OnClickListener,
 		OnLongClickListener, OnTitleBarListener {
 
-	public static final String EXTRAS_OTV_PARTS = "EXTRAS_OTV_PARTS";
+    public static String EXTRAS_OTV_EPISODE = "EXTRAS_OTV_EPISODE";
 	public static final String EXTRAS_OTV_PART_POSITION = "EXTRAS_OTV_PART_POSITION";
 
 	private String mediaCode;
@@ -106,11 +106,10 @@ public class VitamioVastPlayerActivity extends Activity implements AdErrorListen
 		}
 
 		setContentView(R.layout.vast_player);
-		
-		mEpisode = AppUtility.getEpisodeSelected();
-		mParts = mEpisode.getParts();
 
 		Intent i = getIntent();
+        mEpisode = i.getParcelableExtra(EXTRAS_OTV_EPISODE);
+        mParts = mEpisode.getParts();
 		position = i.getIntExtra(EXTRAS_OTV_PART_POSITION, 0);
 		updateValue(position);
 		initUi();

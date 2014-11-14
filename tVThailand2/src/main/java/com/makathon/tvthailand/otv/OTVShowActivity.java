@@ -384,10 +384,8 @@ public class OTVShowActivity extends SherlockActivity implements
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		OTVEpisode ep = mOTVEpisodes.get(position - 1);
-		AppUtility.setEpisodeSelected(ep);
-
 		Intent intent = new Intent(this, OTVPartActivity.class);
-
+        intent.putExtra(OTVPartActivity.EXTRAS_OTV_EPISODE, ep);
 		startActivity(intent);
 
 	}

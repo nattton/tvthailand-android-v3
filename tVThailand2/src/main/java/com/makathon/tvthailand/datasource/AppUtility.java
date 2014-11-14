@@ -1,14 +1,11 @@
 package com.makathon.tvthailand.datasource;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.makathon.tvthailand.otv.datasoruce.OTVEpisode;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -26,16 +23,6 @@ public class AppUtility extends Application {
 
 	public static synchronized AppUtility getInstance() {
 		return instance;
-	}
-
-	private static OTVEpisode episodeSelected = null;
-
-	public static OTVEpisode getEpisodeSelected() {
-		return episodeSelected;
-	}
-
-	public static void setEpisodeSelected(OTVEpisode episodeSelected) {
-		AppUtility.episodeSelected = episodeSelected;
 	}
 
 	@Override

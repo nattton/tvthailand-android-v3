@@ -198,7 +198,7 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 
 	private void initiazeProgram() {
 		Intent i = getIntent();
-		program = (Program)i.getParcelableExtra(EXTRAS_PROGRAM);
+		program = i.getParcelableExtra(EXTRAS_PROGRAM);
 	}
 
 	private void setUpHeaderView(Program program) {

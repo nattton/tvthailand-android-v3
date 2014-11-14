@@ -27,8 +27,6 @@ import com.makathon.tvthailand.R;
 public class VideoPlayerActivity extends Activity implements OnInfoListener,
 		OnBufferingUpdateListener {
 	
-	public static final String EXTRAS_MEDIA_TYPE = "EXTRAS_MEDIA_TYPE";
-	
 	private Uri uri;
 	private String title;
 	private VideoView mVideoView;
@@ -37,25 +35,13 @@ public class VideoPlayerActivity extends Activity implements OnInfoListener,
 	
 	private ProgressBar pb;
 	private TextView downloadRateView, loadRateView;
-	private String mediaType;
 	private int start_buffer_rate;
 
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		
-		Bundle extras = getIntent().getExtras();
 
-        try {
-            mediaType = extras.getString(EXTRAS_MEDIA_TYPE, null);
-            if(mediaType == null || mediaType.equalsIgnoreCase("video")){
-                start_buffer_rate = 80;
-            } else {
-                start_buffer_rate = 10;
-            }
-        } catch (Exception ex) {
-            start_buffer_rate = 80;
-        }
+        start_buffer_rate = 80;
 
 		if (!LibsChecker.checkVitamioLibs(this)) {
 			return;
