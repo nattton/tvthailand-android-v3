@@ -58,6 +58,7 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 	private ListView epList;
 	
 	private ProgressBar progressBar;
+    private ProgressDialog progressDialog;
 
 	private EpisodeAdapter mAdapter;
 	private Episodes mEpisodes;
@@ -369,11 +370,13 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 						episode.getVideos(), episode.getSrcType(),
 						episode.getPassword());
                 parts.setOnLoadListener(new Parts.OnLoadListener() {
-                    ProgressDialog progressDialog;
+
                     @Override
                     public void onStart() {
-                        progressDialog = ProgressDialog.show(EpisodeActivity.this, "",
-                                "Loading, Please wait...", true);
+                        if (progressDialog == null)
+                            progressDialog = ProgressDialog.show(EpisodeActivity.this, "",
+                                    "Loading, Please wait...", true);
+                        else progressDialog.show();
                     }
 
                     @Override

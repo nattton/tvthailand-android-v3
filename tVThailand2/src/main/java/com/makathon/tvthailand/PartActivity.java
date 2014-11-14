@@ -28,16 +28,9 @@ public class PartActivity extends SherlockActivity{
 	public static final String EXTRAS_SRC_TYPE = "EXTRAS_SRC_TYPE";
 	public static final String EXTRAS_PASSWORD = "EXTRAS_PASSWORD";
 	static final String EXTRAS_ICON = "EXTRAS_ICON";
-	
-	private String title;
-	private String[] videos;
-	private String srcType;
-	private String password;
-	private String icon;
-	
-	private ImageLoader mImageLoader;
+
 	private Parts mParts;
-	private PartAdapter mAdapter;
+    private ProgressDialog progressDialog;
 	
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
@@ -47,15 +40,15 @@ public class PartActivity extends SherlockActivity{
 		setContentView(R.layout.part_list_view);
 		
 		Bundle bundle = getIntent().getExtras();
-		title = bundle.getString(EXTRAS_TITLE);
-		videos = bundle.getStringArray(EXTRAS_VIDEOS);
-		srcType = bundle.getString(EXTRAS_SRC_TYPE);
-		password = bundle.getString(EXTRAS_PASSWORD);
-		icon = bundle.getString(EXTRAS_ICON);
+        String title = bundle.getString(EXTRAS_TITLE);
+        String[] videos = bundle.getStringArray(EXTRAS_VIDEOS);
+        String srcType = bundle.getString(EXTRAS_SRC_TYPE);
+        String password = bundle.getString(EXTRAS_PASSWORD);
+        String icon = bundle.getString(EXTRAS_ICON);
 		
 		setTitle(title);
-		
-		mImageLoader = MyVolley.getImageLoader();
+
+        ImageLoader mImageLoader = MyVolley.getImageLoader();
         mImageLoader.get(icon, new ImageListener() {
 			
 			@Override
@@ -71,16 +64,18 @@ public class PartActivity extends SherlockActivity{
 		});
 
 		mParts = new Parts(this, title, icon, videos, srcType, password);
-		
-		mAdapter = new PartAdapter(this, mParts,
+
+        PartAdapter mAdapter = new PartAdapter(this, mParts,
 				R.layout.part_list_item, mImageLoader);
 
         mParts.setOnLoadListener(new Parts.OnLoadListener() {
-            ProgressDialog progressDialog;
+
             @Override
             public void onStart() {
-                progressDialog = ProgressDialog.show(PartActivity.this, "",
-                        "Loading, Please wait...", true);
+                if (progressDialog == null)
+                    progressDialog = ProgressDialog.show(PartActivity.this, "", "Loading, Please wait...", true);
+                else
+                    progressDialog.show();
             }
 
             @Override
