@@ -351,7 +351,6 @@ public class Parts {
 			public void onErrorResponse(VolleyError error) {
                 notifyFinish();
                 notifyError("Can't play video. please try again.");
-				Log.e("response", error.getMessage());
 			}
 		};
 	}
