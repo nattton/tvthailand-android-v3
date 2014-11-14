@@ -1,12 +1,14 @@
 package com.makathon.tvthailand;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.android.volley.VolleyError;
@@ -67,11 +69,30 @@ public class PartActivity extends SherlockActivity{
 					getSupportActionBar().setIcon(new BitmapDrawable(getResources(), response.getBitmap()));
 			}
 		});
-		
+
 		mParts = new Parts(this, title, icon, videos, srcType, password);
 		
 		mAdapter = new PartAdapter(this, mParts,
 				R.layout.part_list_item, mImageLoader);
+
+        mParts.setOnLoadListener(new Parts.OnLoadListener() {
+            ProgressDialog progressDialog;
+            @Override
+            public void onStart() {
+                progressDialog = ProgressDialog.show(PartActivity.this, "",
+                        "Loading, Please wait...", true);
+            }
+
+            @Override
+            public void onFinish() {
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(PartActivity.this, message, Toast.LENGTH_LONG).show();
+            }
+        });
 
 		ListView listview = (ListView) findViewById(R.id.listView);
 		listview.setAdapter(mAdapter);
@@ -85,103 +106,9 @@ public class PartActivity extends SherlockActivity{
 			}
 		});
 		
-//		setUpAd();
-		
 		Tracker t = ((Application)getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("Part");
 		t.send(new HitBuilders.AppViewBuilder().build());
 	}
-	
-//	private void setUpAd() {
-//		adView = (FrameLayout) findViewById(R.id.ad_view);
-//		if (null != controller) {
-//			controller.stopRefresh();
-//			controller = null;
-//		}
-//		if (null != adView) {
-//			adView.removeAllViews();
-//		}
-//		
-//		manager = VservManager.getInstance(context);
-//		
-//		manager.getAd(BANNER_ZONE, AdOrientation.PORTRAIT, new AdLoadCallback() {
-//			
-//			@Override
-//			public void onNoFill() {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//			
-//			@Override
-//			public void onLoadSuccess(VservAd adObj) {
-////				Toast.makeText(YoutubePlayerViewActivity.this, "Success in getting Ad", Toast.LENGTH_SHORT).show();
-//				adObject = adObj;
-//				if(null != adView) {
-//					adView.removeAllViews();
-//				}
-//				/***** APPLICATION IF USE RENDER AD FUNCTIONALITY ******/
-//				if (null != controller) {
-//					controller = null;
-//				}
-//				
-//				if (null != adObject) {
-//					try {
-//						adObject.show(context, adView);
-//					} catch (ViewNotEmptyException e) {
-//						Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-//			
-//			@Override
-//			public void onLoadFailure() {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//		});
-//	}
-//	
-//	@Override
-//	protected void onActivityResult(int requestCode, int resultCode,
-//			Intent intent) {
-//		super.onActivityResult(requestCode, resultCode, intent);
-//
-//		if (requestCode == VservManager.REQUEST_CODE) {
-//			if (intent != null) {
-//
-//				if (intent.hasExtra("showAt")
-//						&& intent.getStringExtra("showAt").equalsIgnoreCase(
-//								"end")) {
-//
-//					VservManager.release(this);
-//					super.finish();
-//				}
-//			} else {
-//
-//				super.finish();
-//			}
-//		}
-//
-//	}
-//	
-//	@Override
-//	protected void onStart() {
-//
-//		if (null != controller) {
-//			controller.resumeRefresh();
-//		}
-//		super.onStart();
-//	}
-//
-//	@Override
-//	protected void onStop() {
-//
-//		if (null != controller) {
-//			controller.stopRefresh();
-//		}
-//		super.onStop();
-//	}
-
 }

@@ -99,7 +99,7 @@ public class ProgramActivity extends SherlockActivity implements
 		id = bundle.getString(EXTRAS_ID);
 		mode = bundle.getInt(EXTRAS_MODE);
 
-		mPrograms = new Programs(this);
+		mPrograms = new Programs();
 		mAdapter = new ProgramAdapter(this, mPrograms, R.layout.whatnew_grid_item, mImageLoader);
 
 		textViewNoContent = (TextView) findViewById(R.id.textViewNoContent);
@@ -281,18 +281,19 @@ public class ProgramActivity extends SherlockActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view,
 			int position, long id) {
-		Program program = mPrograms.get(position);
-		
-		if (program.isOTV() == 1) {
-			Intent intent = new Intent(ProgramActivity.this, OTVShowActivity.class);
-			intent.putExtra(EpisodeActivity.EXTRAS_PROGRAM, program);
-			startActivity(intent);
-		}
-		else {
-			Intent intent = new Intent(ProgramActivity.this, EpisodeActivity.class);
-			intent.putExtra(EpisodeActivity.EXTRAS_PROGRAM, program);
-			startActivity(intent);
-		}
+        if (mPrograms.size() > 0) {
+            Program program = mPrograms.get(position);
+
+            if (program.isOTV() == 1) {
+                Intent intent = new Intent(ProgramActivity.this, OTVShowActivity.class);
+                intent.putExtra(EpisodeActivity.EXTRAS_PROGRAM, program);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(ProgramActivity.this, EpisodeActivity.class);
+                intent.putExtra(EpisodeActivity.EXTRAS_PROGRAM, program);
+                startActivity(intent);
+            }
+        }
 	}
 
 

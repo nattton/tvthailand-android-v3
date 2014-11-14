@@ -86,7 +86,7 @@ public class AppUtility extends Application {
 
 	public Programs getTopHitsPrograms(Context context) {
 		if (topHitsPrograms == null) {
-			topHitsPrograms = new Programs(context);
+			topHitsPrograms = new Programs();
 		}
 		return topHitsPrograms;
 	}

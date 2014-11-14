@@ -24,7 +24,6 @@ import com.makathon.tvthailand.MyVolley;
 public class Programs {
 	private static final String EMPTY_STRING = "";
 	private static final String TAG = "Programs";
-	private Context mContext;
 	private RequestQueue mRequestQueue;
 	private ArrayList<Program> programs = new ArrayList<>();
 	private boolean loading = false;
@@ -47,8 +46,7 @@ public class Programs {
 		this.onProgramChangeListener = onProgramChangeListener;
 	}
 
-	public Programs(Context context) {
-		this.mContext = context;
+	public Programs() {
 		mRequestQueue = MyVolley.getRequestQueue();
 	}
 

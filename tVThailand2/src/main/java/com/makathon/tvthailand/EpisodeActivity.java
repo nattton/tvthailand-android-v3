@@ -3,6 +3,7 @@ package com.makathon.tvthailand;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -21,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -366,6 +368,24 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 				Parts parts = new Parts(this, episode.getTitle(), program.getThumbnail(),
 						episode.getVideos(), episode.getSrcType(),
 						episode.getPassword());
+                parts.setOnLoadListener(new Parts.OnLoadListener() {
+                    ProgressDialog progressDialog;
+                    @Override
+                    public void onStart() {
+                        progressDialog = ProgressDialog.show(EpisodeActivity.this, "",
+                                "Loading, Please wait...", true);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(EpisodeActivity.this, message, Toast.LENGTH_LONG).show();
+                    }
+                });
 				parts.playVideoPart(0);
 
 			} else {

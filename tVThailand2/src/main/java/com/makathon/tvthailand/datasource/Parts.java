@@ -4,16 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -21,7 +18,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.android.volley.AuthFailureError;
@@ -33,13 +29,10 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.youtube.player.YouTubeApiServiceUtil;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeIntents;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.makathon.tvthailand.R;
 
 public class Parts {
-	private ArrayList<Part> parts = new ArrayList<Part>();
+	private ArrayList<Part> parts = new ArrayList<>();
 	private String title;
 	private String[] videos;
 	private String srcType;
@@ -49,13 +42,31 @@ public class Parts {
 
 	private String selectedVideoId;
 
-    private ProgressDialog progressDialog;
-
 	public interface OnLoadListener {
 		void onStart();
 
 		void onFinish();
+
+        void onError(String message);
 	}
+
+    private OnLoadListener onLoadListener;
+
+    public void setOnLoadListener(OnLoadListener onLoadListener) {
+        this.onLoadListener = onLoadListener;
+    }
+
+    private void notifyStart() {
+        if (this.onLoadListener != null) this.onLoadListener.onStart();
+    }
+
+    private void notifyFinish() {
+        if (this.onLoadListener != null) this.onLoadListener.onFinish();
+    }
+
+    private void notifyError(String message) {
+        if (this.onLoadListener != null) this.onLoadListener.onError(message);
+    }
 
 	public interface OnEpisodeChangeListener {
 		void onEpisodeChange(Parts episodes);
@@ -68,11 +79,12 @@ public class Parts {
 		this.onEpisodeChangeListener = onEpisodeChangeListener;
 	}
 
+    private Activity mActivity;
 	private Context mContext;
 
-	public Parts(Context context, String title, String icon, String[] videos,
+	public Parts(Context mContext, String title, String icon, String[] videos,
 			String srcType, String password) {
-		this.mContext = context;
+        this.mContext = mContext;
 		setEpisode(title, icon, videos, srcType, password);
 	}
 
@@ -155,10 +167,7 @@ public class Parts {
 			mContext.startActivity(new Intent(Intent.ACTION_VIEW, uriVideo));
 		} else if (srcType.equals("12")) {
 			playVideo(videos[position]);
-		} else if (srcType.equals("13")) {
-			loadMThaiVideo(videos[position]);
-//            openMThaiVideo(videos[position]);
-		} else if (srcType.equals("14")) {
+		} else if (srcType.equals("13") || srcType.equals("14")) {
 			loadMThaiVideoFromWeb(videos[position]);
 //            openMThaiVideo(videos[position]);
 		} else if (srcType.equals("15")) {
@@ -185,11 +194,6 @@ public class Parts {
 				+ videoId);
 		if (dailymotionInstall()) {
 			mContext.startActivity(new Intent(Intent.ACTION_VIEW, uriVideo));
-
-			// Intent LaunchIntent =
-			// mContext.getPackageManager().getLaunchIntentForPackage("com.dailymotion.dailymotion");
-			// LaunchIntent.putExtra(Intent.ACTION_VIEW, uriVideo);
-			// mContext.startActivity(LaunchIntent);
 		} else {
 			AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
 			alert.setTitle("Recommended Dailymotion Player");
@@ -226,71 +230,8 @@ public class Parts {
 
 	private void playVideo(String path) {
 		startViedo(path);
-
-		// if (isOpenWith) {
-		// isOpenWith = false;
-		// startViedo(path);
-		// } else {
-		// Intent intent = new Intent(mContext, VideoViewActivity.class);
-		// intent.putExtra(VideoViewActivity.EXTRAS_TITLE, display);
-		// intent.putExtra(VideoViewActivity.EXTRAS_ICON, icon);
-		// intent.setData(Uri.parse(path));
-		// mContext.startActivity(intent);
-		// }
 	}
 
-	private int retryCount = 0;
-
-	private void loadMThaiVideo(final String videoKey) {
-		retryCount++;
-		if (retryCount > 3) {
-			retryCount = 0;
-			Toast.makeText(mContext, "Can't load video", Toast.LENGTH_LONG)
-					.show();
-			return;
-		}
-		String mthaiUrl = String.format(
-				"http://video.mthai.com/get_config_event.php?id=%s", videoKey);
-		AsyncHttpClient videoClient = new AsyncHttpClient();
-		videoClient.get(mthaiUrl, new JsonHttpResponseHandler() {
-			public void onSuccess(JSONObject jObj) {
-				try {
-					JSONArray jPlaylist = jObj.getJSONArray("playlist");
-					JSONObject jPlay = jPlaylist.getJSONObject(1);
-					String videoUrl = jPlay.getString("url");
-					String[] seperateUrl = videoUrl.split("/");
-					if (seperateUrl.length == 0)
-						return;
-					if (seperateUrl[seperateUrl.length - 1]
-							.startsWith(videoKey))
-						playVideo(videoUrl);
-					else
-						loadMThaiVideo(videoKey);
-
-				} catch (JSONException e) {
-//					Log.e("loadMVideo", "JSONException");
-					Toast.makeText(mContext, "Video have problem!!!",
-							Toast.LENGTH_LONG).show();
-				}
-			}
-
-			ProgressDialog dialog;
-
-			public void onStart() {
-				dialog = ProgressDialog.show(mContext, "",
-						"Loading, Please wait...", true);
-			}
-
-			public void onFinish() {
-				dialog.dismiss();
-			}
-
-			public void onFailure(Throwable error) {
-				Toast.makeText(mContext, "Loading fail!!!", Toast.LENGTH_LONG)
-						.show();
-			}
-		});
-	}
 
     private void openMThaiVideo(final String videoId) {
         String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", videoId);
@@ -312,68 +253,9 @@ public class Parts {
         dialog.show();
     }
 
-//	private void loadMThaiVideoFromWeb(final String videoKey) {
-//		retryCount++;
-//		if (retryCount > 3) {
-//			retryCount = 0;
-//			Toast.makeText(mContext, "Can't load video", Toast.LENGTH_LONG)
-//					.show();
-//			return;
-//		}
-//
-//		String mthaiUrl = String.format(
-//				"http://video.mthai.com/cool/player/%s.html", videoKey);
-//		AsyncHttpClient videoClient = new AsyncHttpClient();
-//		videoClient.setUserAgent(AppUtility.getUserAgentiOS(mContext));
-//		videoClient.get(mthaiUrl, new AsyncHttpResponseHandler() {
-//			@Override
-//			public void onSuccess(String content) {
-//				try {
-//					Document doc = Jsoup.parse(content);
-//					Elements elSource = doc.getElementsByTag("source");
-//					for (int i = 0; i < elSource.size(); i++) {
-//						Element eSrc = elSource.get(i);
-//						String videoUrl = eSrc.attr("src");
-//						String[] seperateUrl = videoUrl.split("/");
-//						if (seperateUrl.length == 0)
-//							return;
-//						if (seperateUrl[seperateUrl.length - 1]
-//								.startsWith(videoKey)) {
-//							playVideo(videoUrl);
-//							return;
-//						}
-//					}
-//
-//					loadMThaiVideoFromWeb(videoKey);
-//
-//				} catch (Exception e) {
-////					Log.e("loadMVideFromWeb", "Exception");
-//					Toast.makeText(mContext, "Video have problem!!!",
-//							Toast.LENGTH_LONG).show();
-//				}
-//			}
-//
-//			ProgressDialog dialog;
-//
-//			public void onStart() {
-//				dialog = ProgressDialog.show(mContext, "",
-//						"Loading, Please wait...", true);
-//			}
-//
-//			public void onFinish() {
-//				dialog.dismiss();
-//			}
-//
-//			public void onFailure(Throwable error) {
-//				Toast.makeText(mContext, "Loading fail!!!", Toast.LENGTH_LONG)
-//						.show();
-//			}
-//		});
-//	}
-
     private void loadMThaiVideoFromWeb(final String videoId) {
-        this.progressDialog = ProgressDialog.show(mContext, "",
-                "Loading, Please wait...", true);
+        notifyStart();
+
         selectedVideoId = videoId;
         String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", videoId);
 
@@ -393,8 +275,7 @@ public class Parts {
 
 	private void loadMThaiVideoWithPassword(final String videoId,
 			final String password) {
-        this.progressDialog = ProgressDialog.show(mContext, "",
-                "Loading, Please wait...", true);
+        notifyStart();
 
 		selectedVideoId = videoId;
 		String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", videoId);
@@ -402,14 +283,14 @@ public class Parts {
 		RequestQueue mRequestQueue = Volley.newRequestQueue(mContext);
 		StringRequest mthaiRequest = new StringRequest(Method.POST, mthaiUrl, createMthaiReqSuccessListener(), createMthaiReqErrorListener()) {
 			protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("clip_password", password);
                 return params;
             };
             
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-            	Map<String, String> params = new HashMap<String, String>();
+            	Map<String, String> params = new HashMap<>();
                 params.put("User-Agent", AppUtility.getUserAgentChrome());
             	return params;
             }
@@ -423,7 +304,8 @@ public class Parts {
 
 			@Override
 			public void onResponse(String response) {
-                progressDialog.dismiss();
+                notifyFinish();
+
 				String varKey = "{ mp4:  \"http";
 				int indexStart = response.indexOf(varKey) + varKey.length();
 				int indexEnd = response.indexOf("}", indexStart);
@@ -452,17 +334,7 @@ public class Parts {
 				}
 
                 if (password.length() > 0) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle("This video has password");
-                    builder.setMessage("Password : " + password);
-                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            openMThaiVideo(selectedVideoId);
-                        }
-                    });
-                    builder.setNegativeButton(R.string.cancel, null);
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                    openMThaiVideoPassword(selectedVideoId, password);
                 } else {
                     String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", selectedVideoId);
                     Uri uriVideo = Uri.parse(mthaiUrl);
@@ -477,9 +349,9 @@ public class Parts {
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
+                notifyFinish();
+                notifyError("Can't play video. please try again.");
 				Log.e("response", error.getMessage());
-				Toast.makeText(mContext, "Can't play video. please try again.", Toast.LENGTH_LONG).show();
 			}
 		};
 	}

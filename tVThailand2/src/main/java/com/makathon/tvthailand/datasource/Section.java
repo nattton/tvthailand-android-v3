@@ -55,52 +55,7 @@ public class Section {
 		load(false);
 	}
 	public void load(boolean isForce) {
-		loadSection(!false);
-		
-//		SharedPreferences prefs = mContext.getSharedPreferences(PREF_NAME,
-//				Context.MODE_PRIVATE);
-//		long time = prefs.getLong(PREF_SECTION_TIME, 0);
-//		Date nextUpdateTime = new Date(time + SECTION_TIME);
-//		Date currentTime = new Date();
-////		Log.d("loadSection", "currentTime : " + currentTime);
-////		Log.d("loadSection", "nextUpdateTime : " + nextUpdateTime);
-//
-//		String cateStr = prefs.getString(PREF_CAT_NAME, "");
-//		String chStr = prefs.getString(PREF_CH_NAME, "");
-//		String radioStr = prefs.getString(PREF_RADIO_NAME, "");
-//		
-//		if (!cateStr.equals("")) {
-//			try {
-//				JSONArray cateArrPref = new JSONArray(cateStr);
-//				mCategories.clear();
-//				mCategories.jsonMap(cateArrPref);
-//			} catch (JSONException e) {
-//			}
-//		}
-//		
-//		if(!chStr.equals("")) {
-//			try {
-//				JSONArray chArrPref = new JSONArray(chStr);
-//				mChannels.clear();
-//				mChannels.jsonMap(chArrPref);
-//			} catch (JSONException e) {
-//			}
-//		}
-//		
-//		if(!radioStr.equals("")) {
-//			try {
-//				JSONArray radioStrPref = new JSONArray(radioStr);
-//				mRadios.clear();
-//				mRadios.jsonMap(radioStrPref);
-//			} catch (JSONException e) {
-//			}
-//		}
-//
-//		if (isForce || currentTime.after(nextUpdateTime)) {
-//			Log.e("load Section", "Start Load Program");
-//			loadSection();
-//		}
-		
+		loadSection(!isForce);
 	}
 	
 	private void loadSection(boolean shouldCache) {

@@ -59,7 +59,7 @@ public class SearchProgramActivity extends SherlockActivity implements OnLoadDat
         int cacheSize = 1024 * 1024 * memClass / 8;
         mImageLoader = new ImageLoader(mRequestQueue, new BitmapLruCache(cacheSize));
 
-		mPrograms = new Programs(this);
+		mPrograms = new Programs();
 		mAdapter = new ProgramAdapter(this, mPrograms,
 				R.layout.whatnew_grid_item, mImageLoader);
 
@@ -81,27 +81,27 @@ public class SearchProgramActivity extends SherlockActivity implements OnLoadDat
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view,
 					int position, long id) {
-				
-				Program program = mPrograms.get(position);
-				
-				 Tracker t = ((Application)getApplication()).getTracker(
-				            TrackerName.APP_TRACKER);
-				 t.setScreenName("Program");
-				 t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());
-				
-				if (program.isOTV() == 1) {
-					t.setScreenName("Program");
-					t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());
-					
-					Intent intent = new Intent(SearchProgramActivity.this, OTVShowActivity.class);
-					intent.putExtra(EpisodeActivity.EXTRAS_PROGRAM, program);
-					startActivity(intent);
-				}
-				else {
-					Intent intent = new Intent(SearchProgramActivity.this, EpisodeActivity.class);
-					intent.putExtra(EpisodeActivity.EXTRAS_PROGRAM, program);
-					startActivity(intent);
-				}
+                if (mPrograms.size() > 0) {
+                    Program program = mPrograms.get(position);
+
+                    Tracker t = ((Application) getApplication()).getTracker(
+                            TrackerName.APP_TRACKER);
+                    t.setScreenName("Program");
+                    t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());
+
+                    if (program.isOTV() == 1) {
+                        t.setScreenName("Program");
+                        t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());
+
+                        Intent intent = new Intent(SearchProgramActivity.this, OTVShowActivity.class);
+                        intent.putExtra(EpisodeActivity.EXTRAS_PROGRAM, program);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(SearchProgramActivity.this, EpisodeActivity.class);
+                        intent.putExtra(EpisodeActivity.EXTRAS_PROGRAM, program);
+                        startActivity(intent);
+                    }
+                }
 			}
 		});
 		
