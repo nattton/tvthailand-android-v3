@@ -26,22 +26,21 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.Application;
+import com.makathon.tvthailand.MainApplication;
 import com.makathon.tvthailand.MoreDetailActivity;
 import com.makathon.tvthailand.MyVolley;
 import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.Application.TrackerName;
+import com.makathon.tvthailand.MainApplication.TrackerName;
 import com.makathon.tvthailand.contentprovider.MyProgramContentProvider;
 import com.makathon.tvthailand.database.Dao;
 import com.makathon.tvthailand.database.MyProgramModel;
 import com.makathon.tvthailand.database.ProgramTable;
-import com.makathon.tvthailand.datasource.AppUtility;
 import com.makathon.tvthailand.datasource.OnLoadDataListener;
 import com.makathon.tvthailand.datasource.Program;
-import com.makathon.tvthailand.otv.datasoruce.OTVEpisode;
-import com.makathon.tvthailand.otv.datasoruce.OTVEpisodeAdapter;
-import com.makathon.tvthailand.otv.datasoruce.OTVEpisodes;
-import com.makathon.tvthailand.otv.datasoruce.OTVEpisodes.OnOTVEpisodesChangeListener;
+import com.makathon.tvthailand.otv.model.OTVEpisode;
+import com.makathon.tvthailand.otv.model.OTVEpisodeAdapter;
+import com.makathon.tvthailand.otv.model.OTVEpisodes;
+import com.makathon.tvthailand.otv.model.OTVEpisodes.OnOTVEpisodesChangeListener;
 import com.makathon.tvthailand.EpisodeActivity;
 
 public class OTVShowActivity extends SherlockActivity implements
@@ -189,13 +188,13 @@ public class OTVShowActivity extends SherlockActivity implements
 	
 	private void sendTracker(Program show) {
 		if (show != null) {
-			Tracker t = ((Application) getApplication())
+			Tracker t = ((MainApplication) getApplication())
 					.getTracker(TrackerName.APP_TRACKER);
 			t.setScreenName("OTVShow");
 			t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2,
 					show.getTitle()).build());
 
-			Tracker t2 = ((Application) getApplication())
+			Tracker t2 = ((MainApplication) getApplication())
 					.getTracker(TrackerName.OTV_TRACKER);
 			t2.setScreenName("OTVShow");
 			t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(1,

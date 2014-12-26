@@ -11,20 +11,24 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.facebook.Session;
-import com.facebook.UiLifecycleHelper;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.Application.TrackerName;
+import com.koushikdutta.async.future.FutureCallback;
+import com.makathon.tvthailand.MainApplication.TrackerName;
 import com.makathon.tvthailand.account.AccountActivity;
-import com.makathon.tvthailand.datasource.AppUtility;
+import com.makathon.tvthailand.dao.section.SectionCollectionDao;
 import com.makathon.tvthailand.datasource.OnLoadDataListener;
-import com.makathon.tvthailand.datasource.Section;
+import com.makathon.tvthailand.fragment.CategoryFragment;
+import com.makathon.tvthailand.fragment.ChannelFragment;
+import com.makathon.tvthailand.fragment.RadioFragment;
+import com.makathon.tvthailand.manager.http.HTTPEngine;
+import com.makathon.tvthailand.manager.SectionManager;
 import com.viewpagerindicator.TabPageIndicator;
 
 
@@ -33,7 +37,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	private static final String TAG = "MainActivity";
 	private static final String KEY_IS_ADS_DISPLAYED = "KEY_IS_ADS_DISPLAYED";
-//	private boolean doubleBackToExitPressedOnce = false; 
+//	private boolean doubleBackToExitPressedOnce = false;
 	private static boolean isAdsEnabled = true;
 	private boolean isAdsDisplayed = false;
 	private static final String BILLBOARD_ZONE = "c84927ed";
@@ -41,27 +45,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 	
 	private static String[] CONTENT = new String[4];
 
-	private FragmentStatePagerAdapter adapter;
-	private TabPageIndicator indicator;
-	private Section mSection;
-	private CateFragment catFragment;
+	private CategoryFragment catFragment;
 	private ChannelFragment chFragment;
 	private RadioFragment radioFragment;
 	private int current_pos = 0;
 
 	private MenuItem refreshMenu;
-	UiLifecycleHelper uiHelper = null;
 	
 	VservManager manager;
-
-	public static boolean isActive() {
-		Session session = Session.getActiveSession();
-		if (session == null) {
-			return false;
-		}
-
-		return session.isOpened();
-	}
 	
 	public void setTest() {
 		isAdsEnabled = false;
@@ -69,47 +60,60 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.simple_tabs);
+
+        initInstances();
+
 		if (savedInstanceState != null){
 		    isAdsDisplayed = savedInstanceState.getBoolean(KEY_IS_ADS_DISPLAYED);
 		  }
-		
-		CONTENT = getResources().getStringArray(R.array.sections);
-
-		setContentView(R.layout.simple_tabs);
-
-		adapter = new TVThailandAdapter(getSupportFragmentManager());
-
-		ViewPager pager = (ViewPager) findViewById(R.id.pager);
-		pager.setAdapter(adapter);
-
-		indicator = (TabPageIndicator) findViewById(R.id.indicator);
-		indicator.setViewPager(pager);
-		indicator.setCurrentItem(current_pos);
-		indicator.setOnPageChangeListener(new OnPageChangeListener() {
-
-			public void onPageSelected(int position) {
-				current_pos = position;
-			}
-
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-			}
-
-			public void onPageScrollStateChanged(int position) {
-			}
-		});
-
-		catFragment = new CateFragment();
-		chFragment = new ChannelFragment();
-		radioFragment = new RadioFragment();
-
-		mSection = AppUtility.getInstance()
-				.getSections(getApplicationContext());
-		mSection.setOnLoadListener(this);
-		mSection.load(false);
-        
-        super.onCreate(savedInstanceState);
 	}
+
+    private void initInstances() {
+        CONTENT = getResources().getStringArray(R.array.sections);
+
+        FragmentStatePagerAdapter adapter = new TVThailandAdapter(getSupportFragmentManager());
+
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(adapter);
+
+        TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
+        indicator.setViewPager(pager);
+        indicator.setCurrentItem(current_pos);
+        indicator.setOnPageChangeListener(new OnPageChangeListener() {
+
+            public void onPageSelected(int position) {
+                current_pos = position;
+            }
+
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+            }
+
+            public void onPageScrollStateChanged(int position) {
+            }
+        });
+
+        catFragment = new CategoryFragment();
+        chFragment = new ChannelFragment();
+        radioFragment = new RadioFragment();
+
+        loadSection();
+    }
+
+    private void loadSection() {
+        HTTPEngine.getInstance().getSectionData(new FutureCallback<SectionCollectionDao>() {
+            @Override
+            public void onCompleted(Exception e, SectionCollectionDao result) {
+                if (e == null) {
+                    SectionManager.getInstance().setData(result);
+                } else {
+                    Toast.makeText(MainActivity.this, "Cannot connect to the internet.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
 	
 	@Override
 	protected void onStart() {
@@ -127,12 +131,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 	
 	private void sendTracker() {
-		Tracker t = ((Application)getApplication()).getTracker(
+		Tracker t = ((MainApplication)getApplication()).getTracker(
                 TrackerName.APP_TRACKER);
         t.setScreenName("Main");
         t.send(new HitBuilders.AppViewBuilder().build());
         
-		Tracker otvTracker = ((Application)getApplication()).getTracker(
+		Tracker otvTracker = ((MainApplication)getApplication()).getTracker(
                 TrackerName.OTV_TRACKER);
 		otvTracker.setScreenName("Main");
 		otvTracker.send(new HitBuilders.AppViewBuilder().build());
@@ -211,7 +215,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		case 0:
 		case 1:
 		case 2:
-			mSection.load(true);
+            loadSection();
 			break;
 		default:
 
@@ -229,15 +233,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 		public Fragment getItem(int position) {
 			switch (position) {
 			case 0:
-				// Categories
 				return catFragment;
 			case 1:
-				// Channel
 				return chFragment;
 			case 2:
-				// Radio
 				return radioFragment;
-
 			default:
 				return null;
 			}

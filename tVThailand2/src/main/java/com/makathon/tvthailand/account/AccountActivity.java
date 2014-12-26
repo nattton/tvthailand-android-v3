@@ -34,8 +34,7 @@ import android.view.View;
  ******/
 
 public class AccountActivity extends SherlockFragmentActivity implements
-	View.OnClickListener, PlusClient.ConnectionCallbacks, PlusClient.OnConnectionFailedListener,
-    PlusClient.OnAccessRevokedListener  {	
+	View.OnClickListener  {
 	
     private static final int DIALOG_GET_GOOGLE_PLAY_SERVICES = 1;
     private static final int REQUEST_CODE_SIGN_IN = 1;
@@ -47,7 +46,6 @@ public class AccountActivity extends SherlockFragmentActivity implements
 
 	private SherlockFragment[] fragments = new SherlockFragment[FRAGMENT_COUNT];
 	private ProgressDialog mConnectionProgressDialog;
-	private PlusClient mPlusClient;
 	private ConnectionResult mConnectionResult;
 	private boolean isResumed = false;
 	private UiLifecycleHelper uiHelper;
@@ -76,14 +74,6 @@ public class AccountActivity extends SherlockFragmentActivity implements
 		authButton.setReadPermissions(Arrays.asList("basic_info", "email",
 				"user_birthday"));
 
-		
-		/** GOOGLE+ auth setup **/
-        mPlusClient = new PlusClient.Builder(this, this, this)
-        				.setScopes(Scopes.PLUS_LOGIN,"https://www.googleapis.com/auth/userinfo.email")
-        				.build();
-//				        .setActions(MomentUtil.ACTIONS)
-//				        .build();
-
         
 		findViewById(R.id.login_gp_button).setOnClickListener(this);
 		findViewById(R.id.btn_logout_account).setOnClickListener(this);
@@ -111,12 +101,10 @@ public class AccountActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-		mPlusClient.connect();
 	}
 
 	@Override
 	protected void onStop() {
-		mPlusClient.disconnect();
 		super.onStop();
 	}
 
@@ -141,15 +129,6 @@ public class AccountActivity extends SherlockFragmentActivity implements
 		// Facebook onActivityResult
 		uiHelper.onActivityResult(requestCode, resultCode, data);
 
-		// Google+ onActivityResult
-        if (requestCode == REQUEST_CODE_SIGN_IN
-                || requestCode == REQUEST_CODE_GET_GOOGLE_PLAY_SERVICES) {
-            if (resultCode == RESULT_OK && !mPlusClient.isConnected()
-                    && !mPlusClient.isConnecting()) {
-                // This time, connect should succeed.
-                mPlusClient.connect();
-            }
-        }
 		finish();
 	}
 
@@ -232,13 +211,6 @@ public class AccountActivity extends SherlockFragmentActivity implements
                  return;
              }
 
-             try {
-
-                 mConnectionResult.startResolutionForResult(this, REQUEST_CODE_SIGN_IN);
-             } catch (IntentSender.SendIntentException e) {
-                 // Fetch a new result to start.
-                 mPlusClient.connect();
-             }
 			 break;
          case R.id.btn_logout_account:
         	 	logoutFromAccount();
@@ -269,53 +241,8 @@ public class AccountActivity extends SherlockFragmentActivity implements
                 .setMessage(R.string.plus_generic_error)
                 .setCancelable(true)
                 .create();
-    }	
-	
-	@Override
-	public void onConnectionFailed(ConnectionResult result) {
-        mConnectionResult = result;
-	}
+    }
 
-	@Override
-	public void onDisconnected() {
-		Log.d("Gooplus Connect", "disconnected");
-        mPlusClient.connect();
-
-	}
-
-	@Override
-	public void onConnected(Bundle connectionHint) {
-        String currentPersonName = mPlusClient.getCurrentPerson() != null
-                ? mPlusClient.getCurrentPerson().getDisplayName()
-                : getString(R.string.unknown_person);
-        String accountName = mPlusClient.getAccountName();
-        
-          // Googple plus conneted, setUser, setEmail
-          User.getInstance().setUser(mPlusClient.getCurrentPerson()); 
-          User.getInstance().setEmail(accountName);
-//          Log.e("Googleplus Login--Success", currentPersonName+" | "+accountName); 
-          
-          showFragment(PROFILE, false);
-	
-	}
-	
-	@Override
-	public void onAccessRevoked(ConnectionResult status) {
-//        if (status.isSuccess()) {
-////            mSignInStatus.setText(R.string.revoke_access_status);
-//        	Log.e("GooglplusOnAccessRevoked---","Revoked access");
-//        } else {
-////            mSignInStatus.setText(R.string.revoke_access_error_status);
-//        	Log.e("GooglplusOnAccessRevoked---","Unable to revoke access");
-//            mPlusClient.disconnect();
-//        }
-//        mPlusClient.connect();		
-	}
-
-	
-	
-	
-	
 	
 	/******
 	 * 
@@ -355,39 +282,6 @@ public class AccountActivity extends SherlockFragmentActivity implements
 			// show it
 			alertDialog.show();
 		}
-
-		/** Google+ Dialog **/
-		if (User.getInstance().getPerson() != null) {
-			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-					this);
-
-			// set dialog message
-			alertDialogBuilder
-					.setMessage(
-							"Logged in as: "
-									+ User.getInstance().getDisplayName())
-					.setCancelable(false)
-					.setPositiveButton("Cancel",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							})
-					.setNegativeButton("Log out",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									logoutGooglePlus();
-								}
-							});
-			// create alert dialog
-			AlertDialog alertDialog = alertDialogBuilder.create();
-
-			// show it
-			alertDialog.show();
-		}
-
 	}
 
 	
@@ -408,29 +302,5 @@ public class AccountActivity extends SherlockFragmentActivity implements
 		}
 
 	}
-
-	
-	/**
-	 * 
-	 *  Google+ Logout function 
-	 *  
-	 *  **/
-	private void logoutGooglePlus() {
-		if (mPlusClient.isConnected()) {
-			mPlusClient.clearDefaultAccount();
-			mPlusClient.disconnect();
-			mPlusClient.connect();
-			User.getInstance().clearUser();
-//			Log.e("Gooplus Logout", "Logout Success");
-			
-			// Once Logout Success, show Login Page
-			showFragment(SPLASH, false);
-		}
-	}
-
-
-	
-
-    
     
 }

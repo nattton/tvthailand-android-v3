@@ -3,10 +3,9 @@ package com.makathon.tvthailand.adapter;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.datasource.Categories;
-import com.makathon.tvthailand.datasource.Category;
+import com.makathon.tvthailand.dao.section.CategoryItemDao;
+import com.makathon.tvthailand.manager.SectionManager;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,18 +16,7 @@ import android.widget.TextView;
 public class CategoryAdapter extends BaseAdapter {
 	private ImageLoader imageLoader;
 
-	private Activity activity;
-	private int resId;
-	private Categories categories;
-	private static LayoutInflater mInflater = null;
-
-	public CategoryAdapter(Activity a, Categories c, int resouceId,
-			ImageLoader imageLoader) {
-		activity = a;
-		categories = c;
-		resId = resouceId;
-		mInflater = (LayoutInflater) activity
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	public CategoryAdapter(ImageLoader imageLoader) {
 		this.imageLoader = imageLoader;
 	}
 
@@ -41,7 +29,8 @@ public class CategoryAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(resId, parent, false);
+            LayoutInflater mInflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView =  mInflater.inflate(R.layout.cate_grid_item, parent, false);
 			holder = new ViewHolder();
 
 			holder.title = (TextView) convertView
@@ -53,7 +42,7 @@ public class CategoryAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		Category item = categories.get(position);
+        CategoryItemDao item = SectionManager.getInstance().getData().getCategories()[position];
 		holder.title.setText(item.getTitle());
 		holder.thumbnail.setImageUrl(item.getThumbnail(), imageLoader);
 		return convertView;
@@ -61,7 +50,10 @@ public class CategoryAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return categories.size();
+        if (SectionManager.getInstance().getData() == null
+                || SectionManager.getInstance().getData().getCategories() == null)
+            return 0;
+		return SectionManager.getInstance().getData().getCategories().length;
 	}
 
 	@Override

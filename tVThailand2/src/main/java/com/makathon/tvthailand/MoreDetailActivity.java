@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.Application.TrackerName;
+import com.makathon.tvthailand.MainApplication.TrackerName;
 
 public class MoreDetailActivity extends Activity{
 	public static final String EXTRAS_ID = "EXTRAS_ID";
@@ -34,7 +34,7 @@ public class MoreDetailActivity extends Activity{
 		NetworkImageView thumbnail_imv = (NetworkImageView)findViewById(R.id.more_detail_thumbnail);
 		thumbnail_imv.setImageUrl(thumbStr, MyVolley.getImageLoader());
 		
-		Tracker t = ((Application)getApplication())
+		Tracker t = ((MainApplication)getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("MoreDetail");
 		t.send(new HitBuilders.AppViewBuilder().build());

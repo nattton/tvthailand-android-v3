@@ -15,14 +15,8 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.makathon.tvthailand.MyVolley;
-import com.makathon.tvthailand.contentprovider.EpisodeContentProvider;
-import com.makathon.tvthailand.database.Dao;
-import com.makathon.tvthailand.database.EpisodeModel;
-import com.makathon.tvthailand.database.task.EpisodeDestroyInsertTask;
-import com.makathon.tvthailand.database.task.EpisodeInsertTask;
-import com.makathon.tvthailand.database.task.OnStateChangeListener;
+import com.makathon.tvthailand.utils.Constant;
 
 public class Episodes {
 
@@ -118,7 +112,7 @@ public class Episodes {
 		loading = true;
 		
 		notifyLoadStart();
-		String url = String.format("%s/episode/%s/%d?device=android&time=%s", AppUtility.BASE_URL, this.programId, start, AppUtility.getCurrentTime());
+		String url = String.format("%s/episode/%s/%d?device=android&time=%s", Constant.BASE_URL, this.programId, start, AppUtility.getCurrentTime());
 		JsonObjectRequest loadEpisodeRequest = new JsonObjectRequest(Method.GET, url, null, reqSuccessListener(), reqErrorListener());
 		loadEpisodeRequest.setShouldCache(shouldCache);
 		mRequestQueue.add(loadEpisodeRequest);

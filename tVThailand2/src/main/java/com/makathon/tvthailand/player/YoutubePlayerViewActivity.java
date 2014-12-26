@@ -30,7 +30,7 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.datasource.AppUtility;
+import com.makathon.tvthailand.utils.Constant;
 
 /**
  * A simple YouTube Android API demo application which shows how to create a
@@ -58,7 +58,7 @@ public class YoutubePlayerViewActivity extends YouTubeFailureRecoveryActivity {
 		videoId = bundle.getString(EXTRAS_VIDEO_ID);
 
 		YouTubePlayerView youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
-		youTubeView.initialize(AppUtility.DEVELOPER_KEY, this);
+		youTubeView.initialize(Constant.DEVELOPER_KEY, this);
 	}
 	
 	@Override

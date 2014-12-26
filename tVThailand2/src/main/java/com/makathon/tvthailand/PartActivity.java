@@ -17,7 +17,7 @@ import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.Application.TrackerName;
+import com.makathon.tvthailand.MainApplication.TrackerName;
 import com.makathon.tvthailand.adapter.PartAdapter;
 import com.makathon.tvthailand.datasource.Parts;
 
@@ -101,7 +101,7 @@ public class PartActivity extends SherlockActivity{
 			}
 		});
 		
-		Tracker t = ((Application)getApplication())
+		Tracker t = ((MainApplication)getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("Part");
 		t.send(new HitBuilders.AppViewBuilder().build());

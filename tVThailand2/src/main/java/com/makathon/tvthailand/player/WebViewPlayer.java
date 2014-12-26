@@ -43,8 +43,6 @@ public class WebViewPlayer extends WebView {
 //		this.setInitialScale(300);
 		
 		this.setWebChromeClient(new WebChromeClient());
-		
-
 	}
 	
 	
@@ -59,6 +57,10 @@ public class WebViewPlayer extends WebView {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             return super.shouldOverrideUrlLoading(view, url);    //To change body of overridden methods use File | Settings | File Templates.
         }
+    }
+
+    public void actionSkip() {
+        this.loadUrl("javascript:document.getElementById('iframe1').contentWindow.jw_append_skip_ad();");
     }
 
 }

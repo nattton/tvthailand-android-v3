@@ -31,16 +31,16 @@
     <string name="do_you_want_to_logout">Do you want to logout?</string>
     <string name="this_channel_not_available">This Channel not Available</string>
     <string name="search_program_hint">Search Title</string>
-    <string name="loading">Loading &#8230;</string>
-    <string name="please_wait">Please wait &#8230;</string>
+    <string name="loading">Loading …</string>
+    <string name="please_wait">Please wait …</string>
     <string name="information">Information</string>
     <string name="warning">Warning !!</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="progress_message">Signing in to Google&#8230;</string>
+    <string name="progress_message">Signing in to Google…</string>
     <string name="sign_out_button_name">Sign out</string>
     <string name="revoke_access_button_name">Revoke access</string>
-    <string name="default_status" />
+    <string name="default_status"></string>
     <string name="signing_in_status">Signing in with Google+.</string>
     <string name="greeting_status">Welcome, %s.</string>
     <string name="signed_out_status">Signed out.</string>
@@ -105,23 +105,17 @@
     <string name="thumbnail">Thumbnail</string>
     <string name="add_to_favorite">Add to Favorite</string>
     <string name="about">About</string>
-    
     <string name="opt_code">OPT Code</string>
-    
     <string name="please_input_email_address">Please input email address</string>
     <string name="please_input_telephone_number">Please input Telephone number</string>
     <string name="update_profile_success">Update profile success!</string>
     <string name="dismiss">Dismiss</string>
-    
     <string name="password_must_have_more_than_4_characters">Password must have more than 4 characters</string>
     <string name="telephone">Telephone</string>
     <string name="telephone_number">Telephone number</string>
-    
     <string name="password_does_not_mactch_please_type_again">Password does not mactch. please type again</string>
     <string name="watch_live">LIVE</string>
     <string name="cm_account">Account</string>
-    <string name="add_credit">เติม Point</string>
-    <string name="true_money_topup">เติม True Money</string>
     <string name="beta_version">beta version</string>
     <string name="real_copyright">ลิขสิทธิ์แท้</string>
     <string name="old_password">รหัสผ่านเดิม :</string>
@@ -149,12 +143,11 @@
     <string name="email_contact">Email : makathon.labs@gmail.com</string>
     <string name="drama_ch7">ละครช่อง 7</string>
     <string name="drama_ch7_url">http://www.otv.co.th/api/index.php/Ch7/drama</string>
-
-
     <string name="request_ad">Req. Ad</string>
     <string name="language">Language</string>
     <string name="companionPlaceholder">Companion Slot</string>
     <string name="leaderboardCompanionPlaceholder">Leaderboard Companion Slot</string>
+
     <string-array name="default_ad_tag_labels">
         <item>Instream 1</item>
         <item>Instream 2</item>
@@ -163,11 +156,9 @@
         <item>Ads List</item>
         <item>Custom Tag</item>
     </string-array>
-    <string-array name="default_ad_tags">
-        <item><![CDATA[http://th-otv.videoplaza.tv/proxy/distributor/v2?s=147b5982-ee47-483a-8150-7c435731ea7d&tt=p&rt=vast_2.0&rnd={random}&xgid=792be049-b06b-44e0-8b95-6d4a8183d229&pf=fl_11]]></item>
-        <item><![CDATA[http://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=%2F6062%2Fhanna_MA_group%2Fvideo_m3u8&ciu_szs=&impl=s&gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&m_ast=vast&url=[referrer_url]&correlator=[timestamp]]]></item>
-        <item><![CDATA[http://googleads.g.doubleclick.net/pagead/ads?eid=41351061&ad_type=skippablevideo&client=ca-video-pub-4975756195050566&videoad_start_delay=0&description_url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DSS7HCA9U0hQ&max_ad_duration=60000]]></item>
-        <item><![CDATA[http://pubads.g.doubleclick.net/gampad/ads?sz=400x300&iu=%2F6062%2Fhanna_MA_group%2Fwrapper_with_comp&ciu_szs=728x90&impl=s&gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&m_ast=vast&url=[referrer_url]&correlator=[timestamp]]]></item>
-        <item><![CDATA[http://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=%2F15018773%2Feverything2&ciu_szs=300x250%2C468x60%2C728x90&impl=s&gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&url=[referrer_url]&correlator=[timestamp]&cmsid=133&vid=10XWSh7W4so&ad_rule=1]]></item>
-    </string-array>
+
+    <string name="title_activity_web_fullscreen">WebFullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 </resources>

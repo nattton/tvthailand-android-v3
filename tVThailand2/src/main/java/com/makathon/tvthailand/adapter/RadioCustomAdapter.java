@@ -1,7 +1,5 @@
 package com.makathon.tvthailand.adapter;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +9,12 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.datasource.Radio;
+import com.makathon.tvthailand.dao.section.RadioItemDao;
 import com.tonicartos.widget.stickygridheaders.StickyGridHeadersSimpleArrayAdapter;
 
 
 
-public class RadioCustomAdapter extends StickyGridHeadersSimpleArrayAdapter<Radio> {
+public class RadioCustomAdapter extends StickyGridHeadersSimpleArrayAdapter<RadioItemDao> {
 
     private int mHeaderResId;
 
@@ -25,8 +23,10 @@ public class RadioCustomAdapter extends StickyGridHeadersSimpleArrayAdapter<Radi
     private int mItemResId;
 
     private ImageLoader imageLoader;
-    
-	public RadioCustomAdapter(Context context, ArrayList<Radio> items,
+
+
+
+	public RadioCustomAdapter(Context context, RadioItemDao[] items,
 			int headerResId, int itemResId, ImageLoader mImageLoader) {
 		super(context, items, headerResId, itemResId);
 		this.mInflater = LayoutInflater.from(context);

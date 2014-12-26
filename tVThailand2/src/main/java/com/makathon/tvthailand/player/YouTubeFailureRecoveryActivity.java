@@ -22,6 +22,7 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.makathon.tvthailand.R;
 import com.makathon.tvthailand.R.string;
 import com.makathon.tvthailand.datasource.AppUtility;
+import com.makathon.tvthailand.utils.Constant;
 
 import android.content.Intent;
 import android.widget.Toast;
@@ -50,7 +51,7 @@ public abstract class YouTubeFailureRecoveryActivity extends YouTubeBaseActivity
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == RECOVERY_DIALOG_REQUEST) {
       // Retry initialization if user performed a recovery action
-      getYouTubePlayerProvider().initialize(AppUtility.DEVELOPER_KEY, this);
+      getYouTubePlayerProvider().initialize(Constant.DEVELOPER_KEY, this);
     }
   }
 

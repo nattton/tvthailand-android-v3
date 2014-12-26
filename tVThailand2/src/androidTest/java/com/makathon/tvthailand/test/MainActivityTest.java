@@ -1,19 +1,13 @@
 package com.makathon.tvthailand.test;
 
-import java.util.ArrayList;
-
 import com.makathon.tvthailand.AboutActivity;
-import com.makathon.tvthailand.EpisodeActivity;
 import com.makathon.tvthailand.MainActivity;
 import com.makathon.tvthailand.ProgramActivity;
 import com.makathon.tvthailand.ProgramLoaderActivity;
 import com.makathon.tvthailand.account.AccountActivity;
-import com.makathon.tvthailand.otv.datasoruce.OTVEpisode;
 import com.robotium.solo.Solo;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {

@@ -23,11 +23,8 @@ public class RatingActivity extends Activity {
 	private Dao<MyProgramModel> mDaoMyProgram;
 	private MyProgramModel mMyProgram;
 
-	private TextView title_tv;
-	private NetworkImageView thumbnail_imv;
 	private RatingBar ratingbar;
 	private TextView rate_number_tv;
-	private LinearLayout save_btn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +35,7 @@ public class RatingActivity extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			int id = extras.getInt(EXTRAS_ID);
-			mDaoMyProgram = new Dao<MyProgramModel>(MyProgramModel.class, this,
+			mDaoMyProgram = new Dao<>(MyProgramModel.class, this,
 					MyProgramContentProvider.CONTENT_URI);
 			mMyProgram = mDaoMyProgram.getById(id);
 
@@ -46,10 +43,10 @@ public class RatingActivity extends Activity {
 			finish();
 		}
 
-		title_tv = (TextView) findViewById(R.id.tv_title_ep);
+        TextView title_tv = (TextView) findViewById(R.id.tv_title_ep);
 		title_tv.setText(mMyProgram.getTitle());
 
-		thumbnail_imv = (NetworkImageView) findViewById(R.id.iv_tri_point_ep);
+        NetworkImageView thumbnail_imv = (NetworkImageView) findViewById(R.id.iv_tri_point_ep);
 		thumbnail_imv.setImageUrl(mMyProgram.getThumbnail(), MyVolley.getImageLoader());
 
 		ratingbar = (RatingBar) findViewById(R.id.ratingBar);
@@ -58,7 +55,7 @@ public class RatingActivity extends Activity {
 		rate_number_tv = (TextView) findViewById(R.id.my_vote);
 		rate_number_tv.setText(String.valueOf(mMyProgram.getMyVote()));
 
-		save_btn = (LinearLayout) findViewById(R.id.vote_llayout);
+        LinearLayout save_btn = (LinearLayout) findViewById(R.id.vote_llayout);
 
 		save_btn.setOnClickListener(new OnClickListener() {
 

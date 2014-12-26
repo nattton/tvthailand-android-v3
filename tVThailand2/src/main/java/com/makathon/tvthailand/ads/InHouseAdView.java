@@ -1,7 +1,5 @@
 package com.makathon.tvthailand.ads;
 
-import java.util.Date;
-
 import mobi.vserv.android.ads.AdLoadCallback;
 import mobi.vserv.android.ads.AdOrientation;
 import mobi.vserv.android.ads.ViewNotEmptyException;
@@ -9,17 +7,11 @@ import mobi.vserv.android.ads.VservAd;
 import mobi.vserv.android.ads.VservController;
 import mobi.vserv.android.ads.VservManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,13 +20,10 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Request.Method;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.makathon.tvthailand.MyVolley;
-import com.makathon.tvthailand.datasource.AppUtility;
+import com.koushikdutta.async.future.FutureCallback;
+import com.makathon.tvthailand.dao.advertise.AdCollectionDao;
+import com.makathon.tvthailand.dao.advertise.AdItemDao;
+import com.makathon.tvthailand.manager.http.HTTPEngine;
 
 public class InHouseAdView implements OnTouchListener, Handler.Callback {
 	private final String PREF_NAME = "com.makathon.tvthailand.ads.InHouseAdView";
@@ -42,7 +31,6 @@ public class InHouseAdView implements OnTouchListener, Handler.Callback {
 	private static final int CLICK_ON_URL = 2;
 	
 	private Context mContext;
-	private RequestQueue mReqestQueue;
 	private WebView mWebView;
 	private Handler handler = new Handler(this);
 	
@@ -57,7 +45,6 @@ public class InHouseAdView implements OnTouchListener, Handler.Callback {
 
 	public InHouseAdView(Context context) {
 		mContext = context;
-		mReqestQueue = MyVolley.getRequestQueue();
 	}
 	
 	public void loadRequest() {
@@ -75,52 +62,19 @@ public class InHouseAdView implements OnTouchListener, Handler.Callback {
 		mWebView.setOnTouchListener(this);
 		requestAds();
 	}
-	
-	private String getCurrentTime() {
-		Time today = new Time(Time.getCurrentTimezone());
-		today.setToNow();
-		return today.format("%Y%m%d%H%M");
-	}
-	
-	private void requestAds() {
-		String url = String.format("%s/advertise?device=android&time=%s", AppUtility.BASE_URL, getCurrentTime());
-		JsonObjectRequest loadAdsRequest = new JsonObjectRequest(Method.GET, url, null, reqSuccessListener(), reqErrorListener());
-		mReqestQueue.add(loadAdsRequest);
-	}
-	
-	private Response.Listener<JSONObject> reqSuccessListener() {
-		return new Response.Listener<JSONObject>() {
 
-			@Override
-			public void onResponse(JSONObject response) {
-				try {
-					JSONArray jAds = response.getJSONArray("ads");
-					int adLength = jAds.length();
-					for (int i = 0; i < adLength; i++) {
-						JSONObject adObj = jAds.getJSONObject(i);
-						String name = adObj.getString("name");
-						String url = adObj.getString("url");
-						int time = adObj.getInt("time");
-						int interval = adObj.getInt("interval");
-						AdRotate adR = new AdRotate(name, url, time, interval);
-						if (startRotateAd(adR)) break;
-					}
-				} catch (JSONException e) {
-					Log.e("InHouseAd", "JSONException");
-				}
-			}
-		};
-	}
-	
-	private Response.ErrorListener reqErrorListener() {
-		return new Response.ErrorListener() {
+    private void requestAds() {
+        HTTPEngine.getInstance().getAdvertiseData(new FutureCallback<AdCollectionDao>() {
+            @Override
+            public void onCompleted(Exception e, AdCollectionDao result) {
+                if (e == null) {
+                    startAd(result);
+                } else {
 
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				
-			}
-		};
-	}
+                }
+            }
+        });
+    }
 	
 	private void setUpAd() {
 		try {
@@ -170,38 +124,53 @@ public class InHouseAdView implements OnTouchListener, Handler.Callback {
 		}
 	}
 
-	private boolean startRotateAd(final AdRotate adRotate) {
-		SharedPreferences prefs = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-		long lasttime = prefs.getLong(adRotate.getName(), 0);
-		Date nextTime = new Date(lasttime + adRotate.getInterval());
-		Date currentTime = new Date();
-		if (currentTime.after(nextTime)) {
-			String adUrl = adRotate.getUrl();
-			if (adUrl.contains("kapook.com")) {
-				mWebView.getSettings().setUserAgentString(UserAgentDesktop);
-			} else {
-				mWebView.getSettings().setUserAgentString(UserAgentMobile);
-			}
-			mWebView.loadUrl(adRotate.getUrl());
-			mWebView.setVisibility(View.VISIBLE);
-			if (adView != null) {
-				adView.setVisibility(View.GONE);	
-			}
-			
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putLong(adRotate.getName(), currentTime.getTime());
-			editor.commit();
+    private void startAd(AdCollectionDao adItemList) {
+        AdItemDao adItem = adItemList.getShuffleAd();
+        String adUrl = adItem.getUrl();
+        if (adUrl.contains("kapook.com")) {
+            mWebView.getSettings().setUserAgentString(UserAgentDesktop);
+        } else {
+            mWebView.getSettings().setUserAgentString(UserAgentMobile);
+        }
+        mWebView.loadUrl(adItem.getUrl());
+        mWebView.setVisibility(View.VISIBLE);
+        if (adView != null) {
+            adView.setVisibility(View.GONE);
+        }
+    }
 
-			return true;
-		} else {
-			mWebView.setVisibility(View.GONE);
-			if (adView != null) {
-				adView.setVisibility(View.VISIBLE);
-			}
-		}
-		
-		return false;
-	}
+//	private boolean startRotateAd(final AdsItemDao adItem) {
+//		SharedPreferences prefs = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+//		long lasttime = prefs.getLong(adItem.getName(), 0);
+//		Date nextTime = new Date(lasttime + adItem.getInterval());
+//		Date currentTime = new Date();
+//		if (currentTime.after(nextTime)) {
+//			String adUrl = adItem.getUrl();
+//			if (adUrl.contains("kapook.com")) {
+//				mWebView.getSettings().setUserAgentString(UserAgentDesktop);
+//			} else {
+//				mWebView.getSettings().setUserAgentString(UserAgentMobile);
+//			}
+//			mWebView.loadUrl(adItem.getUrl());
+//			mWebView.setVisibility(View.VISIBLE);
+//			if (adView != null) {
+//				adView.setVisibility(View.GONE);
+//			}
+//
+//			SharedPreferences.Editor editor = prefs.edit();
+//			editor.putLong(adItem.getName(), currentTime.getTime());
+//			editor.commit();
+//
+//			return true;
+//		} else {
+//			mWebView.setVisibility(View.GONE);
+//			if (adView != null) {
+//				adView.setVisibility(View.VISIBLE);
+//			}
+//		}
+//
+//		return false;
+//	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {

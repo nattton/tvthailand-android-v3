@@ -7,9 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import com.makathon.tvthailand.R;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.makathon.tvthailand.datasource.AppUtility;
 import com.makathon.tvthailand.utils.Base64;
 
 import android.annotation.SuppressLint;
@@ -224,9 +221,5 @@ public class EpisodeModel extends ModelBase {
 		EpisodeModel episode = new EpisodeModel();
 		episode.fromCursor(cursor, context);
 		return episode;
-	}
-	
-	public void sendView() { 
-		AppUtility.getInstance().viewEpisode(epId, new AsyncHttpResponseHandler());
 	}
 }

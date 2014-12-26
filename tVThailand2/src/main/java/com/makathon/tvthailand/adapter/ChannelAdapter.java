@@ -1,12 +1,11 @@
 package com.makathon.tvthailand.adapter;
 
 import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.datasource.Channel;
-import com.makathon.tvthailand.datasource.Channels;
+import com.makathon.tvthailand.dao.section.ChannelItemDao;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.makathon.tvthailand.manager.SectionManager;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,17 +14,10 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class ChannelAdapter extends BaseAdapter{
-	private Activity activity;
-	private int resId;
-	private Channels channels;
-	private static LayoutInflater mInflater = null;
 	private ImageLoader imageLoader;
 	
-	public ChannelAdapter(Activity a, Channels c, int resouceId, ImageLoader mImageLoader) {
-        activity = a;
-        channels = c;
-        resId = resouceId;
-        mInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	public ChannelAdapter(ImageLoader mImageLoader) {
+
         imageLoader = mImageLoader;
 	}
 
@@ -38,7 +30,8 @@ public class ChannelAdapter extends BaseAdapter{
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(resId, parent, false);
+            LayoutInflater mInflater = (LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = mInflater.inflate(R.layout.channel_grid_item, parent, false);
             holder = new ViewHolder();
 			holder.channel_tv = (TextView) convertView.findViewById(R.id.tv_channel);
 			holder.channel_icon = (NetworkImageView) convertView.findViewById(R.id.imv_channel);
@@ -47,7 +40,7 @@ public class ChannelAdapter extends BaseAdapter{
 			holder = (ViewHolder)convertView.getTag();
 		}
 		
-		Channel item = channels.get(position);
+		ChannelItemDao item = SectionManager.getInstance().getData().getChannels()[position];
 		holder.channel_tv.setText(item.getTitle());
 		if (item.getThumbnail() != null) {
 			holder.channel_icon.setImageUrl(item.getThumbnail(), imageLoader);
@@ -58,10 +51,13 @@ public class ChannelAdapter extends BaseAdapter{
 		return convertView;
 	}
 
-	@Override
-	public int getCount() {
-		return channels.size();
-	}
+    @Override
+    public int getCount() {
+        if (SectionManager.getInstance().getData() == null
+                || SectionManager.getInstance().getData().getChannels() == null)
+            return 0;
+        return SectionManager.getInstance().getData().getChannels().length;
+    }
 
 	@Override
 	public Object getItem(int position) {

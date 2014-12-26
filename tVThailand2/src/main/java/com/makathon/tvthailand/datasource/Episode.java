@@ -7,12 +7,14 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import com.makathon.tvthailand.R;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.makathon.tvthailand.utils.Base64;
+import com.makathon.tvthailand.utils.Utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
+
+import org.apache.http.Header;
 
 @SuppressWarnings("serial")
 public class Episode implements Serializable {
@@ -163,6 +165,6 @@ public class Episode implements Serializable {
 	}
 	
 	public void sendView() { 
-		AppUtility.getInstance().viewEpisode(id, new AsyncHttpResponseHandler());
+		Utils.getInstance().viewEpisode(id);
 	}
 }

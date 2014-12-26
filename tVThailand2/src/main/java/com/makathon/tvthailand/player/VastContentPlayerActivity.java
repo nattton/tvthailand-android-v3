@@ -31,8 +31,8 @@ import com.google.ads.interactivemedia.v3.api.ImaSdkFactory;
 import com.google.ads.interactivemedia.v3.api.ImaSdkSettings;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.Application;
-import com.makathon.tvthailand.Application.TrackerName;
+import com.makathon.tvthailand.MainApplication;
+import com.makathon.tvthailand.MainApplication.TrackerName;
 import com.makathon.tvthailand.R;
 import com.makathon.tvthailand.player.TrackingVideoView.CompleteCallback;
 import com.makathon.tvthailand.utils.CountDownTimer;
@@ -106,7 +106,7 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
 
     private void sendTracker()
     {
-        Tracker t = ((Application) getApplication())
+        Tracker t = ((MainApplication) getApplication())
                 .getTracker(TrackerName.APP_TRACKER);
         t.setScreenName("VasContentPlayer");
         t.send(new HitBuilders.AppViewBuilder().build());
@@ -240,7 +240,7 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
                 isAdPlaying = false;
                 break;
             case ALL_ADS_COMPLETED:
-                Tracker t2 = ((Application) getApplication())
+                Tracker t2 = ((MainApplication) getApplication())
                         .getTracker(TrackerName.OTV_TRACKER);
                 t2.setScreenName("VastPlayer");
                 t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(5, tagUrl).build());

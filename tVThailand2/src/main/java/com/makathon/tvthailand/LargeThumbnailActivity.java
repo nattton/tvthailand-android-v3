@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.Application.TrackerName;
+import com.makathon.tvthailand.MainApplication.TrackerName;
 import com.makathon.tvthailand.contentprovider.MyProgramContentProvider;
 import com.makathon.tvthailand.database.Dao;
 import com.makathon.tvthailand.database.MyProgramModel;
@@ -72,7 +72,7 @@ public class LargeThumbnailActivity extends Activity implements
 		img.setImageUrl(larg_thumbnail_url, MyVolley.getImageLoader());
 		img.setMaxZoom(4f);
 		
-		Tracker t = ((Application)getApplication())
+		Tracker t = ((MainApplication)getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("LargeThumbnail");
 		t.send(new HitBuilders.AppViewBuilder().build());

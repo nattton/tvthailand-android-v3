@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.makathon.tvthailand"
-    android:installLocation="auto">
+    android:installLocation="auto" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,23 +11,27 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <permission android:protectionLevel="signature"
-        android:name="com.makathon.tvthailand.permission.C2D_MESSAGE" />
+
+    <permission
+        android:name="com.makathon.tvthailand.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
     <uses-permission android:name="com.makathon.tvthailand.permission.C2D_MESSAGE" />
 
     <application
-        android:name="Application"
+        android:name=".MainApplication"
         android:allowBackup="true"
-        android:label="@string/app_name"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
-        android:theme="@style/TVThailandTheme">
+        android:label="@string/app_name"
+        android:theme="@style/TVThailandTheme" >
         <activity
             android:name="com.makathon.tvthailand.MainActivity"
             android:configChanges="screenSize|keyboardHidden"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -39,7 +43,7 @@
         <activity
             android:name="com.makathon.tvthailand.SearchProgramActivity"
             android:label="Search"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
 
@@ -84,9 +88,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateAlwaysHidden">
+            android:windowSoftInputMode="stateAlwaysHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="video/*" />
@@ -101,7 +106,6 @@
                 <data android:scheme="http" />
                 <data android:mimeType="video/*" />
             </intent-filter>
-
         </activity>
         <activity
             android:name="com.makathon.tvthailand.player.RadioPlayerActivity"
@@ -109,8 +113,7 @@
             android:label="TV Thailand Player"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateAlwaysHidden">
-
+            android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity
             android:name="com.makathon.tvthailand.ProgramLoaderActivity"
@@ -139,7 +142,6 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
         <activity
             android:name="com.makathon.tvthailand.player.YoutubePlayerViewActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -208,33 +210,44 @@
 
         <!-- Push Service -->
         <service android:name="com.parse.PushService" />
-        <receiver android:name="com.parse.ParseBroadcastReceiver">
+
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.makathon.tvthailand.utils.Receiver"
-            android:exported="false">
+        <receiver
+            android:name="com.makathon.tvthailand.utils.Receiver"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
                 <action android:name="com.parse.push.intent.DELETE" />
                 <action android:name="com.parse.push.intent.OPEN" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.parse.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <!--
-                  IMPORTANT: Change "com.parse.starter" to match your app's package name.
-                -->
+<!--                   IMPORTANT: Change "com.parse.starter" to match your app's package name. -->
                 <category android:name="com.makathon.tvthailand" />
             </intent-filter>
         </receiver>
-        <meta-data android:name="com.crashlytics.ApiKey" android:value="3120d8f68ae38afbc965e336f679243187ec8cd9"/>
+
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="3120d8f68ae38afbc965e336f679243187ec8cd9" />
+
+        <activity
+            android:name="com.makathon.tvthailand.WebFullscreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_web_fullscreen"
+            android:theme="@style/FullscreenTheme" >
+        </activity>
     </application>
 
 </manifest>

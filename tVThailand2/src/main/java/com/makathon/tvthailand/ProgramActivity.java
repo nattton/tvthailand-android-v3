@@ -41,28 +41,23 @@ import com.makathon.tvthailand.player.VastContentPlayerActivity;
 public class ProgramActivity extends SherlockActivity implements
 		OnLoadDataListener, OnItemClickListener, OnScrollListener {
 
-	static final String EXTRAS_MODE = "EXTRAS_MODE";
-	static final String EXTRAS_ID = "EXTRAS_ID";
-	static final String EXTRAS_TITLE = "EXTRAS_TITLE";
-	static final String EXTRAS_ICON = "EXTRAS_ICON";
-	static final String EXTRAS_URL = "EXTRAS_URL";
+	public static final String EXTRAS_MODE = "EXTRAS_MODE";
+    public static final String EXTRAS_ID = "EXTRAS_ID";
+    public static final String EXTRAS_TITLE = "EXTRAS_TITLE";
+    public static final String EXTRAS_ICON = "EXTRAS_ICON";
+    public static final String EXTRAS_URL = "EXTRAS_URL";
 
 	/** MODE **/
-	static final int BY_CATEGORY = 1;
-	static final int BY_CHANNEL = 2;
-
-	private static ImageLoader mImageLoader;
+    public static final int BY_CATEGORY = 1;
+    public static final int BY_CHANNEL = 2;
 
 	private int mode;
 	private String id;
-	private String title;
-	private String icon;
 	private String url;
 
 	private Programs mPrograms;
 	private ProgramAdapter mAdapter;
 	private MenuItem refreshMenu;
-	private MenuItem playMenu;
 
 	private ProgressBar progressBar;
 	private TextView textViewNoContent;
@@ -76,12 +71,12 @@ public class ProgramActivity extends SherlockActivity implements
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 		Bundle bundle = getIntent().getExtras();
-		title = bundle.getString(EXTRAS_TITLE);
+		String title = bundle.getString(EXTRAS_TITLE);
 		setTitle(title);
-		icon = bundle.getString(EXTRAS_ICON);
+		String icon = bundle.getString(EXTRAS_ICON);
 		url = bundle.getString(EXTRAS_URL);
 
-        mImageLoader = MyVolley.getImageLoader();        
+        ImageLoader mImageLoader = MyVolley.getImageLoader();
         mImageLoader.get(icon, new ImageListener() {
 			
 			@Override
@@ -176,7 +171,7 @@ public class ProgramActivity extends SherlockActivity implements
 		MenuInflater inflater = getSherlock().getMenuInflater();
 		inflater.inflate(R.menu.program, menu);
 		refreshMenu = menu.findItem(R.id.refresh);
-		playMenu = menu.findItem(R.id.play);
+        MenuItem playMenu = menu.findItem(R.id.play);
 		if (mode == BY_CHANNEL && url != null && !url.equals("")) {
 			playMenu.setVisible(true);
 		} else {

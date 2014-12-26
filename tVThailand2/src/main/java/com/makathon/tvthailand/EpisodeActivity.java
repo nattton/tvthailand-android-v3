@@ -28,12 +28,11 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import com.makathon.tvthailand.Application.TrackerName;
+import com.makathon.tvthailand.MainApplication.TrackerName;
 import com.makathon.tvthailand.adapter.EpisodeAdapter;
 import com.makathon.tvthailand.contentprovider.MyProgramContentProvider;
 import com.makathon.tvthailand.database.Dao;
@@ -51,11 +50,9 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		OnItemClickListener, OnLoadListener, OnScrollListener {
 	public static final String EXTRAS_PROGRAM = "EXTRAS_PROGRAM";
 	public static final String EXTRAS_DISABLE_OTV = "EXTRAS_DISABLE_OTV";
-	private ImageLoader mImageLoader;
 	
 	private View header;
 	private Program program;
-	private ListView epList;
 	
 	private ProgressBar progressBar;
     private ProgressDialog progressDialog;
@@ -87,8 +84,6 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.episode_view);
-		
-		mImageLoader = MyVolley.getImageLoader();
 
         isDisableOTV = getIntent().getBooleanExtra(EXTRAS_DISABLE_OTV, false);
 
@@ -129,7 +124,7 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 			myProgamUpdateTask.execute();
 		}
 
-		epList = (ListView) findViewById(R.id.ep_list);
+        ListView epList = (ListView) findViewById(R.id.ep_list);
 		epList.addHeaderView(header, null, false);
 
 		mEpisodes = new Episodes(this);
@@ -170,7 +165,7 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		
 //		setUpAd();
 		
-		Tracker t = ((Application) getApplication())
+		Tracker t = ((MainApplication) getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("Episode");
 		t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());
@@ -213,7 +208,7 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		setTitle(program.getTitle());
 		tv_title.setText(program.getTitle());
 		tvDescription.setText(program.getDescription());
-		imgThumbnail.setImageUrl(program.getThumbnail(), mImageLoader);
+		imgThumbnail.setImageUrl(program.getThumbnail(), MyVolley.getImageLoader());
 	}
 
 	private void refreshView() {
@@ -357,7 +352,7 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		
 		Episode episode = mEpisodes.get(position - 1);
 
-		Tracker t = ((Application) getApplication())
+		Tracker t = ((MainApplication) getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("Episode");
 		t.send(new HitBuilders.AppViewBuilder().setCustomDimension(3,

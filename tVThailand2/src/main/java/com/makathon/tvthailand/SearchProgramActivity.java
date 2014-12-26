@@ -11,7 +11,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import com.makathon.tvthailand.Application.TrackerName;
+import com.makathon.tvthailand.MainApplication.TrackerName;
 import com.makathon.tvthailand.adapter.ProgramAdapter;
 import com.makathon.tvthailand.contentprovider.ProgramSuggestionProvider;
 import com.makathon.tvthailand.datasource.OnLoadDataListener;
@@ -32,8 +32,6 @@ import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class SearchProgramActivity extends SherlockActivity implements OnLoadDataListener {
-	private static RequestQueue mRequestQueue;
-	private static ImageLoader mImageLoader;
 	
 	private Programs mPrograms;
 	private ProgramAdapter mAdapter;
@@ -50,14 +48,14 @@ public class SearchProgramActivity extends SherlockActivity implements OnLoadDat
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		
 		setContentView(R.layout.simple_grid_view);
-		
-		mRequestQueue = Volley.newRequestQueue(this);
+
+        RequestQueue mRequestQueue = Volley.newRequestQueue(this);
 
         int memClass = ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE))
                 .getMemoryClass();
         // Use 1/8th of the available memory for this memory cache.
         int cacheSize = 1024 * 1024 * memClass / 8;
-        mImageLoader = new ImageLoader(mRequestQueue, new BitmapLruCache(cacheSize));
+        ImageLoader mImageLoader = new ImageLoader(mRequestQueue, new BitmapLruCache(cacheSize));
 
 		mPrograms = new Programs();
 		mAdapter = new ProgramAdapter(this, mPrograms,
@@ -84,7 +82,7 @@ public class SearchProgramActivity extends SherlockActivity implements OnLoadDat
                 if (mPrograms.size() > 0) {
                     Program program = mPrograms.get(position);
 
-                    Tracker t = ((Application) getApplication()).getTracker(
+                    Tracker t = ((MainApplication) getApplication()).getTracker(
                             TrackerName.APP_TRACKER);
                     t.setScreenName("Program");
                     t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());
@@ -126,7 +124,7 @@ public class SearchProgramActivity extends SherlockActivity implements OnLoadDat
 			setTitle("Search : " + query);
 			mPrograms.loadProgramBySearch(query, 0);
 			
-			Tracker t = ((Application)getApplication()).getTracker(
+			Tracker t = ((MainApplication)getApplication()).getTracker(
 		            TrackerName.APP_TRACKER);
 			t.setScreenName("Search");
 			t.send(new HitBuilders.AppViewBuilder().setCustomDimension(4, query).build());

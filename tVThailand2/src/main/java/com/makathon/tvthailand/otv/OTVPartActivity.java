@@ -1,7 +1,5 @@
 package com.makathon.tvthailand.otv;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,16 +11,13 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.makathon.tvthailand.Application;
+import com.makathon.tvthailand.MainApplication;
 import com.makathon.tvthailand.MyVolley;
 import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.Application.TrackerName;
-import com.makathon.tvthailand.datasource.AppUtility;
-import com.makathon.tvthailand.otv.datasoruce.OTVEpisode;
-import com.makathon.tvthailand.otv.datasoruce.OTVPart;
-import com.makathon.tvthailand.otv.datasoruce.OTVPartAdapter;
-import com.makathon.tvthailand.player.VastPlayerActivity;
-import com.makathon.tvthailand.player.VitamioVastPlayerActivity;
+import com.makathon.tvthailand.MainApplication.TrackerName;
+import com.makathon.tvthailand.WebFullscreenActivity;
+import com.makathon.tvthailand.otv.model.OTVEpisode;
+import com.makathon.tvthailand.otv.model.OTVPartAdapter;
 
 public class OTVPartActivity extends SherlockActivity implements OnItemClickListener {
 	public static String EXTRAS_OTV_EPISODE = "EXTRAS_OTV_EPISODE";
@@ -54,12 +49,12 @@ public class OTVPartActivity extends SherlockActivity implements OnItemClickList
 	
 	private void sendTracker(OTVEpisode episode) {
 		if (episode != null) {
-			Tracker t = ((Application) getApplication())
+			Tracker t = ((MainApplication) getApplication())
 					.getTracker(TrackerName.APP_TRACKER);
 			t.setScreenName("OTVPart");
 			t.send(new HitBuilders.AppViewBuilder().build());
 
-			Tracker t2 = ((Application) getApplication())
+			Tracker t2 = ((MainApplication) getApplication())
 					.getTracker(TrackerName.OTV_TRACKER);
 			t2.setScreenName("OTVPart");
 			t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, episode.getNameTh()).build());
@@ -70,17 +65,21 @@ public class OTVPartActivity extends SherlockActivity implements OnItemClickList
 	public void onItemClick(AdapterView<?> parent, View v, int position,
 			long id) {
 
-        Intent intentVastPlayer;
+//        Intent intentVastPlayer;
+//
+//		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+//			intentVastPlayer = new Intent(OTVPartActivity.this, VastPlayerActivity.class);
+//
+//		} else {
+//			intentVastPlayer = new Intent(OTVPartActivity.this, VitamioVastPlayerActivity.class);
+//		}
+//        intentVastPlayer = new Intent(OTVPartActivity.this, VitamioVastPlayerActivity.class);
+//        intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_EPISODE, episode);
+//        intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_PART_POSITION, position);
+//        startActivity(intentVastPlayer);
 
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-			intentVastPlayer = new Intent(OTVPartActivity.this, VastPlayerActivity.class);
+        Intent i = new Intent(OTVPartActivity.this, WebFullscreenActivity.class);
+        startActivity(i);
 
-		} else {
-			intentVastPlayer = new Intent(OTVPartActivity.this, VitamioVastPlayerActivity.class);
-		}
-
-        intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_EPISODE, episode);
-        intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_PART_POSITION, position);
-        startActivity(intentVastPlayer);
 	}
 }

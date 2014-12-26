@@ -8,11 +8,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.makathon.tvthailand.MyVolley;
+import com.makathon.tvthailand.utils.Constant;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -58,7 +58,7 @@ public class PreRollAdFactory {
 
     public void load(){
         notifyLoadStart();
-        String url = String.format("%s/preroll_advertise?device=android", AppUtility.BASE_URL);
+        String url = String.format("%s/preroll_advertise?device=android", Constant.BASE_URL);
         JsonObjectRequest loadRequest = new JsonObjectRequest(Request.Method.GET, url, null, reqSuccessListener(), reqErrorListener());
         mRequestQueue.add(loadRequest);
     }
