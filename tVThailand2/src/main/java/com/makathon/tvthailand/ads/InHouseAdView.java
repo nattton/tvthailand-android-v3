@@ -1,12 +1,5 @@
 package com.makathon.tvthailand.ads;
 
-import mobi.vserv.android.ads.AdLoadCallback;
-import mobi.vserv.android.ads.AdOrientation;
-import mobi.vserv.android.ads.ViewNotEmptyException;
-import mobi.vserv.android.ads.VservAd;
-import mobi.vserv.android.ads.VservController;
-import mobi.vserv.android.ads.VservManager;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,10 +13,15 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.koushikdutta.async.future.FutureCallback;
 import com.makathon.tvthailand.dao.advertise.AdCollectionDao;
 import com.makathon.tvthailand.dao.advertise.AdItemDao;
-import com.makathon.tvthailand.manager.http.HTTPEngine;
+
+import mobi.vserv.android.ads.AdLoadCallback;
+import mobi.vserv.android.ads.AdOrientation;
+import mobi.vserv.android.ads.ViewNotEmptyException;
+import mobi.vserv.android.ads.VservAd;
+import mobi.vserv.android.ads.VservController;
+import mobi.vserv.android.ads.VservManager;
 
 public class InHouseAdView implements OnTouchListener, Handler.Callback {
 	private final String PREF_NAME = "com.makathon.tvthailand.ads.InHouseAdView";
@@ -64,16 +62,7 @@ public class InHouseAdView implements OnTouchListener, Handler.Callback {
 	}
 
     private void requestAds() {
-        HTTPEngine.getInstance().getAdvertiseData(new FutureCallback<AdCollectionDao>() {
-            @Override
-            public void onCompleted(Exception e, AdCollectionDao result) {
-                if (e == null) {
-                    startAd(result);
-                } else {
 
-                }
-            }
-        });
     }
 	
 	private void setUpAd() {

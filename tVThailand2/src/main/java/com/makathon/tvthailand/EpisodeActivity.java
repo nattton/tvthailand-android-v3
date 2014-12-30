@@ -105,7 +105,7 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 			mMyProgram.setThumbnail(program.getThumbnail());
 			mMyProgram.setDescription(program.getDescription());
 			mMyProgram.setRating(program.getRating());
-			MyProgamInsertTask myProgramInsertTask = new MyProgamInsertTask(
+			MyProgramInsertTask myProgramInsertTask = new MyProgramInsertTask(
 					mDaoMyProgram, mMyProgram) {
 
 			};
@@ -229,14 +229,14 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		}
 	}
 
-	protected class MyProgamInsertTask extends
+	protected class MyProgramInsertTask extends
 			AsyncTask<Integer, Integer, Void> {
 
 		private Dao<MyProgramModel> mDaoMyProgram;
 		private MyProgramModel mMyProgram;
 
-		public MyProgamInsertTask(Dao<MyProgramModel> mDaoMyProgram,
-				MyProgramModel mMyProgram) {
+		public MyProgramInsertTask(Dao<MyProgramModel> mDaoMyProgram,
+                                   MyProgramModel mMyProgram) {
 			this.mDaoMyProgram = mDaoMyProgram;
 			this.mMyProgram = mMyProgram;
 		}

@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.makathon.tvthailand.MainApplication;
@@ -20,7 +19,6 @@ import com.makathon.tvthailand.ProgramActivity;
 import com.makathon.tvthailand.R;
 import com.makathon.tvthailand.adapter.ChannelAdapter;
 import com.makathon.tvthailand.dao.section.ChannelItemDao;
-import com.makathon.tvthailand.dao.section.SectionCollectionDao;
 import com.makathon.tvthailand.manager.SectionManager;
 import com.makathon.tvthailand.manager.bus.BusProvider;
 import com.squareup.otto.Subscribe;
@@ -34,9 +32,7 @@ public class ChannelFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.channel_grid_view, container,
 				false);
 		GridView gridview = (GridView) rootView.findViewById(R.id.gridview);
-
-        ImageLoader mImageLoader = MyVolley.getImageLoader();
-		gridview.setAdapter(mAdapter = new ChannelAdapter(mImageLoader));
+		gridview.setAdapter(mAdapter = new ChannelAdapter(MyVolley.getImageLoader()));
 		
 		gridview.setOnItemClickListener(new OnItemClickListener() {
 
@@ -78,7 +74,8 @@ public class ChannelFragment extends Fragment {
     }
 
     @Subscribe
-    public void onSectionLoaded(SectionCollectionDao data) {
-        mAdapter.notifyDataSetChanged();
+    public void onSectionLoaded(SectionManager.EventType eventType) {
+        if (eventType == SectionManager.EventType.Loaded)
+            mAdapter.notifyDataSetChanged();
     }
 }

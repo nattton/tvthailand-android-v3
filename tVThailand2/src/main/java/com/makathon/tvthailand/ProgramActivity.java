@@ -3,11 +3,9 @@ package com.makathon.tvthailand;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
@@ -23,12 +21,9 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
-import com.makathon.tvthailand.R;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.makathon.tvthailand.adapter.ProgramAdapter;
-import com.makathon.tvthailand.ads.InHouseAdView;
 import com.makathon.tvthailand.datasource.OnLoadDataListener;
 import com.makathon.tvthailand.datasource.PreRollAd;
 import com.makathon.tvthailand.datasource.PreRollAdFactory;
@@ -76,8 +71,7 @@ public class ProgramActivity extends SherlockActivity implements
 		String icon = bundle.getString(EXTRAS_ICON);
 		url = bundle.getString(EXTRAS_URL);
 
-        ImageLoader mImageLoader = MyVolley.getImageLoader();
-        mImageLoader.get(icon, new ImageListener() {
+        MyVolley.getImageLoader().get(icon, new ImageListener() {
 			
 			@Override
 			public void onErrorResponse(VolleyError error) {
@@ -95,7 +89,7 @@ public class ProgramActivity extends SherlockActivity implements
 		mode = bundle.getInt(EXTRAS_MODE);
 
 		mPrograms = new Programs();
-		mAdapter = new ProgramAdapter(this, mPrograms, R.layout.whatnew_grid_item, mImageLoader);
+		mAdapter = new ProgramAdapter(this, mPrograms, R.layout.whatnew_grid_item, MyVolley.getImageLoader());
 
 		textViewNoContent = (TextView) findViewById(R.id.textViewNoContent);
 		GridView gridview = (GridView) findViewById(R.id.gridview);

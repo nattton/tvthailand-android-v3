@@ -1,5 +1,7 @@
 package com.makathon.tvthailand.datasource;
 
+import android.util.Log;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -8,12 +10,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.android.volley.Request;
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.makathon.tvthailand.MyVolley;
+import com.makathon.tvthailand.dao.show.ShowCollectionDao;
+import com.makathon.tvthailand.manager.http.GsonRequest;
 import com.makathon.tvthailand.utils.Constant;
 
 public class Programs {
@@ -117,12 +122,12 @@ public class Programs {
 				reqSuccessListenner(), reqErrorListener());
 		mRequestQueue.add(loadProgramRequest);
 
-//        HTTPEngine.getInstance().getCategory(id, start, new FutureCallback<ShowCollectionDao>() {
+//        mRequestQueue.add(new GsonRequest<ShowCollectionDao>(url, ShowCollectionDao.class, null, new Response.Listener<ShowCollectionDao>() {
 //            @Override
-//            public void onCompleted(Exception e, ShowCollectionDao result) {
-//                Log.d("Programs", result.shows.get(0).getTitle());
+//            public void onResponse(ShowCollectionDao response) {
+//                Log.d("ShowCollectionDao", response.getShows().get(0).getTitle());
 //            }
-//        });
+//        }, reqErrorListener()));
 	}
 
 	public void loadProgramByChannel(String id, int start) {

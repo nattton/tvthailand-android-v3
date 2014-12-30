@@ -5,11 +5,14 @@ import android.content.pm.PackageInfo;
 import android.provider.Settings;
 import android.text.format.Time;
 
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.makathon.tvthailand.MyVolley;
 
 /**
- * Created by nuuneoi on 10/16/2014.
+ * Created by nattapong
  */
 public class Utils {
 
@@ -49,12 +52,20 @@ public class Utils {
     public void viewEpisode(String programId) {
         String url = String.format("%s/view_episode/%s?device=android",
                 Constant.BASE_URL, programId);
-        Ion.with(mContext).load(url).asString().setCallback(new FutureCallback<String>() {
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
-            public void onCompleted(Exception e, String result) {
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
 
             }
         });
+        stringRequest.setShouldCache(false);
+        MyVolley.getRequestQueue().add(stringRequest);
     }
 
 }

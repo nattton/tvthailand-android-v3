@@ -86,12 +86,10 @@ public class OTVPart implements Parcelable {
 	}
 
 	public void setStream_url(String streamUrl) {
-//		this.streamUrl = CheckNullString(streamUrl);
-        this.streamUrl = "http://api.otv.co.th/mockup/embed.php?app=14&v=39954";
+		this.streamUrl = CheckNullString(streamUrl);
 	}
 
 	public String getVastUrl() {
-//        return "http://img.vserv.mobi/vast/6372f97c79807c85110999d2c7a9ae1b.xml";
 		return vastUrl;
 	}
 

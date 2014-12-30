@@ -1,13 +1,5 @@
 package com.makathon.tvthailand.player;
 
-import io.vov.vitamio.LibsChecker;
-import io.vov.vitamio.MediaPlayer;
-import io.vov.vitamio.MediaPlayer.OnBufferingUpdateListener;
-import io.vov.vitamio.MediaPlayer.OnInfoListener;
-import io.vov.vitamio.widget.MediaController;
-import io.vov.vitamio.widget.MediaController.OnHiddenListener;
-import io.vov.vitamio.widget.MediaController.OnShownListener;
-import io.vov.vitamio.widget.VideoView;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -20,10 +12,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.makathon.tvthailand.MyVolley;
 import com.makathon.tvthailand.R;
+
+import io.vov.vitamio.LibsChecker;
+import io.vov.vitamio.MediaPlayer;
+import io.vov.vitamio.MediaPlayer.OnBufferingUpdateListener;
+import io.vov.vitamio.MediaPlayer.OnInfoListener;
+import io.vov.vitamio.widget.MediaController;
+import io.vov.vitamio.widget.MediaController.OnHiddenListener;
+import io.vov.vitamio.widget.MediaController.OnShownListener;
+import io.vov.vitamio.widget.VideoView;
 
 @SuppressLint("NewApi")
 public class RadioPlayerActivity extends Activity implements OnInfoListener,
@@ -78,8 +78,7 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 		
 		if (mediaType != null && mediaType.equalsIgnoreCase("radio")) {
 			thumbnaiStation.setVisibility(View.VISIBLE);
-            ImageLoader imageLoader = MyVolley.getImageLoader();
-			thumbnaiStation.setImageUrl(thumbnailURL, imageLoader);
+			thumbnaiStation.setImageUrl(thumbnailURL, MyVolley.getImageLoader());
 		}
 
 		if (uri == null) {

@@ -71,7 +71,8 @@ public class CategoryFragment extends SherlockFragment implements OnItemClickLis
     }
 
     @Subscribe
-    public void onSectionLoaded(SectionCollectionDao data) {
-        mAdapter.notifyDataSetChanged();
+    public void onSectionLoaded(SectionManager.EventType eventType) {
+        if (eventType == SectionManager.EventType.Loaded)
+            mAdapter.notifyDataSetChanged();
     }
 }

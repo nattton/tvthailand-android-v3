@@ -22,15 +22,15 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.makathon.tvthailand.EpisodeActivity;
 import com.makathon.tvthailand.MainApplication;
+import com.makathon.tvthailand.MainApplication.TrackerName;
 import com.makathon.tvthailand.MoreDetailActivity;
 import com.makathon.tvthailand.MyVolley;
 import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.MainApplication.TrackerName;
 import com.makathon.tvthailand.contentprovider.MyProgramContentProvider;
 import com.makathon.tvthailand.database.Dao;
 import com.makathon.tvthailand.database.MyProgramModel;
@@ -41,12 +41,9 @@ import com.makathon.tvthailand.otv.model.OTVEpisode;
 import com.makathon.tvthailand.otv.model.OTVEpisodeAdapter;
 import com.makathon.tvthailand.otv.model.OTVEpisodes;
 import com.makathon.tvthailand.otv.model.OTVEpisodes.OnOTVEpisodesChangeListener;
-import com.makathon.tvthailand.EpisodeActivity;
 
 public class OTVShowActivity extends SherlockActivity implements
 		OnLoadDataListener, OnClickListener, OnItemClickListener, OnLongClickListener {
-
-	private ImageLoader mImageLoader;
 	
 	public static final String EXTRAS_PROGRAM = "EXTRAS_PROGRAM";
 
@@ -83,8 +80,6 @@ public class OTVShowActivity extends SherlockActivity implements
 		setContentView(R.layout.episode_view);
 		
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		
-		mImageLoader = MyVolley.getImageLoader();
 
 		initEpisode();
 		initiazeUI();
@@ -206,7 +201,7 @@ public class OTVShowActivity extends SherlockActivity implements
 		setTitle(program.getTitle());
 		tv_title.setText(program.getTitle());
 		tvDescription.setText(program.getDetail());
-		imgThumbnail.setImageUrl(program.getThumbnail(), mImageLoader);
+		imgThumbnail.setImageUrl(program.getThumbnail(), MyVolley.getImageLoader());
 	}
 
 	private void refreshView() {

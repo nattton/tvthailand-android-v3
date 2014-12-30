@@ -17,9 +17,10 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.koushikdutta.async.future.FutureCallback;
 import com.makathon.tvthailand.MainApplication.TrackerName;
 import com.makathon.tvthailand.account.AccountActivity;
 import com.makathon.tvthailand.dao.section.SectionCollectionDao;
@@ -103,14 +104,16 @@ public class MainActivity extends SherlockFragmentActivity implements
     }
 
     private void loadSection() {
-        HTTPEngine.getInstance().getSectionData(new FutureCallback<SectionCollectionDao>() {
+        SectionManager.getInstance().loadData();
+        HTTPEngine.getInstance().getSectionData(new Response.Listener<SectionCollectionDao>() {
             @Override
-            public void onCompleted(Exception e, SectionCollectionDao result) {
-                if (e == null) {
-                    SectionManager.getInstance().setData(result);
-                } else {
-                    Toast.makeText(MainActivity.this, "Cannot connect to the internet.", Toast.LENGTH_LONG).show();
-                }
+            public void onResponse(SectionCollectionDao response) {
+                SectionManager.getInstance().setData(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Cannot connect to the internet.", Toast.LENGTH_LONG).show();
             }
         });
     }

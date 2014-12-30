@@ -2,6 +2,7 @@ package com.makathon.tvthailand.otv;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -18,11 +19,12 @@ import com.makathon.tvthailand.MainApplication.TrackerName;
 import com.makathon.tvthailand.WebFullscreenActivity;
 import com.makathon.tvthailand.otv.model.OTVEpisode;
 import com.makathon.tvthailand.otv.model.OTVPartAdapter;
+import com.makathon.tvthailand.player.VastPlayerActivity;
+import com.makathon.tvthailand.player.VitamioVastPlayerActivity;
 
 public class OTVPartActivity extends SherlockActivity implements OnItemClickListener {
 	public static String EXTRAS_OTV_EPISODE = "EXTRAS_OTV_EPISODE";
 
-    private ImageLoader mImageLoader;
 	private OTVEpisode episode;
 	private OTVPartAdapter mAdapter;
 	
@@ -31,14 +33,12 @@ public class OTVPartActivity extends SherlockActivity implements OnItemClickList
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.part_list_view);
-		
-		mImageLoader = MyVolley.getImageLoader();
 
         Intent i = getIntent();
         episode = i.getParcelableExtra(EXTRAS_OTV_EPISODE);
         setTitle(episode.getNameTh() + "  " + episode.getDate());
 
-        mAdapter = new OTVPartAdapter(this, episode.getParts(), R.layout.part_list_item, mImageLoader);
+        mAdapter = new OTVPartAdapter(this, episode.getParts(), R.layout.part_list_item, MyVolley.getImageLoader());
 
         ListView listview = (ListView) findViewById(R.id.listView);
         listview.setAdapter(mAdapter);
@@ -65,21 +65,23 @@ public class OTVPartActivity extends SherlockActivity implements OnItemClickList
 	public void onItemClick(AdapterView<?> parent, View v, int position,
 			long id) {
 
-//        Intent intentVastPlayer;
-//
-//		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-//			intentVastPlayer = new Intent(OTVPartActivity.this, VastPlayerActivity.class);
-//
-//		} else {
-//			intentVastPlayer = new Intent(OTVPartActivity.this, VitamioVastPlayerActivity.class);
-//		}
-//        intentVastPlayer = new Intent(OTVPartActivity.this, VitamioVastPlayerActivity.class);
-//        intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_EPISODE, episode);
-//        intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_PART_POSITION, position);
-//        startActivity(intentVastPlayer);
+        Intent intentVastPlayer;
 
-        Intent i = new Intent(OTVPartActivity.this, WebFullscreenActivity.class);
-        startActivity(i);
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+			intentVastPlayer = new Intent(OTVPartActivity.this, VastPlayerActivity.class);
+
+		} else {
+			intentVastPlayer = new Intent(OTVPartActivity.this, VitamioVastPlayerActivity.class);
+		}
+
+        Log.d("Play Video", episode.getParts().get(position).getStreamUrl());
+//        intentVastPlayer = new Intent(OTVPartActivity.this, VitamioVastPlayerActivity.class);
+        intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_EPISODE, episode);
+        intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_PART_POSITION, position);
+        startActivity(intentVastPlayer);
+
+//        Intent i = new Intent(OTVPartActivity.this, WebFullscreenActivity.class);
+//        startActivity(i);
 
 	}
 }

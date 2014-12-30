@@ -2,9 +2,11 @@ package com.makathon.tvthailand.manager.http;
 
 import android.content.Context;
 
-import com.google.gson.reflect.TypeToken;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.makathon.tvthailand.MyVolley;
 import com.makathon.tvthailand.dao.advertise.AdCollectionDao;
 import com.makathon.tvthailand.dao.advertise.KapookItemDao;
 import com.makathon.tvthailand.dao.section.SectionCollectionDao;
@@ -27,46 +29,49 @@ public class HTTPEngine {
     }
 
     private Context mContext;
+    private RequestQueue mRequestQueue;
+    private Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+
+    public enum ShowMode {
+        CATEGORY, CHANNEL
+    }
 
     private HTTPEngine() {
         mContext = Contextor.getInstance().getContext();
+        mRequestQueue = MyVolley.getRequestQueue();
     }
 
-    public void getAdvertiseData(FutureCallback<AdCollectionDao> callback) {
+    public void getAdvertiseData(Response.Listener<AdCollectionDao> listener, Response.ErrorListener errorListener) {
         String url = String.format("%s/advertise", Constant.BASE_URL);
-        Ion.with(mContext)
-                .load(url)
-                .addQueries(Constant.getDefaultParams())
-                .setLogging("Load Advertise", 1)
-                .as(new TypeToken<AdCollectionDao>() {})
-                .setCallback(callback);
+        GsonRequest<AdCollectionDao> gsonRequest = new GsonRequest<>(url, AdCollectionDao.class, null, listener, errorListener);
+        mRequestQueue.add(gsonRequest);
     }
 
-    public void getAdKapookData (FutureCallback<KapookItemDao> callback) {
+    public void getAdKapookData(Response.Listener<KapookItemDao> listener, Response.ErrorListener errorListener) {
         String url = "http://kapi.kapook.com/partner/url";
-        Ion.with(mContext)
-                .load(url)
-                .setLogging("Load AdKapook", 1)
-                .as(new TypeToken<KapookItemDao>() {})
-                .setCallback(callback);
-    }
-    public void getSectionData(FutureCallback<SectionCollectionDao> callback) {
-        String url = String.format("%s/section", Constant.BASE_URL);
-        Ion.with(mContext)
-                .load(url)
-                .addQueries(Constant.getDefaultParams())
-                .setLogging("Load Section", 1)
-                .as(new TypeToken<SectionCollectionDao>() {})
-                .setCallback(callback);
+        GsonRequest<KapookItemDao> gsonRequest = new GsonRequest<>(url, KapookItemDao.class, null, listener, errorListener);
+        mRequestQueue.add(gsonRequest);
     }
 
-    public void getCategory(String categoryID, int start, FutureCallback<ShowCollectionDao> callback) {
-        String url = String.format("%s/category/%s/%d", Constant.BASE_URL, categoryID, start);
-        Ion.with(mContext)
-                .load(url)
-                .addQueries(Constant.getDefaultParams())
-                .setLogging("Load Category", 1)
-                .as(new TypeToken<ShowCollectionDao>() {})
-                .setCallback(callback);
+    public void getSectionData(Response.Listener<SectionCollectionDao> listener, Response.ErrorListener errorListener) {
+        String url = String.format("%s/section", Constant.BASE_URL);
+        GsonRequest<SectionCollectionDao> gsonRequest = new GsonRequest<>(url, SectionCollectionDao.class, null, listener, errorListener);
+        mRequestQueue.add(gsonRequest);
+    }
+
+    public void getShowData(ShowMode showMode, String id, final int start, Response.Listener<ShowCollectionDao> listener, Response.ErrorListener errorListener) {
+        String apiName = "";
+        switch (showMode) {
+            case CATEGORY:
+                apiName = "category";
+                break;
+            case CHANNEL:
+                apiName = "channel";
+                break;
+        }
+
+        String url = String.format("%s/%s/%s/%d", Constant.BASE_URL, apiName, id, start);
+        GsonRequest<ShowCollectionDao> gsonRequest = new GsonRequest<>(url, ShowCollectionDao.class, null, listener, errorListener);
+        mRequestQueue.add(gsonRequest);
     }
 }

@@ -10,6 +10,7 @@ public class ShowItemDao {
     @SerializedName("title") private String title;
     @SerializedName("thumbnail") private String thumbnailURL;
     @SerializedName("description") private String description;
+    @SerializedName("last_epname") private String lastEpname;
     @SerializedName("is_otv") private String isOtv;
     @SerializedName("otv_id") private String otvID;
 
@@ -27,6 +28,10 @@ public class ShowItemDao {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getLastEpname() {
+        return lastEpname;
     }
 
     public boolean isOtv() {

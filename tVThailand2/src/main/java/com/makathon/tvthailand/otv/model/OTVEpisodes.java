@@ -1,11 +1,6 @@
 package com.makathon.tvthailand.otv.model;
 
-import java.util.ArrayList;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
@@ -16,26 +11,29 @@ import com.makathon.tvthailand.MyVolley;
 import com.makathon.tvthailand.datasource.OnLoadDataListener;
 import com.makathon.tvthailand.datasource.Program;
 
-import io.vov.vitamio.utils.Log;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 
 public class OTVEpisodes {
 	private static final String EMPTY_STRING = "";
-	
-	private RequestQueue mRequestQueue;
+
 	private ArrayList<OTVEpisode> episodes = new ArrayList<>();
 	
 	public OTVEpisodes() {
-		mRequestQueue = MyVolley.getRequestQueue();
+
 	}
 
 	public void loadOTVEpisodes(Program show) {
 		notifyLoadStart();
 		String url = String.format("%s/Content/index/%s/%s/%s/%s/0/50/0", OTVConfig.BASE_URL, OTVConfig.APP_ID, MainApplication.getAppVersion(), OTVConfig.API_VERSION, show.getOtvId());
-        Log.e("OTVEpisodes", url);
+//        Log.d("OTVEpisodes", url);
         JsonObjectRequest loadEpisodeRequest = new JsonObjectRequest(Method.GET, url, null, reqSuccessListener(), reqErrorListener());
 		loadEpisodeRequest.setShouldCache(false);
-		mRequestQueue.add(loadEpisodeRequest);
+        MyVolley.getRequestQueue().add(loadEpisodeRequest);
 	}
 	
 	private Listener<JSONObject> reqSuccessListener() {

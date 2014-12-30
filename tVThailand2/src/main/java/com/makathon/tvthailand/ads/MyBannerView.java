@@ -1,21 +1,5 @@
 package com.makathon.tvthailand.ads;
 
-import java.util.Locale;
-
-import mobi.vserv.android.ads.AdLoadCallback;
-import mobi.vserv.android.ads.AdOrientation;
-import mobi.vserv.android.ads.ViewNotEmptyException;
-import mobi.vserv.android.ads.VservAd;
-import mobi.vserv.android.ads.VservController;
-import mobi.vserv.android.ads.VservManager;
-
-import com.koushikdutta.async.future.FutureCallback;
-import com.makathon.tvthailand.R;
-import com.makathon.tvthailand.dao.advertise.AdCollectionDao;
-import com.makathon.tvthailand.dao.advertise.AdItemDao;
-import com.makathon.tvthailand.dao.advertise.KapookItemDao;
-import com.makathon.tvthailand.manager.http.HTTPEngine;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -31,10 +15,25 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.makathon.tvthailand.R;
+import com.makathon.tvthailand.dao.advertise.AdCollectionDao;
+import com.makathon.tvthailand.dao.advertise.AdItemDao;
+import com.makathon.tvthailand.dao.advertise.KapookItemDao;
+import com.makathon.tvthailand.manager.http.HTTPEngine;
+
+import java.util.Locale;
+
+import mobi.vserv.android.ads.AdLoadCallback;
+import mobi.vserv.android.ads.AdOrientation;
+import mobi.vserv.android.ads.ViewNotEmptyException;
+import mobi.vserv.android.ads.VservAd;
+import mobi.vserv.android.ads.VservController;
+import mobi.vserv.android.ads.VservManager;
+
 @SuppressLint({ "DefaultLocale", "SetJavaScriptEnabled" })
 public class MyBannerView extends LinearLayout {
-	private final String PREF_NAME = "com.makathon.tvthailand.ads.KapookBannerView";
-
 	private boolean autoLoad = false;
 
 	private LinearLayout parentView;
@@ -111,14 +110,15 @@ public class MyBannerView extends LinearLayout {
 	}
 
     private void requestAds() {
-        HTTPEngine.getInstance().getAdvertiseData(new FutureCallback<AdCollectionDao>() {
+        HTTPEngine.getInstance().getAdvertiseData(new Response.Listener<AdCollectionDao>() {
             @Override
-            public void onCompleted(Exception e, AdCollectionDao result) {
-                if (e == null) {
-                    displayAds(result);
-                } else {
-                    requestVservAd();
-                }
+            public void onResponse(AdCollectionDao response) {
+                displayAds(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                requestVservAd();
             }
         });
     }
@@ -138,15 +138,18 @@ public class MyBannerView extends LinearLayout {
 	}
 
     public void requestKapookAds() {
-        HTTPEngine.getInstance().getAdKapookData(new FutureCallback<KapookItemDao>() {
+        HTTPEngine.getInstance().getAdKapookData(new Response.Listener<KapookItemDao>() {
             @Override
-            public void onCompleted(Exception e, KapookItemDao result) {
-                if (e == null && result != null) {
-                    webView1px.loadUrl(result.getUrl1x1());
-                    webViewShow.loadUrl(result.getUrlShow());
-                } else {
-                    requestVservAd();
-                }
+            public void onResponse(KapookItemDao response) {
+                if (response.getUrl1x1() != null && !"".equals(response.getUrl1x1()))
+                    webView1px.loadUrl(response.getUrl1x1());
+                if (response.getUrlShow() != null && !"".equals(response.getUrlShow()))
+                    webViewShow.loadUrl(response.getUrlShow());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                requestVservAd();
             }
         });
     }

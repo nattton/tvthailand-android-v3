@@ -17,6 +17,10 @@ import java.util.HashMap;
  */
 public class SectionManager {
 
+    public static enum EventType {
+        Loaded
+    }
+
     private static SectionManager instance;
 
     public static SectionManager getInstance() {
@@ -55,7 +59,7 @@ public class SectionManager {
             }
         }
         this.data = data;
-        BusProvider.getInstance().post(data);
+        BusProvider.getInstance().post(EventType.Loaded);
         saveData();
     }
 
