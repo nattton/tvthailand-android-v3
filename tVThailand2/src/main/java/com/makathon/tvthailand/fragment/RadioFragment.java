@@ -20,7 +20,7 @@ import com.makathon.tvthailand.R;
 import com.makathon.tvthailand.adapter.RadioCustomAdapter;
 import com.makathon.tvthailand.dao.section.RadioItemDao;
 import com.makathon.tvthailand.manager.SectionManager;
-import com.makathon.tvthailand.manager.bus.BusProvider;
+import com.makathon.tvthailand.manager.bus.MainBus;
 import com.makathon.tvthailand.player.RadioPlayerActivity;
 import com.squareup.otto.Subscribe;
 
@@ -56,7 +56,7 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-                RadioItemDao radio = SectionManager.getInstance().getData().getRadios()[position];
+                RadioItemDao radio = SectionManager.getInstance().getData().getRadios().get(position);
 				 Tracker t = ((MainApplication) getActivity().getApplication()).getTracker(
 				            TrackerName.APP_TRACKER);
 				 t.setScreenName("Radio");
@@ -84,18 +84,19 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        BusProvider.getInstance().register(this);
+        MainBus.getInstance().register(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        BusProvider.getInstance().unregister(this);
+        MainBus.getInstance().unregister(this);
     }
 
     @Subscribe
     public void onSectionLoaded(SectionManager.EventType eventType) {
         if (eventType == SectionManager.EventType.Loaded)
-            mAdapter.notifyDataSetChanged();
+            if (mAdapter != null)
+                mAdapter.notifyDataSetChanged();
     }
 }

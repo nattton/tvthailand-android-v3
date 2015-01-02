@@ -40,7 +40,7 @@ public class ChannelAdapter extends BaseAdapter{
 			holder = (ViewHolder)convertView.getTag();
 		}
 		
-		ChannelItemDao item = SectionManager.getInstance().getData().getChannels()[position];
+		ChannelItemDao item = SectionManager.getInstance().getData().getChannels().get(position);
 		holder.channel_tv.setText(item.getTitle());
 		if (item.getThumbnail() != null) {
 			holder.channel_icon.setImageUrl(item.getThumbnail(), imageLoader);
@@ -56,7 +56,7 @@ public class ChannelAdapter extends BaseAdapter{
         if (SectionManager.getInstance().getData() == null
                 || SectionManager.getInstance().getData().getChannels() == null)
             return 0;
-        return SectionManager.getInstance().getData().getChannels().length;
+        return SectionManager.getInstance().getData().getChannels().size();
     }
 
 	@Override

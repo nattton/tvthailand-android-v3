@@ -1,7 +1,7 @@
 package com.makathon.tvthailand.dao.show;
 
 import com.google.gson.annotations.SerializedName;
-import com.makathon.tvthailand.manager.bus.BusProvider;
+import com.makathon.tvthailand.manager.bus.MainBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,6 @@ public class ShowCollectionDao {
             this.shows.add(item);
         }
 
-        BusProvider.getInstance().post(this);
+        MainBus.getInstance().post(this);
     }
 }

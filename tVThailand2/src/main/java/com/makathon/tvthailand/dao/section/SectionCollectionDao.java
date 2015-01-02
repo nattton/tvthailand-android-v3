@@ -2,23 +2,29 @@ package com.makathon.tvthailand.dao.section;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created by nattapong on 12/19/14 AD.
  */
 public class SectionCollectionDao {
-    @SerializedName("categories") private CategoryItemDao[] categories;
-    @SerializedName("channels") private ChannelItemDao[] channels;
-    @SerializedName("radios") private RadioItemDao[] radios;
+    @SerializedName("categories") private List<CategoryItemDao> categories;
+    @SerializedName("channels") private List<ChannelItemDao> channels;
+    @SerializedName("radios") private List<RadioItemDao> radios;
 
-    public CategoryItemDao[] getCategories() {
+    public List<CategoryItemDao> getCategories() {
         return categories;
     }
 
-    public ChannelItemDao[] getChannels() {
+    public List<ChannelItemDao> getChannels() {
         return channels;
     }
 
-    public RadioItemDao[] getRadios() {
+    public List<RadioItemDao> getRadios() {
+        if (radios == null) {
+            radios = Collections.emptyList();
+        }
         return radios;
     }
 }

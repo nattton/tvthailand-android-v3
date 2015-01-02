@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.makathon.tvthailand.dao.section.SectionCollectionDao;
-import com.makathon.tvthailand.manager.bus.BusProvider;
+import com.makathon.tvthailand.manager.bus.MainBus;
 import com.makathon.tvthailand.utils.Constant;
 import com.makathon.tvthailand.utils.Contextor;
 
@@ -38,6 +38,9 @@ public class SectionManager {
     }
 
     public SectionCollectionDao getData() {
+        if (data == null) {
+            data = new SectionCollectionDao();
+        }
         return data;
     }
 
@@ -45,8 +48,8 @@ public class SectionManager {
         if (data != null && data.getRadios() != null) {
             HashMap<String, Integer> categorySet = new HashMap<>();
             int headerValue = 0;
-            for (int i = 0; i < data.getRadios().length; i++) {
-                String cate = data.getRadios()[i].getCategory();
+            for (int i = 0; i < data.getRadios().size(); i++) {
+                String cate = data.getRadios().get(i).getCategory();
                 int headerId = 0;
                 if (categorySet.containsKey(cate)) {
                     headerId = categorySet.get(cate);
@@ -55,11 +58,11 @@ public class SectionManager {
                     categorySet.put(cate, headerValue);
                     headerValue++;
                 }
-                data.getRadios()[i].setHeaderId(headerId);
+                data.getRadios().get(i).setHeaderId(headerId);
             }
         }
         this.data = data;
-        BusProvider.getInstance().post(EventType.Loaded);
+        MainBus.getInstance().post(EventType.Loaded);
         saveData();
     }
 

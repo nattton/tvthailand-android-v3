@@ -117,11 +117,11 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 			mMyProgram.setThumbnail(program.getThumbnail());
 			mMyProgram.setDescription(program.getDescription());
 			mMyProgram.setRating(program.getRating());
-			MyProgamUpdateTask myProgamUpdateTask = new MyProgamUpdateTask(
+			MyProgramUpdateTask myProgramUpdateTask = new MyProgramUpdateTask(
 					mDaoMyProgram, mMyProgram) {
 
 			};
-			myProgamUpdateTask.execute();
+			myProgramUpdateTask.execute();
 		}
 
         ListView epList = (ListView) findViewById(R.id.ep_list);
@@ -249,14 +249,14 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 
 	}
 
-	protected class MyProgamUpdateTask extends
+	protected class MyProgramUpdateTask extends
 			AsyncTask<Integer, Integer, Void> {
 
 		private Dao<MyProgramModel> mDaoMyProgram;
 		private MyProgramModel mMyProgram;
 
-		public MyProgamUpdateTask(Dao<MyProgramModel> mDaoMyProgram,
-				MyProgramModel mMyProgram) {
+		public MyProgramUpdateTask(Dao<MyProgramModel> mDaoMyProgram,
+                                   MyProgramModel mMyProgram) {
 			this.mDaoMyProgram = mDaoMyProgram;
 			this.mMyProgram = mMyProgram;
 		}
@@ -368,20 +368,35 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 
                     @Override
                     public void onStart() {
-                        if (progressDialog == null)
-                            progressDialog = ProgressDialog.show(EpisodeActivity.this, "",
-                                    "Loading, Please wait...", true);
-                        else progressDialog.show();
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (progressDialog == null)
+                                    progressDialog = ProgressDialog.show(EpisodeActivity.this, "",
+                                            "Loading, Please wait...", true);
+                                else progressDialog.show();
+                            }
+                        });
                     }
 
                     @Override
                     public void onFinish() {
-                        progressDialog.dismiss();
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialog.dismiss();
+                            }
+                        });
                     }
 
                     @Override
-                    public void onError(String message) {
-                        Toast.makeText(EpisodeActivity.this, message, Toast.LENGTH_LONG).show();
+                    public void onError(final String message) {
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(EpisodeActivity.this, message, Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
                 });
 				parts.playVideoPart(0);
@@ -403,11 +418,11 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		
 		long lastUpdate = new Date().getTime();
 		mMyProgram.setTimeViewed(lastUpdate);
-		MyProgamUpdateTask myProgamUpdateTask = new MyProgamUpdateTask(
+		MyProgramUpdateTask myProgramUpdateTask = new MyProgramUpdateTask(
 				mDaoMyProgram, mMyProgram) {
 
 		};
-		myProgamUpdateTask.execute();
+		myProgramUpdateTask.execute();
 	}
 	
 	@Override

@@ -42,7 +42,7 @@ public class CategoryAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-        CategoryItemDao item = SectionManager.getInstance().getData().getCategories()[position];
+        CategoryItemDao item = SectionManager.getInstance().getData().getCategories().get(position);
 		holder.title.setText(item.getTitle());
 		holder.thumbnail.setImageUrl(item.getThumbnail(), imageLoader);
 		return convertView;
@@ -53,7 +53,7 @@ public class CategoryAdapter extends BaseAdapter {
         if (SectionManager.getInstance().getData() == null
                 || SectionManager.getInstance().getData().getCategories() == null)
             return 0;
-		return SectionManager.getInstance().getData().getCategories().length;
+		return SectionManager.getInstance().getData().getCategories().size();
 	}
 
 	@Override

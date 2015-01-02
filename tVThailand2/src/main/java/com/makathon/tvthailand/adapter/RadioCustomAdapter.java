@@ -12,6 +12,7 @@ import com.makathon.tvthailand.R;
 import com.makathon.tvthailand.dao.section.RadioItemDao;
 import com.tonicartos.widget.stickygridheaders.StickyGridHeadersSimpleArrayAdapter;
 
+import java.util.List;
 
 
 public class RadioCustomAdapter extends StickyGridHeadersSimpleArrayAdapter<RadioItemDao> {
@@ -26,7 +27,7 @@ public class RadioCustomAdapter extends StickyGridHeadersSimpleArrayAdapter<Radi
 
 
 
-	public RadioCustomAdapter(Context context, RadioItemDao[] items,
+	public RadioCustomAdapter(Context context, List<RadioItemDao> items,
 			int headerResId, int itemResId, ImageLoader mImageLoader) {
 		super(context, items, headerResId, itemResId);
 		this.mInflater = LayoutInflater.from(context);

@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.makathon.tvthailand.dao.show.ShowCollectionDao;
 import com.makathon.tvthailand.dao.show.ShowItemDao;
-import com.makathon.tvthailand.manager.bus.BusProvider;
+import com.makathon.tvthailand.manager.bus.MainBus;
 import com.makathon.tvthailand.utils.Contextor;
 
 
@@ -47,7 +47,7 @@ public class ShowManager {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                BusProvider.getInstance().post(EventType.Loaded);
+                MainBus.getInstance().post(EventType.Loaded);
             }
         });
     }

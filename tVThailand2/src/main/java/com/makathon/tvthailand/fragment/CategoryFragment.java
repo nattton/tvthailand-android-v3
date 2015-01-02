@@ -18,9 +18,8 @@ import com.makathon.tvthailand.ProgramActivity;
 import com.makathon.tvthailand.R;
 import com.makathon.tvthailand.adapter.CategoryAdapter;
 import com.makathon.tvthailand.dao.section.CategoryItemDao;
-import com.makathon.tvthailand.dao.section.SectionCollectionDao;
 import com.makathon.tvthailand.manager.SectionManager;
-import com.makathon.tvthailand.manager.bus.BusProvider;
+import com.makathon.tvthailand.manager.bus.MainBus;
 import com.squareup.otto.Subscribe;
 
 public class CategoryFragment extends SherlockFragment implements OnItemClickListener {
@@ -41,7 +40,7 @@ public class CategoryFragment extends SherlockFragment implements OnItemClickLis
 	
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-        CategoryItemDao category = SectionManager.getInstance().getData().getCategories()[position];
+        CategoryItemDao category = SectionManager.getInstance().getData().getCategories().get(position);
 		
 		 Tracker t = ((MainApplication) getActivity().getApplication()).getTracker(
 		            TrackerName.APP_TRACKER);
@@ -61,13 +60,13 @@ public class CategoryFragment extends SherlockFragment implements OnItemClickLis
     @Override
     public void onResume() {
         super.onResume();
-        BusProvider.getInstance().register(this);
+        MainBus.getInstance().register(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        BusProvider.getInstance().unregister(this);
+        MainBus.getInstance().unregister(this);
     }
 
     @Subscribe
