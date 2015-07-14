@@ -81,9 +81,9 @@
         android:orientation="vertical" >
     </LinearLayout>
 
-    <com.makathon.tvthailand.ads.MyBannerView
+    <com.codemobi.android.tvthailand.ads.MyBannerView
         android:layout_width="match_parent"
         android:layout_height="50dp" >
-    </com.makathon.tvthailand.ads.MyBannerView>
+    </com.codemobi.android.tvthailand.ads.MyBannerView>
 
 </LinearLayout>

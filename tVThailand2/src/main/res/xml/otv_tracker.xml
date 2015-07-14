@@ -8,11 +8,11 @@
     <bool name="ga_reportUncaughtExceptions">true</bool>
     
     <!-- Player Activity -->
-    <screenName name="com.makathon.tvthailand.player.YoutubePlayerViewActivity">YoutubePlayer</screenName>
-    <screenName name="com.makathon.tvthailand.player.VideoPlayerActivity">VideoPlayer</screenName>
-    <screenName name="com.makathon.tvthailand.player.VastPlayerActivity">VastPlayerActivity</screenName>
+    <screenName name="com.codemobi.android.tvthailand.player.YoutubePlayerViewActivity">YoutubePlayer</screenName>
+    <screenName name="com.codemobi.android.tvthailand.player.VideoPlayerActivity">VideoPlayer</screenName>
+    <screenName name="com.codemobi.android.tvthailand.player.VastPlayerActivity">VastPlayerActivity</screenName>
     <!-- OTV Activity -->
-    <screenName name="com.makathon.tvthailand.otv.OTVShowActivity">OTVShow</screenName>
-    <screenName name="com.makathon.tvthailand.otv.OTVPartActivity">OTVPart</screenName>
+    <screenName name="com.codemobi.android.tvthailand.otv.OTVShowActivity">OTVShow</screenName>
+    <screenName name="com.codemobi.android.tvthailand.otv.OTVPartActivity">OTVPart</screenName>
     
 </resources>
