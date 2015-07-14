@@ -2,6 +2,7 @@ package com.codemobi.android.tvthailand.adapter;
 
 import java.util.HashMap;
 
+import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.datasource.Episode;
 import com.codemobi.android.tvthailand.datasource.Episodes;
 
@@ -18,12 +19,11 @@ import android.widget.TextView;
 public class EpisodeAdapter extends BaseAdapter{
 	
 	private Activity activity;
-	private int resId;
 	private Episodes episodes;
 	private static LayoutInflater mInflater = null;
 
-	HashMap<String, Integer> videoTypeMap = new HashMap<String, Integer>();
-	public EpisodeAdapter(Activity a, Episodes c, int resouceId) {
+	HashMap<String, Integer> videoTypeMap = new HashMap<>();
+	public EpisodeAdapter(Activity a, Episodes c) {
 		videoTypeMap.put("0", com.codemobi.android.tvthailand.R.drawable.ic_youtube);
 		videoTypeMap.put("1", com.codemobi.android.tvthailand.R.drawable.ic_dailymotion);
 		videoTypeMap.put("11", com.codemobi.android.tvthailand.R.drawable.ic_chrome);
@@ -34,7 +34,6 @@ public class EpisodeAdapter extends BaseAdapter{
 		
         activity = a;
         episodes = c;
-        resId = resouceId;
         mInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -52,7 +51,7 @@ public class EpisodeAdapter extends BaseAdapter{
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(resId, parent, false);
+			convertView = mInflater.inflate(R.layout.episode_list_item, parent, false);
             holder = new ViewHolder();
             holder.mediaThumnail = (ImageView)convertView.findViewById(com.codemobi.android.tvthailand.R.id.media_thumnail);
             holder.title = (TextView)convertView.findViewById(com.codemobi.android.tvthailand.R.id.tv_label_ep);
@@ -66,12 +65,12 @@ public class EpisodeAdapter extends BaseAdapter{
 		}
 		
 		Episode item = episodes.get(position);
-		
+
 		if (videoTypeMap.containsKey(item.getSrcType())) {
 			holder.mediaThumnail.setImageResource(videoTypeMap.get(item.getSrcType()));
 		} 
 		else {
-//			holder.mediaThumnail.setImageResource(R.drawable.ic_error);
+//			holder.mediaThumbnail.setImageResource(R.drawable.ic_error);
 		}
 		
 		holder.title.setText(item.getTitle());

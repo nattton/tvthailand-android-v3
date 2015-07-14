@@ -13,42 +13,26 @@ public class Program implements Parcelable {
 	private String poster;
 	private String description;
 	private String detail;
-	private float rating;
 	private String lastEPName;
 	private int viewCount;
 	private int voteCount;
 	
 	private int isOTV;
 	private String otvId;
-	private String otvApiName;
+	private String otvLogo;
 
 	public Program(String id, String title, String thumbnail,
-			String description, float rating, int isOTV, String otvId, String otvApiName) {
+			String description, String lastEPName, int isOTV, String otvId, String otvLogo) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.thumbnail = thumbnail;
 		this.description = description;
-		this.rating = rating;
-		
-		this.isOTV = isOTV;
-		this.otvId = otvId;
-		this.otvApiName = otvApiName;
-	}
-
-	public Program(String id, String title, String thumbnail,
-			String description, float rating, String lastEPName, int isOTV, String otvId, String otvApiName) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.thumbnail = thumbnail;
-		this.description = description;
-		this.rating = rating;
 		this.lastEPName = lastEPName;
-		
+
 		this.isOTV = isOTV;
 		this.otvId = otvId;
-		this.otvApiName = otvApiName;
+		this.otvLogo = otvLogo;
 	}
 	
 	public Program(JSONObject jObj) {
@@ -59,14 +43,13 @@ public class Program implements Parcelable {
 			this.poster = jObj.getString("poster");
 			this.description = jObj.getString("description");
 			this.detail = jObj.getString("detail");
-			this.rating = jObj.has("rating") ? jObj.getLong("rating"): 0;
 			this.lastEPName = jObj.has("last_epname") ? jObj.getString("last_epname"): "";
 			this.viewCount = jObj.has("view_count") ? jObj.getInt("vote_count"): 0;
 			this.voteCount = jObj.has("vote_count") ? jObj.getInt("vote_count"): 0;
 			
 			this.isOTV = jObj.has("is_otv") ? jObj.getInt("is_otv"): 0;
 			this.otvId = jObj.has("otv_id") ? jObj.getString("otv_id"): "";
-			this.otvApiName = jObj.has("otv_api_name") ? jObj.getString("otv_api_name"): "";
+			this.otvLogo = jObj.has("otv_logo") ? jObj.getString("otv_logo"): "";
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -94,10 +77,6 @@ public class Program implements Parcelable {
 		return detail;
 	}
 
-	public float getRating() {
-		return rating;
-	}
-
 	public String getLastEPName() {
 		return lastEPName;
 	}
@@ -116,9 +95,6 @@ public class Program implements Parcelable {
 	}
 
 	public int isOTV() {
-//		return isOTV;
-//      force no otv
-//      return 0;
         return this.isOTV;
 	}
 
@@ -126,8 +102,8 @@ public class Program implements Parcelable {
 		return otvId;
 	}
 
-	public String getOtvApiName() {
-		return otvApiName;
+	public String getOtvLogo() {
+		return otvLogo;
 	}
 
 	@Override
@@ -143,13 +119,12 @@ public class Program implements Parcelable {
 		dest.writeString(poster);
 		dest.writeString(description);
 		dest.writeString(detail);
-		dest.writeFloat(rating);
 		dest.writeString(lastEPName);
 		dest.writeInt(viewCount);
 		
 		dest.writeInt(isOTV);
 		dest.writeString(otvId);
-		dest.writeString(otvApiName);
+		dest.writeString(otvLogo);
 	}
 	
 	public static final Parcelable.Creator<Program> CREATOR = new Parcelable.Creator<Program>() {
@@ -173,13 +148,12 @@ public class Program implements Parcelable {
 		this.poster = source.readString();
 		this.description = source.readString();
 		this.detail = source.readString();
-		this.rating = source.readFloat();
 		this.lastEPName = source.readString();
 		this.viewCount = source.readInt();
 		
 		this.isOTV = source.readInt();
 		this.otvId = source.readString();
-		this.otvApiName = source.readString();
+		this.otvLogo = source.readString();
 	}
 
 }

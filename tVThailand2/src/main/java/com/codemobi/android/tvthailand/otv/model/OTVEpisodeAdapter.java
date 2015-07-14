@@ -1,5 +1,6 @@
 package com.codemobi.android.tvthailand.otv.model;
 
+import com.bumptech.glide.Glide;
 import com.codemobi.android.tvthailand.R;
 
 import android.app.Activity;
@@ -18,18 +19,20 @@ public class OTVEpisodeAdapter extends BaseAdapter {
 	private int resId;
 	private OTVEpisodes episodes;
 	private static LayoutInflater mInflater = null;
+	private String logo;
 	
 	public OTVEpisodeAdapter(Activity otvShowDetailActivity,
-			OTVEpisodes mOTVEpisodes, int episodeListItem) {
+			OTVEpisodes mOTVEpisodes, int episodeListItem, String logo) {
 		this.activity = otvShowDetailActivity;
 		this.resId = episodeListItem;
 		this.episodes = mOTVEpisodes;
+		this.logo = logo;
 		
 		mInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	private static final class ViewHolder {
-		public ImageView mediaThumnail;
+		public ImageView mediaThumbnail;
 		public TextView title;
 		public TextView aired;
 		public TextView viewCount;
@@ -60,7 +63,7 @@ public class OTVEpisodeAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = mInflater.inflate(resId, parent, false);
             holder = new ViewHolder();
-            holder.mediaThumnail = (ImageView)convertView.findViewById(R.id.media_thumnail);
+            holder.mediaThumbnail = (ImageView)convertView.findViewById(R.id.media_thumnail);
             holder.title = (TextView)convertView.findViewById(R.id.tv_label_ep);
             holder.aired = (TextView)convertView.findViewById(R.id.tv_on_air_ep);
             holder.viewCount = (TextView)convertView.findViewById(R.id.view_count_ep);
@@ -76,7 +79,14 @@ public class OTVEpisodeAdapter extends BaseAdapter {
 		
 		holder.layoutParts.setVisibility(View.GONE);
 		holder.view_count_ll.setVisibility(View.INVISIBLE);
-		holder.mediaThumnail.setImageResource(R.drawable.ic_otv);
+
+		Glide.with(parent.getContext())
+				.load(logo)
+				.centerCrop()
+				.placeholder(R.drawable.ic_otv)
+				.crossFade()
+				.into(holder.mediaThumbnail);
+
 		holder.title.setText(episode.getNameTh() + "  " + episode.getDate());
 		holder.aired.setText("Aired : "+episode.getDate());
 		

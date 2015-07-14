@@ -47,11 +47,6 @@ public class HTTPEngine {
         mRequestQueue.add(gsonRequest);
     }
 
-    public void getAdKapookData(Response.Listener<KapookItemDao> listener, Response.ErrorListener errorListener) {
-        String url = "http://kapi.kapook.com/partner/url";
-        GsonRequest<KapookItemDao> gsonRequest = new GsonRequest<>(url, KapookItemDao.class, null, listener, errorListener);
-        mRequestQueue.add(gsonRequest);
-    }
 
     public void getSectionData(Response.Listener<SectionCollectionDao> listener, Response.ErrorListener errorListener) {
         String url = String.format("%s/section", Constant.BASE_URL);

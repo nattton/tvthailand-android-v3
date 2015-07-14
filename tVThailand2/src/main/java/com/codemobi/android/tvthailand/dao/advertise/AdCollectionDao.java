@@ -20,11 +20,17 @@ public class AdCollectionDao {
         return ads;
     }
 
-    public AdItemDao getShuffleAd() {
+    public AdItemDao getShuffleAd() throws EmptyException {
         int adSize = ads.size();
+        if (adSize == 0) throw new EmptyException("Empty List");
         Random randomGenerator = new Random();
         int randomInt = randomGenerator.nextInt(adSize);
         return ads.get(randomInt);
     }
 
+    public static class EmptyException extends Exception {
+        public EmptyException(String msg) {
+            super(msg);
+        }
+    }
 }

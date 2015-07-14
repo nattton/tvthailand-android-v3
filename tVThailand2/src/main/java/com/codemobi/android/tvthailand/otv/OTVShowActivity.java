@@ -14,6 +14,7 @@ import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,11 +23,12 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.android.volley.toolbox.NetworkImageView;
+import com.bumptech.glide.Glide;
 import com.codemobi.android.tvthailand.EpisodeActivity;
 import com.codemobi.android.tvthailand.MainApplication;
 import com.codemobi.android.tvthailand.MoreDetailActivity;
 import com.codemobi.android.tvthailand.MyVolley;
+import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.contentprovider.MyProgramContentProvider;
 import com.codemobi.android.tvthailand.database.Dao;
 import com.codemobi.android.tvthailand.database.MyProgramModel;
@@ -53,7 +55,7 @@ public class OTVShowActivity extends SherlockActivity implements
 	 */
 	private TextView tv_title;
 	private TextView tvDescription;
-	private NetworkImageView imgThumbnail;
+	private ImageView imgThumbnail;
 	private ImageButton imb_fav;
 //	private LinearLayout header_buttom_ll;
 	// private TextView vote_now_tv;
@@ -92,8 +94,7 @@ public class OTVShowActivity extends SherlockActivity implements
 			mMyProgram.setTitle(program.getTitle());
 			mMyProgram.setThumbnail(program.getThumbnail());
 			mMyProgram.setDescription(program.getDescription());
-			mMyProgram.setRating(program.getRating());
-			MyProgamInsertTask myProgramInsertTask = new MyProgamInsertTask(
+			MyProgramInsertTask myProgramInsertTask = new MyProgramInsertTask(
 					mDaoMyProgram, mMyProgram) {
 
 			};
@@ -104,12 +105,11 @@ public class OTVShowActivity extends SherlockActivity implements
 			mMyProgram.setTitle(program.getTitle());
 			mMyProgram.setThumbnail(program.getThumbnail());
 			mMyProgram.setDescription(program.getDescription());
-			mMyProgram.setRating(program.getRating());
-			MyProgamUpdateTask myProgamUpdateTask = new MyProgamUpdateTask(
+			MyProgramUpdateTask myProgramUpdateTask = new MyProgramUpdateTask(
 					mDaoMyProgram, mMyProgram) {
 
 			};
-			myProgamUpdateTask.execute();
+			myProgramUpdateTask.execute();
 		}
 
 		epList = (ListView) findViewById(com.codemobi.android.tvthailand.R.id.ep_list);
@@ -118,7 +118,7 @@ public class OTVShowActivity extends SherlockActivity implements
 		mOTVEpisodes = new OTVEpisodes();
 
 		mAdapter = new OTVEpisodeAdapter(this, mOTVEpisodes,
-				com.codemobi.android.tvthailand.R.layout.episode_list_item);
+				com.codemobi.android.tvthailand.R.layout.episode_list_item, program.getOtvLogo());
 		epList.setAdapter(mAdapter);
 		epList.setOnItemClickListener(this);
 
@@ -159,23 +159,15 @@ public class OTVShowActivity extends SherlockActivity implements
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(
 				com.codemobi.android.tvthailand.R.layout.episode_header, null, false);
 
-		// vote_now_tv = (TextView) header.findViewById(R.id.vote_now);
-		// my_vote_tv = (TextView) header.findViewById(R.id.my_vote);
-
 		tv_title = (TextView) header.findViewById(com.codemobi.android.tvthailand.R.id.tv_title);
-		imgThumbnail = (NetworkImageView) header.findViewById(com.codemobi.android.tvthailand.R.id.thumbnail);
+		imgThumbnail = (ImageView) header.findViewById(com.codemobi.android.tvthailand.R.id.thumbnail);
 		imgThumbnail.setOnClickListener(this);
 		tvDescription = (TextView) header.findViewById(com.codemobi.android.tvthailand.R.id.tv_description);
 		imb_fav = (ImageButton) header.findViewById(com.codemobi.android.tvthailand.R.id.imb_add_to_fav);
-//		imb_fav.setVisibility(View.GONE);
 
-		// header.findViewById(R.id.vote_llayout).setOnClickListener(this);
 		header.findViewById(com.codemobi.android.tvthailand.R.id.btn_more_detail).setOnClickListener(this);
         header.findViewById(com.codemobi.android.tvthailand.R.id.btn_more_detail).setOnLongClickListener(this);
-		 imb_fav.setOnClickListener(this);
-
-		// avg_rating_tv = (TextView) header
-		// .findViewById(R.id.avg_rating);
+		imb_fav.setOnClickListener(this);
 	}
 	
 	private void sendTracker(Program show) {
@@ -198,7 +190,10 @@ public class OTVShowActivity extends SherlockActivity implements
 		setTitle(program.getTitle());
 		tv_title.setText(program.getTitle());
 		tvDescription.setText(program.getDetail());
-		imgThumbnail.setImageUrl(program.getThumbnail(), MyVolley.getImageLoader());
+		Glide.with(this)
+				.load(program.getThumbnail())
+				.crossFade()
+				.into(imgThumbnail);
 	}
 
 	private void refreshView() {
@@ -209,24 +204,17 @@ public class OTVShowActivity extends SherlockActivity implements
 			} else {
 				imb_fav.setBackgroundResource(com.codemobi.android.tvthailand.R.drawable.button_fav);
 			}
-
-			// if (mMyProgram.getMyVote() > 0) {
-			// my_vote_tv.setText(String.valueOf(mMyProgram.getMyVote()));
-			// vote_now_tv.setText("You");
-			// } else {
-			// vote_now_tv.setText("Rate this");
-			// }
 		}
 	}
 
-	protected class MyProgamInsertTask extends
+	protected class MyProgramInsertTask extends
 			AsyncTask<Integer, Integer, Void> {
 
 		private Dao<MyProgramModel> mDaoMyProgram;
 		private MyProgramModel mMyProgram;
 
-		public MyProgamInsertTask(Dao<MyProgramModel> mDaoMyProgram,
-				MyProgramModel mMyProgram) {
+		public MyProgramInsertTask(Dao<MyProgramModel> mDaoMyProgram,
+								   MyProgramModel mMyProgram) {
 			this.mDaoMyProgram = mDaoMyProgram;
 			this.mMyProgram = mMyProgram;
 		}
@@ -239,14 +227,14 @@ public class OTVShowActivity extends SherlockActivity implements
 
 	}
 
-	protected class MyProgamUpdateTask extends
+	protected class MyProgramUpdateTask extends
 			AsyncTask<Integer, Integer, Void> {
 
 		private Dao<MyProgramModel> mDaoMyProgram;
 		private MyProgramModel mMyProgram;
 
-		public MyProgamUpdateTask(Dao<MyProgramModel> mDaoMyProgram,
-				MyProgramModel mMyProgram) {
+		public MyProgramUpdateTask(Dao<MyProgramModel> mDaoMyProgram,
+								   MyProgramModel mMyProgram) {
 			this.mDaoMyProgram = mDaoMyProgram;
 			this.mMyProgram = mMyProgram;
 		}
@@ -320,23 +308,13 @@ public class OTVShowActivity extends SherlockActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case com.codemobi.android.tvthailand.R.id.imb_add_to_fav:
+		case R.id.imb_add_to_fav:
 			 mMyProgram.setFav(!mMyProgram.isFav());
 			 mDaoMyProgram.update(mMyProgram);
 			 break;
-			// // case R.id.vote_llayout:
-			// // Intent intentVote = new Intent(EpisodeActivity.this,
-			// RatingActivity.class);
-			// // intentVote.putExtra(RatingActivity.EXTRAS_ID,
-			// mMyProgram.getId());
-			// // startActivity(intentVote);
-			// // break;
-		case com.codemobi.android.tvthailand.R.id.btn_more_detail:
+		case R.id.btn_more_detail:
 			openMoreDetail();
 			break;
-		// case R.id.thumbnail:
-		// openLargeImage();
-		// break;
 		default:
 			break;
 		}
@@ -345,7 +323,7 @@ public class OTVShowActivity extends SherlockActivity implements
     @Override
     public boolean onLongClick(View v) {
         switch (v.getId()) {
-            case com.codemobi.android.tvthailand.R.id.btn_more_detail:
+            case R.id.btn_more_detail:
                 Intent intent = new Intent(OTVShowActivity.this, EpisodeActivity.class);
                 intent.putExtra(EpisodeActivity.EXTRAS_PROGRAM, program);
                 intent.putExtra(EpisodeActivity.EXTRAS_DISABLE_OTV, true);

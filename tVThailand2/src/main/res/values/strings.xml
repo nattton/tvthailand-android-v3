@@ -12,8 +12,8 @@
 
     <string-array name="sections">
         <item>CATEGORIES</item>
-        <item>CHANNELS</item>
-        <item>RADIOS</item>
+        <item>CHANNEL</item>
+        <item>RADIO</item>
     </string-array>
 
     <string name="parts">parts</string>

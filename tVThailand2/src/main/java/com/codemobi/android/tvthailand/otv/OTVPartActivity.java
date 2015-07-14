@@ -73,13 +73,8 @@ public class OTVPartActivity extends SherlockActivity implements OnItemClickList
 		}
 
         Log.d("Play Video", episode.getParts().get(position).getStreamUrl());
-//        intentVastPlayer = new Intent(OTVPartActivity.this, VitamioVastPlayerActivity.class);
         intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_EPISODE, episode);
         intentVastPlayer.putExtra(VastPlayerActivity.EXTRAS_OTV_PART_POSITION, position);
         startActivity(intentVastPlayer);
-
-//        Intent i = new Intent(OTVPartActivity.this, WebFullscreenActivity.class);
-//        startActivity(i);
-
 	}
 }

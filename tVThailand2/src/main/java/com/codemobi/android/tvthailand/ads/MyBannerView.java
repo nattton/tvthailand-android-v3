@@ -124,35 +124,20 @@ public class MyBannerView extends LinearLayout {
     }
 	
 	private void displayAds (AdCollectionDao adItemList)  {
-        AdItemDao adItem = adItemList.getShuffleAd();
-		String nameLower = adItem.getName().toLowerCase(Locale.getDefault());
-		if (nameLower.contains("kapook")) {
-			requestKapookAds();
-		} else if (nameLower.contains("vserv")) {
-			requestVservAd();
-		} else {
-			if (adItem.getUrl().length() > 0) {
-				webViewShow.loadUrl(adItem.getUrl());
+		try {
+			AdItemDao adItem = adItemList.getShuffleAd();
+			String nameLower = adItem.getName().toLowerCase(Locale.getDefault());
+			if (nameLower.contains("vserv")) {
+				requestVservAd();
+			} else {
+				if (adItem.getUrl().length() > 0) {
+					webViewShow.loadUrl(adItem.getUrl());
+				}
 			}
+		} catch (AdCollectionDao.EmptyException err) {
+			requestVservAd();
 		}
 	}
-
-    public void requestKapookAds() {
-        HTTPEngine.getInstance().getAdKapookData(new Response.Listener<KapookItemDao>() {
-            @Override
-            public void onResponse(KapookItemDao response) {
-                if (response.getUrl1x1() != null && !"".equals(response.getUrl1x1()))
-                    webView1px.loadUrl(response.getUrl1x1());
-                if (response.getUrlShow() != null && !"".equals(response.getUrlShow()))
-                    webViewShow.loadUrl(response.getUrlShow());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                requestVservAd();
-            }
-        });
-    }
 
 	public class AdWebViewClient extends WebViewClient {
 

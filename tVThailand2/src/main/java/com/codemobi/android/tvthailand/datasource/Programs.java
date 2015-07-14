@@ -63,8 +63,8 @@ public class Programs {
 				String description = jObj.has("description") ? jObj.getString("description") : EMPTY_STRING;
 				int isOTV = jObj.has("is_otv") ? jObj.getInt("is_otv") : 0;
 				String otvId = jObj.has("otv_id") ? jObj.getString("otv_id") : EMPTY_STRING;
-				String otvApiName = jObj.has("otv_api_name") ? jObj.getString("otv_api_name") : EMPTY_STRING;
-				insert(new Program(id, title, thumbnail, description, rating, lastEpname, isOTV, otvId, otvApiName));
+				String otvLogo = jObj.has("otv_logo") ? jObj.getString("otv_logo") : EMPTY_STRING;
+				insert(new Program(id, title, thumbnail, description, lastEpname, isOTV, otvId, otvLogo));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

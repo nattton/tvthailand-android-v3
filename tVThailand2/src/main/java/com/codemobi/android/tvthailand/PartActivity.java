@@ -27,7 +27,7 @@ public class PartActivity extends SherlockActivity{
 	public static final String EXTRAS_VIDEOS = "EXTRAS_VIDEOS";
 	public static final String EXTRAS_SRC_TYPE = "EXTRAS_SRC_TYPE";
 	public static final String EXTRAS_PASSWORD = "EXTRAS_PASSWORD";
-	static final String EXTRAS_ICON = "EXTRAS_ICON";
+	public static final String EXTRAS_ICON = "EXTRAS_ICON";
 
 	private Parts mParts;
     private ProgressDialog progressDialog;

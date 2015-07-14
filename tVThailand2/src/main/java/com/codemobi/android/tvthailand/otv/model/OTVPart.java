@@ -17,19 +17,6 @@ public class OTVPart implements Parcelable {
 
     private static final String EMPTY_STRING = "";
 	
-	
-//	public OTVPart (String partId, String nameTh, String  nameEn, String thumbnail, String cover, String streamUrl, String vastUrl, String mediaCode) {
-//		super();
-//		this.partId = CheckNullString(partId);
-//		this.nameTh = CheckNullString(nameTh);
-//		this.nameEn = CheckNullString(nameEn);
-//		this.thumbnail = CheckNullString(thumbnail);
-//		this.cover = CheckNullString(cover);
-//		this.streamUrl = CheckNullString(streamUrl);
-//		this.vastUrl = CheckNullString(vastUrl);
-//		this.mediaCode = CheckNullString(mediaCode);
-//	}
-	
 	public OTVPart() {
 		super();
         setSkipad(8);

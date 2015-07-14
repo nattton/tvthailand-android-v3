@@ -19,6 +19,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,7 +29,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.android.volley.toolbox.NetworkImageView;
+import com.bumptech.glide.Glide;
 import com.codemobi.android.tvthailand.datasource.Program;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -65,11 +66,8 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 	 */
 	private TextView tv_title;
 	private TextView tvDescription;
-	private NetworkImageView imgThumbnail;
+	private ImageView imgThumbnail;
 	private ImageButton imb_fav;
-//	private TextView vote_now_tv;
-//	private TextView my_vote_tv;
-//	private TextView avg_rating_tv;
 	
 	//////
 	
@@ -87,16 +85,16 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 
         isDisableOTV = getIntent().getBooleanExtra(EXTRAS_DISABLE_OTV, false);
 
-		initiazeProgram();
+		initProgram();
 		
-		initiazeUI();
+		initUI();
 		
 		progressBar = (ProgressBar)findViewById(R.id.progressBar);
 		
 		setUpHeaderView();
 
 		String where = ProgramTable.ProgramColumns.PROGRAM_ID + " = " + program.getId();
-		mDaoMyProgram = new Dao<MyProgramModel>(MyProgramModel.class, this,
+		mDaoMyProgram = new Dao<>(MyProgramModel.class, this,
 				MyProgramContentProvider.CONTENT_URI, where);
 		if (mDaoMyProgram.size() == 0) {
 			mMyProgram = new MyProgramModel();
@@ -104,7 +102,6 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 			mMyProgram.setTitle(program.getTitle());
 			mMyProgram.setThumbnail(program.getThumbnail());
 			mMyProgram.setDescription(program.getDescription());
-			mMyProgram.setRating(program.getRating());
 			MyProgramInsertTask myProgramInsertTask = new MyProgramInsertTask(
 					mDaoMyProgram, mMyProgram) {
 
@@ -116,7 +113,6 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 			mMyProgram.setTitle(program.getTitle());
 			mMyProgram.setThumbnail(program.getThumbnail());
 			mMyProgram.setDescription(program.getDescription());
-			mMyProgram.setRating(program.getRating());
 			MyProgramUpdateTask myProgramUpdateTask = new MyProgramUpdateTask(
 					mDaoMyProgram, mMyProgram) {
 
@@ -128,7 +124,7 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		epList.addHeaderView(header, null, false);
 
 		mEpisodes = new Episodes(this);
-		mAdapter = new EpisodeAdapter(this, mEpisodes, R.layout.episode_list_item);
+		mAdapter = new EpisodeAdapter(this, mEpisodes);
 		epList.setAdapter(mAdapter);
 
 		mEpisodes.setOnLoadListener(this);
@@ -162,9 +158,6 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		getContentResolver().registerContentObserver(
 				MyProgramContentProvider.CONTENT_URI, true, observer);
 		
-		
-//		setUpAd();
-		
 		Tracker t = ((MainApplication) getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("Episode");
@@ -172,29 +165,21 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 	}
 	
 	@SuppressLint("SetJavaScriptEnabled")
-	private void initiazeUI() {		
+	private void initUI() {
 		header = ((LayoutInflater) this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(
 				R.layout.episode_header, null, false);
 
-//		vote_now_tv = (TextView) header.findViewById(R.id.vote_now);
-//		my_vote_tv = (TextView) header.findViewById(R.id.my_vote);
-
 		tv_title = (TextView) header.findViewById(R.id.tv_title);
-		imgThumbnail = (NetworkImageView) header.findViewById(R.id.thumbnail);
+		imgThumbnail = (ImageView) header.findViewById(R.id.thumbnail);
 		imgThumbnail.setOnClickListener(this);
 		tvDescription = (TextView) header.findViewById(R.id.tv_description);
 		imb_fav = (ImageButton) header.findViewById(R.id.imb_add_to_fav);
-
-//		header.findViewById(R.id.vote_llayout).setOnClickListener(this);
 		header.findViewById(R.id.btn_more_detail).setOnClickListener(this);
 		imb_fav.setOnClickListener(this);
-
-//		avg_rating_tv = (TextView) header
-//				.findViewById(R.id.avg_rating);
 	}
 
-	private void initiazeProgram() {
+	private void initProgram() {
 		Intent i = getIntent();
 		program = i.getParcelableExtra(EXTRAS_PROGRAM);
 	}
@@ -208,7 +193,11 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		setTitle(program.getTitle());
 		tv_title.setText(program.getTitle());
 		tvDescription.setText(program.getDescription());
-		imgThumbnail.setImageUrl(program.getThumbnail(), MyVolley.getImageLoader());
+		Glide.with(this)
+				.load(program.getThumbnail())
+				.fitCenter()
+				.crossFade()
+				.into(imgThumbnail);
 	}
 
 	private void refreshView() {
@@ -219,13 +208,6 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 			} else {
 				imb_fav.setBackgroundResource(R.drawable.button_fav);
 			}
-
-//			if (mMyProgram.getMyVote() > 0) {
-//				my_vote_tv.setText(String.valueOf(mMyProgram.getMyVote()));
-//				vote_now_tv.setText("You");
-//			} else {
-//				vote_now_tv.setText("Rate this");
-//			}
 		}
 	}
 
@@ -308,11 +290,6 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 			mMyProgram.setFav(!mMyProgram.isFav());
 			mDaoMyProgram.update(mMyProgram);
 			break;
-//		case R.id.vote_llayout:
-//			Intent intentVote = new Intent(EpisodeActivity.this, RatingActivity.class);
-//			intentVote.putExtra(RatingActivity.EXTRAS_ID, mMyProgram.getId());
-//			startActivity(intentVote);
-//			break;
 		case R.id.btn_more_detail:
 			openMoreDetail();
 			break;
@@ -454,95 +431,4 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 	@Override
 	public void onScrollStateChanged(AbsListView view, int state) {
 	}
-
-//	private void setUpAd() {
-//		adView = (FrameLayout) findViewById(R.id.ad_view);
-//		if (null != controller) {
-//			controller.stopRefresh();
-//			controller = null;
-//		}
-//		if (null != adView) {
-//			adView.removeAllViews();
-//		}
-//		
-//		manager = VservManager.getInstance(context);
-//		
-//		manager.getAd(BANNER_ZONE, AdOrientation.PORTRAIT, new AdLoadCallback() {
-//			
-//			@Override
-//			public void onNoFill() {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//			
-//			@Override
-//			public void onLoadSuccess(VservAd adObj) {
-////				Toast.makeText(YoutubePlayerViewActivity.this, "Success in getting Ad", Toast.LENGTH_SHORT).show();
-//				adObject = adObj;
-//				if(null != adView) {
-//					adView.removeAllViews();
-//				}
-//				/***** APPLICATION IF USE RENDER AD FUNCTIONALITY ******/
-//				if (null != controller) {
-//					controller = null;
-//				}
-//				
-//				if (null != adObject) {
-//					try {
-//						adObject.show(context, adView);
-//					} catch (ViewNotEmptyException e) {
-//						Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-//			
-//			@Override
-//			public void onLoadFailure() {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//		});
-//	}
-//	
-//	@Override
-//	protected void onActivityResult(int requestCode, int resultCode,
-//			Intent intent) {
-//		super.onActivityResult(requestCode, resultCode, intent);
-//
-//		if (requestCode == VservManager.REQUEST_CODE) {
-//			if (intent != null) {
-//
-//				if (intent.hasExtra("showAt")
-//						&& intent.getStringExtra("showAt").equalsIgnoreCase(
-//								"end")) {
-//
-//					VservManager.release(this);
-//					super.finish();
-//				}
-//			} else {
-//
-//				super.finish();
-//			}
-//		}
-//
-//	}
-//	
-//	@Override
-//	protected void onStart() {
-//
-//		if (null != controller) {
-//			controller.resumeRefresh();
-//		}
-//		super.onStart();
-//	}
-//
-//	@Override
-//	protected void onStop() {
-//
-//		if (null != controller) {
-//			controller.stopRefresh();
-//		}
-//		super.onStop();
-//	}
 }

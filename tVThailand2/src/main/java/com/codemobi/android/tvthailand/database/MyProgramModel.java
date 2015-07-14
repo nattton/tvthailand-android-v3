@@ -75,6 +75,6 @@ public class MyProgramModel extends ProgramModel {
 	}
 	
 	public Program toProgram() {
-		return new Program(programId, title, thumbnail, description, 0, 0, "", "");
+		return new Program(programId, title, thumbnail, description, "", 0, "", "");
 	}
 }

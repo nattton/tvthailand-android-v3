@@ -47,7 +47,7 @@ public class EpisodeCursorAdapter extends CursorAdapter {
 			holder.mediaThumnail.setImageResource(videoTypeMap.get(item
 					.getSrcType()));
 		} else {
-//			holder.mediaThumnail.setImageResource(R.drawable.ic_error);
+//			holder.mediaThumbnail.setImageResource(R.drawable.ic_error);
 		}
 
 		holder.title.setText(item.getTitle());
