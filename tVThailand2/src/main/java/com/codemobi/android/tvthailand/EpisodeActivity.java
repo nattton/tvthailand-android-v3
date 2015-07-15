@@ -45,7 +45,7 @@ import com.codemobi.android.tvthailand.datasource.Episodes;
 import com.codemobi.android.tvthailand.datasource.Parts;
 import com.codemobi.android.tvthailand.datasource.Episodes.OnLoadListener;
 import com.codemobi.android.tvthailand.datasource.Episodes.OnProgramChangeListener;
-import com.codemobi.android.tvthailand.otv.OTVShowActivity;
+import com.codemobi.android.tvthailand.otv.activity.OTVShowActivity;
 
 public class EpisodeActivity extends SherlockFragmentActivity implements OnClickListener,
 		OnItemClickListener, OnLoadListener, OnScrollListener {

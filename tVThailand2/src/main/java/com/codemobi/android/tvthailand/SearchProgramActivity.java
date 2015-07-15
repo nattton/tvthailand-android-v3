@@ -17,7 +17,7 @@ import com.codemobi.android.tvthailand.toolbox.BitmapLruCache;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import com.codemobi.android.tvthailand.otv.OTVShowActivity;
+import com.codemobi.android.tvthailand.otv.activity.OTVShowActivity;
 
 import android.app.ActivityManager;
 import android.app.SearchManager;

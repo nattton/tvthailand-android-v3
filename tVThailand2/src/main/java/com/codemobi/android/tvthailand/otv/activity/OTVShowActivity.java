@@ -1,4 +1,4 @@
-package com.codemobi.android.tvthailand.otv;
+package com.codemobi.android.tvthailand.otv.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +27,6 @@ import com.bumptech.glide.Glide;
 import com.codemobi.android.tvthailand.EpisodeActivity;
 import com.codemobi.android.tvthailand.MainApplication;
 import com.codemobi.android.tvthailand.MoreDetailActivity;
-import com.codemobi.android.tvthailand.MyVolley;
 import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.contentprovider.MyProgramContentProvider;
 import com.codemobi.android.tvthailand.database.Dao;
@@ -36,7 +35,7 @@ import com.codemobi.android.tvthailand.database.ProgramTable;
 import com.codemobi.android.tvthailand.datasource.OnLoadDataListener;
 import com.codemobi.android.tvthailand.datasource.Program;
 import com.codemobi.android.tvthailand.otv.model.OTVEpisode;
-import com.codemobi.android.tvthailand.otv.model.OTVEpisodeAdapter;
+import com.codemobi.android.tvthailand.otv.adapter.OTVEpisodeAdapter;
 import com.codemobi.android.tvthailand.otv.model.OTVEpisodes;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;

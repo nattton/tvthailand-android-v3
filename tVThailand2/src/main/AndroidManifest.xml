@@ -161,10 +161,10 @@
 
         <!-- OTV -->
         <activity
-            android:name="com.codemobi.android.tvthailand.otv.OTVShowActivity"
+            android:name=".otv.activity.OTVShowActivity"
             android:label="OTV Show" />
         <activity
-            android:name="com.codemobi.android.tvthailand.otv.OTVPartActivity"
+            android:name=".otv.activity.OTVPartActivity"
             android:label="OTV Part" />
 
         <provider

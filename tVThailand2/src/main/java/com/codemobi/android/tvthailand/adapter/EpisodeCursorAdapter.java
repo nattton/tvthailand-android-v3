@@ -67,7 +67,7 @@ public class EpisodeCursorAdapter extends CursorAdapter {
 				R.layout.episode_list_item, parent, false);
 		ViewHolder holder = new ViewHolder();
 		holder.mediaThumnail = (ImageView) view
-				.findViewById(R.id.media_thumnail);
+				.findViewById(R.id.media_thumbnail);
 		holder.title = (TextView) view.findViewById(R.id.tv_label_ep);
 		holder.aired = (TextView) view.findViewById(R.id.tv_on_air_ep);
 		holder.viewCount = (TextView) view.findViewById(R.id.view_count_ep);

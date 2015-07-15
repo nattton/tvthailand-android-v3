@@ -1,8 +1,12 @@
-package com.codemobi.android.tvthailand.otv.model;
+package com.codemobi.android.tvthailand.otv.adapter;
+
+import java.util.ArrayList;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.codemobi.android.tvthailand.R;
+import com.codemobi.android.tvthailand.otv.model.OTVPart;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,34 +15,57 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class OTVShowsAdapter extends BaseAdapter {
+public class OTVPartAdapter extends BaseAdapter {
 	private ImageLoader imageLoader;
 
 	private Activity activity;
 	private int resId;
-	private OTVShows shows;
-	private boolean isDisplayImage = true;
+	private ArrayList<OTVPart> parts;
 	private static LayoutInflater mInflater = null;
 
-	public OTVShowsAdapter(Activity otvShowListActivity, OTVShows mOTVShows,
-			int whatnewGridItem, ImageLoader imageLoader) {
-		this.activity = otvShowListActivity;
-		this.shows = mOTVShows;
-		this.resId = whatnewGridItem;
+	public OTVPartAdapter(Activity a, ArrayList<OTVPart> parts, int resouceId, ImageLoader mImageLoader) {
+		this.activity = a;
+		this.parts = parts;
+		this.resId = resouceId;
 		mInflater = (LayoutInflater) activity
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		this.imageLoader = imageLoader;
+		imageLoader = mImageLoader;
 	}
 
 	private static final class ViewHolder {
-		public TextView title;
-		public TextView description;
 		public NetworkImageView thumbnail;
+		public TextView title;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder;
+		if (convertView == null) {
+			convertView = mInflater.inflate(resId, parent, false);
+			holder = new ViewHolder();
+			holder.title = (TextView) convertView.findViewById(R.id.title);
+			holder.thumbnail = (NetworkImageView) convertView
+					.findViewById(R.id.thumbnail);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
+
+		OTVPart item = parts.get(position);
+
+		holder.title.setText(item.getNameTh());
+		if (item.getThumbnail() != null && item.getThumbnail() != "") {
+			holder.thumbnail.setImageUrl(item.getThumbnail(), imageLoader);
+		} else {
+			holder.thumbnail.setImageResource(R.drawable.ic_tvthailand_120);
+		}
+		
+		return convertView;
 	}
 
 	@Override
 	public int getCount() {
-		return shows.size();
+		return parts.size();
 	}
 
 	@Override
@@ -51,35 +78,4 @@ public class OTVShowsAdapter extends BaseAdapter {
 		return position;
 	}
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder;
-		if (convertView == null) {
-			convertView = mInflater.inflate(resId, parent, false);
-			holder = new ViewHolder();
-			holder.title = (TextView) convertView.findViewById(R.id.title);
-			holder.title.setSelected(true);
-			holder.description = (TextView) convertView
-					.findViewById(R.id.description);
-			holder.description.setSelected(true);
-			holder.thumbnail = (NetworkImageView) convertView
-					.findViewById(R.id.thumbnail);
-
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder) convertView.getTag();
-		}
-
-		OTVShow show = shows.get(position);
-		holder.title.setText(show.getNameTh());
-		holder.description.setText(show.getDetail());
-		if (isDisplayImage) {
-			holder.thumbnail.setVisibility(View.VISIBLE);
-			holder.thumbnail.setImageUrl(show.getThumbnail(), imageLoader);
-		} else {
-			holder.thumbnail.setVisibility(View.GONE);
-		}
-
-		return convertView;
-	}
 }

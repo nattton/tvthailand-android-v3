@@ -1,4 +1,4 @@
-package com.codemobi.android.tvthailand.otv;
+package com.codemobi.android.tvthailand.otv.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.codemobi.android.tvthailand.MyVolley;
-import com.codemobi.android.tvthailand.otv.model.OTVPartAdapter;
+import com.codemobi.android.tvthailand.otv.adapter.OTVPartAdapter;
 import com.codemobi.android.tvthailand.player.VitamioVastPlayerActivity;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;

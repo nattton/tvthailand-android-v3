@@ -20,7 +20,7 @@
             android:orientation="horizontal" >
 
             <ImageView
-                android:id="@+id/media_thumnail"
+                android:id="@+id/media_thumbnail"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_centerVertical="true" 
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@id/media_thumnail"
+                android:layout_toRightOf="@id/media_thumbnail"
                 android:text="@string/episode"
                 android:textColor="#33B5E5"
                 android:textSize="24sp" >

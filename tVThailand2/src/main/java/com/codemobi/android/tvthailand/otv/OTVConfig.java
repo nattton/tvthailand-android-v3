@@ -1,4 +1,4 @@
-package com.codemobi.android.tvthailand.otv.model;
+package com.codemobi.android.tvthailand.otv;
 
 public class OTVConfig {
 	public static final String BASE_URL = "http://api.otv.co.th/api/index.php/v202";

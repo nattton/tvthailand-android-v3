@@ -29,7 +29,7 @@ import com.codemobi.android.tvthailand.datasource.PreRollAd;
 import com.codemobi.android.tvthailand.datasource.PreRollAdFactory;
 import com.codemobi.android.tvthailand.datasource.Program;
 import com.codemobi.android.tvthailand.datasource.Programs;
-import com.codemobi.android.tvthailand.otv.OTVShowActivity;
+import com.codemobi.android.tvthailand.otv.activity.OTVShowActivity;
 import com.codemobi.android.tvthailand.player.VastContentPlayerActivity;
 
 public class ProgramActivity extends SherlockActivity implements

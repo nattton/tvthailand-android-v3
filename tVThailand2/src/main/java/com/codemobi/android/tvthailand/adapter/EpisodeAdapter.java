@@ -38,7 +38,7 @@ public class EpisodeAdapter extends BaseAdapter{
 	}
 
 	private static final class ViewHolder {
-		public ImageView mediaThumnail;
+		public ImageView mediaThumbnail;
 		public TextView title;
 		public TextView aired;
 		public TextView viewCount;
@@ -53,7 +53,7 @@ public class EpisodeAdapter extends BaseAdapter{
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.episode_list_item, parent, false);
             holder = new ViewHolder();
-            holder.mediaThumnail = (ImageView)convertView.findViewById(com.codemobi.android.tvthailand.R.id.media_thumnail);
+            holder.mediaThumbnail = (ImageView)convertView.findViewById(com.codemobi.android.tvthailand.R.id.media_thumbnail);
             holder.title = (TextView)convertView.findViewById(com.codemobi.android.tvthailand.R.id.tv_label_ep);
             holder.aired = (TextView)convertView.findViewById(com.codemobi.android.tvthailand.R.id.tv_on_air_ep);
             holder.viewCount = (TextView)convertView.findViewById(com.codemobi.android.tvthailand.R.id.view_count_ep);
@@ -67,7 +67,7 @@ public class EpisodeAdapter extends BaseAdapter{
 		Episode item = episodes.get(position);
 
 		if (videoTypeMap.containsKey(item.getSrcType())) {
-			holder.mediaThumnail.setImageResource(videoTypeMap.get(item.getSrcType()));
+			holder.mediaThumbnail.setImageResource(videoTypeMap.get(item.getSrcType()));
 		} 
 		else {
 //			holder.mediaThumbnail.setImageResource(R.drawable.ic_error);

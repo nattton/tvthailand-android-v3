@@ -25,7 +25,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.MainApplication.TrackerName;
 import com.codemobi.android.tvthailand.datasource.Episodes;
 import com.codemobi.android.tvthailand.datasource.Episodes.OnProgramChangeListener;
-import com.codemobi.android.tvthailand.otv.OTVShowActivity;
+import com.codemobi.android.tvthailand.otv.activity.OTVShowActivity;
 
 public class ProgramLoaderActivity extends SherlockFragmentActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener {

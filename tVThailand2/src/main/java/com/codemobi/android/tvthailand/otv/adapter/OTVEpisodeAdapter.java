@@ -1,7 +1,9 @@
-package com.codemobi.android.tvthailand.otv.model;
+package com.codemobi.android.tvthailand.otv.adapter;
 
 import com.bumptech.glide.Glide;
 import com.codemobi.android.tvthailand.R;
+import com.codemobi.android.tvthailand.otv.model.OTVEpisode;
+import com.codemobi.android.tvthailand.otv.model.OTVEpisodes;
 
 import android.app.Activity;
 import android.content.Context;
@@ -63,7 +65,7 @@ public class OTVEpisodeAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = mInflater.inflate(resId, parent, false);
             holder = new ViewHolder();
-            holder.mediaThumbnail = (ImageView)convertView.findViewById(R.id.media_thumnail);
+            holder.mediaThumbnail = (ImageView)convertView.findViewById(R.id.media_thumbnail);
             holder.title = (TextView)convertView.findViewById(R.id.tv_label_ep);
             holder.aired = (TextView)convertView.findViewById(R.id.tv_on_air_ep);
             holder.viewCount = (TextView)convertView.findViewById(R.id.view_count_ep);

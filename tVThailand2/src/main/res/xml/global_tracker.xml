@@ -20,7 +20,7 @@
     <screenName name="com.codemobi.android.tvthailand.player.VideoPlayerActivity">VideoPlayer</screenName>
     <screenName name="com.codemobi.android.tvthailand.player.VastPlayerActivity">VastPlayerActivity</screenName>
     <!-- OTV Activity -->
-    <screenName name="com.codemobi.android.tvthailand.otv.OTVShowActivity">OTVShow</screenName>
-    <screenName name="com.codemobi.android.tvthailand.otv.OTVPartActivity">OTVPart</screenName>
+    <screenName name="com.codemobi.android.tvthailand.otv.activity.OTVShowActivity">OTVShow</screenName>
+    <screenName name="com.codemobi.android.tvthailand.otv.activity.OTVPartActivity">OTVPart</screenName>
     
 </resources>
