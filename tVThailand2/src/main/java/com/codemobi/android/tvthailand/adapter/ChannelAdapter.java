@@ -41,6 +41,7 @@ public class ChannelAdapter extends BaseAdapter{
 		
 		ChannelItemDao item = SectionManager.getInstance().getData().getChannels().get(position);
 		holder.channel_tv.setText(item.getTitle());
+
 		if (item.getThumbnail() != null) {
 			holder.channel_icon.setImageUrl(item.getThumbnail(), imageLoader);
 		} else {

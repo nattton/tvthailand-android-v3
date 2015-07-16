@@ -12,6 +12,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.codemobi.android.tvthailand.adapter.ProgramCursorAdapter;
@@ -20,8 +22,6 @@ import com.codemobi.android.tvthailand.database.MyProgramModel;
 import com.codemobi.android.tvthailand.database.MyProgramTable;
 import com.codemobi.android.tvthailand.database.ProgramTable;
 import com.codemobi.android.tvthailand.datasource.Program;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.MainApplication.TrackerName;
 import com.codemobi.android.tvthailand.datasource.Episodes;
 import com.codemobi.android.tvthailand.datasource.Episodes.OnProgramChangeListener;
@@ -34,33 +34,30 @@ public class ProgramLoaderActivity extends SherlockFragmentActivity implements
 	static final String KEY = "ACTION_KEY";
 	
 	private TextView textViewNoContent;
-	private GridView gridView;
 	private ProgramCursorAdapter mAdapter;
-	String string_key = "";
-	
-//	private User mUser;
+	private String actionKey = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_grid_view);
 		Bundle bundle = getIntent().getExtras();
-		string_key = bundle.getString(KEY);
+		actionKey = bundle.getString(KEY);
 		
 		ActionBar ab = getSupportActionBar();
-		if(string_key.equals(FAVORITE)) {
+		if(actionKey.equals(FAVORITE)) {
 			setTitle(FAVORITE);
 			ab.setIcon(R.drawable.ic_favorite);
 		}
-		else if(string_key.equals(RECENTLY)) {
+		else if(actionKey.equals(RECENTLY)) {
 			setTitle(RECENTLY);
 			ab.setIcon(R.drawable.ic_recently);
 		}
 
 		textViewNoContent = (TextView)findViewById(R.id.textViewNoContent);
-		gridView = (GridView) findViewById(R.id.gridview);
+		GridView gridView = (GridView) findViewById(R.id.gridview);
 		
-		mAdapter = new ProgramCursorAdapter(this, MyVolley.getImageLoader());
+		mAdapter = new ProgramCursorAdapter(this);
 		gridView.setAdapter(mAdapter);
 
 		getSupportLoaderManager().initLoader(0, null, this);
@@ -111,14 +108,14 @@ public class ProgramLoaderActivity extends SherlockFragmentActivity implements
 		
 		Loader<Cursor> cursor = null;
 
-		if(string_key.equals(FAVORITE)){
+		if(actionKey.equals(FAVORITE)){
 			String selection = MyProgramTable.MyProgramColumns.IS_FAV + " = " + "1";
 			String sortOrder = ProgramTable.ProgramColumns.TITLE + " COLLATE LOCALIZED ASC";
 			cursor = new CursorLoader(this,
 					MyProgramContentProvider.CONTENT_URI, null, selection, null,
 					sortOrder);
 		}
-		if(string_key.equals(RECENTLY)){
+		if(actionKey.equals(RECENTLY)){
 			String selection = MyProgramTable.MyProgramColumns.TIME_VIEWED + " != " + "0";
 			String sortOrder = MyProgramTable.MyProgramColumns.TIME_VIEWED + " COLLATE LOCALIZED DESC";
 			cursor = new CursorLoader(this,

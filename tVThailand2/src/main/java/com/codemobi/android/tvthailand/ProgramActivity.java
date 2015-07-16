@@ -2,6 +2,7 @@ package com.codemobi.android.tvthailand;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -20,9 +21,9 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
-import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.codemobi.android.tvthailand.adapter.ProgramAdapter;
 import com.codemobi.android.tvthailand.datasource.OnLoadDataListener;
 import com.codemobi.android.tvthailand.datasource.PreRollAd;
@@ -70,25 +71,21 @@ public class ProgramActivity extends SherlockActivity implements
 		String icon = bundle.getString(EXTRAS_ICON);
 		url = bundle.getString(EXTRAS_URL);
 
-        MyVolley.getImageLoader().get(icon, new ImageListener() {
-			
-			@Override
-			public void onErrorResponse(VolleyError error) {
-
-			}
-			
-			@Override
-			public void onResponse(ImageContainer response, boolean isImmediate) {
-				if (response.getBitmap() != null)
-					getSupportActionBar().setIcon(new BitmapDrawable(getResources(), response.getBitmap()));
-			}
-		});
+		Glide.with(this)
+				.load(icon)
+				.asBitmap()
+				.into(new SimpleTarget<Bitmap>() {
+					@Override
+					public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+							getSupportActionBar().setIcon(new BitmapDrawable(getResources(), resource));
+					}
+				});
         
 		id = bundle.getString(EXTRAS_ID);
 		mode = bundle.getInt(EXTRAS_MODE);
 
 		mPrograms = new Programs();
-		mAdapter = new ProgramAdapter(this, mPrograms, R.layout.whatnew_grid_item, MyVolley.getImageLoader());
+		mAdapter = new ProgramAdapter(mPrograms);
 
 		textViewNoContent = (TextView) findViewById(R.id.textViewNoContent);
 		GridView gridview = (GridView) findViewById(R.id.gridview);

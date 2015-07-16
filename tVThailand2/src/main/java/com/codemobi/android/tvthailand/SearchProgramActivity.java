@@ -1,33 +1,26 @@
 package com.codemobi.android.tvthailand;
 
+import android.app.SearchManager;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
+
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
 import com.codemobi.android.tvthailand.adapter.ProgramAdapter;
 import com.codemobi.android.tvthailand.contentprovider.ProgramSuggestionProvider;
 import com.codemobi.android.tvthailand.datasource.OnLoadDataListener;
 import com.codemobi.android.tvthailand.datasource.Program;
 import com.codemobi.android.tvthailand.datasource.Programs;
-import com.codemobi.android.tvthailand.toolbox.BitmapLruCache;
+import com.codemobi.android.tvthailand.otv.activity.OTVShowActivity;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-
-import com.codemobi.android.tvthailand.otv.activity.OTVShowActivity;
-
-import android.app.ActivityManager;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class SearchProgramActivity extends SherlockActivity implements OnLoadDataListener {
 	
@@ -47,17 +40,8 @@ public class SearchProgramActivity extends SherlockActivity implements OnLoadDat
 		
 		setContentView(R.layout.simple_grid_view);
 
-        RequestQueue mRequestQueue = Volley.newRequestQueue(this);
-
-        int memClass = ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE))
-                .getMemoryClass();
-        // Use 1/8th of the available memory for this memory cache.
-        int cacheSize = 1024 * 1024 * memClass / 8;
-        ImageLoader mImageLoader = new ImageLoader(mRequestQueue, new BitmapLruCache(cacheSize));
-
 		mPrograms = new Programs();
-		mAdapter = new ProgramAdapter(this, mPrograms,
-				R.layout.whatnew_grid_item, mImageLoader);
+		mAdapter = new ProgramAdapter(mPrograms);
 
 		GridView gridview = (GridView) findViewById(R.id.gridview);
 		gridview.setAdapter(mAdapter);

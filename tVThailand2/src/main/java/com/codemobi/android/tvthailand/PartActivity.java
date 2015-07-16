@@ -2,6 +2,7 @@ package com.codemobi.android.tvthailand;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -11,15 +12,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
-import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.codemobi.android.tvthailand.MainApplication.TrackerName;
 import com.codemobi.android.tvthailand.adapter.PartAdapter;
 import com.codemobi.android.tvthailand.datasource.Parts;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.codemobi.android.tvthailand.MainApplication.TrackerName;
 
 public class PartActivity extends SherlockActivity{
 	
@@ -48,25 +48,18 @@ public class PartActivity extends SherlockActivity{
 		
 		setTitle(title);
 
-        ImageLoader mImageLoader = MyVolley.getImageLoader();
-        mImageLoader.get(icon, new ImageListener() {
-			
-			@Override
-			public void onErrorResponse(VolleyError error) {
-
-			}
-			
-			@Override
-			public void onResponse(ImageContainer response, boolean isImmediate) {
-				if (response.getBitmap() != null)
-					getSupportActionBar().setIcon(new BitmapDrawable(getResources(), response.getBitmap()));
-			}
-		});
+		Glide.with(this)
+				.load(icon)
+				.asBitmap()
+				.into(new SimpleTarget<Bitmap>() {
+					@Override
+					public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+						getSupportActionBar().setIcon(new BitmapDrawable(getResources(), resource));
+					}
+				});
 
 		mParts = new Parts(this, title, icon, videos, srcType, password);
-
-        PartAdapter mAdapter = new PartAdapter(this, mParts,
-				R.layout.part_list_item, mImageLoader);
+        PartAdapter mAdapter = new PartAdapter(mParts);
 
         mParts.setOnLoadListener(new Parts.OnLoadListener() {
 

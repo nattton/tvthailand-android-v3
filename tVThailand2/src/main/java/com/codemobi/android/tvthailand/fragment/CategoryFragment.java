@@ -33,7 +33,7 @@ public class CategoryFragment extends SherlockFragment implements OnItemClickLis
 				false);
 
         GridView gridview = (GridView) rootView.findViewById(R.id.gridview);
-		gridview.setAdapter(mAdapter = new CategoryAdapter(MyVolley.getImageLoader()));
+		gridview.setAdapter(mAdapter = new CategoryAdapter());
 		gridview.setOnItemClickListener(this);
 		return rootView;
 	}

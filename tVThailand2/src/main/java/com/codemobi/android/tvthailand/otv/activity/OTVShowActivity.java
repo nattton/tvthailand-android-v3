@@ -3,6 +3,8 @@ package com.codemobi.android.tvthailand.otv.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +26,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.codemobi.android.tvthailand.EpisodeActivity;
 import com.codemobi.android.tvthailand.MainApplication;
 import com.codemobi.android.tvthailand.MoreDetailActivity;
@@ -47,7 +51,6 @@ public class OTVShowActivity extends SherlockActivity implements
 
 	private ProgressBar progressBar;
 	private MenuItem refreshMenu;
-	private MenuItem playMenu;
 
 	/*
 	 * Header View
@@ -56,15 +59,10 @@ public class OTVShowActivity extends SherlockActivity implements
 	private TextView tvDescription;
 	private ImageView imgThumbnail;
 	private ImageButton imb_fav;
-//	private LinearLayout header_buttom_ll;
-	// private TextView vote_now_tv;
-	// private TextView my_vote_tv;
-	// private TextView avg_rating_tv;
 
 	private Program program;
 
 	private View header;
-	private ListView epList;
 	private OTVEpisodeAdapter mAdapter;
 	private OTVEpisodes mOTVEpisodes;
 
@@ -111,7 +109,7 @@ public class OTVShowActivity extends SherlockActivity implements
 			myProgramUpdateTask.execute();
 		}
 
-		epList = (ListView) findViewById(com.codemobi.android.tvthailand.R.id.ep_list);
+		ListView epList = (ListView) findViewById(com.codemobi.android.tvthailand.R.id.ep_list);
 		epList.addHeaderView(header, null, false);
 
 		mOTVEpisodes = new OTVEpisodes();
@@ -149,7 +147,17 @@ public class OTVShowActivity extends SherlockActivity implements
 	private void initEpisode() {
 		Intent i = getIntent();
 		program = (Program) i.getParcelableExtra(EXTRAS_PROGRAM);
-		
+
+		Glide.with(this)
+				.load(program.getOtvLogo())
+				.asBitmap()
+				.into(new SimpleTarget<Bitmap>() {
+					@Override
+					public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+							getSupportActionBar().setIcon(new BitmapDrawable(getResources(), resource));
+					}
+				});
+
 		sendTracker(program);
 	}
 
@@ -251,7 +259,7 @@ public class OTVShowActivity extends SherlockActivity implements
 		MenuInflater inflater = getSherlock().getMenuInflater();
 		inflater.inflate(com.codemobi.android.tvthailand.R.menu.program, menu);
 		refreshMenu = menu.findItem(com.codemobi.android.tvthailand.R.id.refresh);
-		playMenu = menu.findItem(com.codemobi.android.tvthailand.R.id.play);
+		MenuItem playMenu = menu.findItem(com.codemobi.android.tvthailand.R.id.play);
 		playMenu.setVisible(false);
 
 		return super.onCreateOptionsMenu(menu);

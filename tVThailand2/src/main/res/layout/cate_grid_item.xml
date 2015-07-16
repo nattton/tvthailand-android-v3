@@ -10,13 +10,12 @@
         android:orientation="horizontal"
         android:padding="5dp" >
 
-        <com.android.volley.toolbox.NetworkImageView
+        <ImageView
             android:id="@+id/thumb_cate"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="4dp"
             android:adjustViewBounds="true"
-            android:background="@drawable/ic_cate_empty"
             android:contentDescription="@null"
             android:scaleType="centerCrop" />
 

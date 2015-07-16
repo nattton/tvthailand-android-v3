@@ -36,7 +36,7 @@ public class OTVPartActivity extends SherlockActivity implements OnItemClickList
         episode = i.getParcelableExtra(EXTRAS_OTV_EPISODE);
         setTitle(episode.getNameTh() + "  " + episode.getDate());
 
-        mAdapter = new OTVPartAdapter(this, episode.getParts(), R.layout.part_list_item, MyVolley.getImageLoader());
+        mAdapter = new OTVPartAdapter(episode.getParts());
 
         ListView listview = (ListView) findViewById(R.id.listView);
         listview.setAdapter(mAdapter);

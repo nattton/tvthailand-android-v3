@@ -2,6 +2,8 @@ package com.codemobi.android.tvthailand.adapter;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.bumptech.glide.Glide;
+import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.dao.section.CategoryItemDao;
 import com.codemobi.android.tvthailand.manager.SectionManager;
 
@@ -10,18 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class CategoryAdapter extends BaseAdapter {
-	private ImageLoader imageLoader;
 
-	public CategoryAdapter(ImageLoader imageLoader) {
-		this.imageLoader = imageLoader;
+	public CategoryAdapter() {
+		super();
 	}
 
 	private static final class ViewHolder {
 		TextView title;
-		NetworkImageView thumbnail;
+		ImageView thumbnail;
 	}
 
 	@Override
@@ -34,7 +36,7 @@ public class CategoryAdapter extends BaseAdapter {
 
 			holder.title = (TextView) convertView
 					.findViewById(com.codemobi.android.tvthailand.R.id.tv_label_cate);
-			holder.thumbnail = (NetworkImageView) convertView
+			holder.thumbnail = (ImageView) convertView
 					.findViewById(com.codemobi.android.tvthailand.R.id.thumb_cate);
 			convertView.setTag(holder);
 		} else {
@@ -43,7 +45,12 @@ public class CategoryAdapter extends BaseAdapter {
 
         CategoryItemDao item = SectionManager.getInstance().getData().getCategories().get(position);
 		holder.title.setText(item.getTitle());
-		holder.thumbnail.setImageUrl(item.getThumbnail(), imageLoader);
+		Glide.with(parent.getContext())
+				.load(item.getThumbnail())
+				.placeholder(R.drawable.ic_cate_empty)
+				.crossFade()
+				.centerCrop()
+				.into(holder.thumbnail);
 		return convertView;
 	}
 

@@ -1,36 +1,27 @@
 package com.codemobi.android.tvthailand.adapter;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.codemobi.android.tvthailand.R;
-import com.codemobi.android.tvthailand.datasource.Part;
-import com.codemobi.android.tvthailand.datasource.Parts;
-
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-public class PartAdapter extends BaseAdapter{
-	private Activity activity;
-	private int resId;
-	private ImageLoader imageLoader;
-	private Parts parts;
-	private static LayoutInflater mInflater = null;
+import com.bumptech.glide.Glide;
+import com.codemobi.android.tvthailand.R;
+import com.codemobi.android.tvthailand.datasource.Part;
+import com.codemobi.android.tvthailand.datasource.Parts;
 
-	public PartAdapter(Activity a, Parts c, int resouceId, ImageLoader mImageLoader) {
-        activity = a;
+public class PartAdapter extends BaseAdapter {
+	private Parts parts;
+
+	public PartAdapter(Parts c) {
         parts = c;
-        resId = resouceId;
-        mInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        imageLoader = mImageLoader;
 	}
 
 	private static final class ViewHolder {
-		public NetworkImageView thumbnail;
+		public ImageView thumbnail;
 		public TextView title;
 	}
 
@@ -38,10 +29,11 @@ public class PartAdapter extends BaseAdapter{
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(resId, parent, false);
+			LayoutInflater mInflater = (LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = mInflater.inflate(R.layout.part_list_item, parent, false);
             holder = new ViewHolder();
             holder.title = (TextView)convertView.findViewById(R.id.title);
-		    holder.thumbnail = (NetworkImageView)convertView.findViewById(R.id.thumbnail);
+		    holder.thumbnail = (ImageView)convertView.findViewById(R.id.thumbnail);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder)convertView.getTag();
@@ -49,11 +41,13 @@ public class PartAdapter extends BaseAdapter{
 		
 		Part item = parts.get(position);
 		holder.title.setText(item.getTitle());
-		if (item.getThumbnail() != null && item.getThumbnail() != "") {
-			holder.thumbnail.setImageUrl(item.getThumbnail(), imageLoader);
-		} else {
-			holder.thumbnail.setImageResource(R.drawable.ic_tvthailand_120);
-		}
+		Glide.with(parent.getContext())
+				.load(item.getThumbnail())
+				.placeholder(R.drawable.ic_tvthailand_show_placeholder)
+				.crossFade()
+				.fitCenter()
+				.into(holder.thumbnail);
+
 		return convertView;
 	}
 

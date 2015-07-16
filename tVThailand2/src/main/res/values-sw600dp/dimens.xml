@@ -4,5 +4,8 @@
          Customize dimensions originally defined in res/values/dimens.xml (such as
          screen margins) for sw600dp devices (e.g. 7" tablets) here.
     -->
-
+    <dimen name="episode_list_item_thumbnail_size">48dp</dimen>
+    <dimen name="episode_list_item_title_size">24sp</dimen>
+    <dimen name="episode_list_item_aired_size">20sp</dimen>
+    <dimen name="episode_list_item_view_size">16sp</dimen>
 </resources>

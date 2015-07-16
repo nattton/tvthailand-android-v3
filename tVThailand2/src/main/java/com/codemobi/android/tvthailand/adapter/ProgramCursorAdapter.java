@@ -1,30 +1,28 @@
 package com.codemobi.android.tvthailand.adapter;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.codemobi.android.tvthailand.R;
-import com.codemobi.android.tvthailand.database.ProgramModel;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ProgramCursorAdapter extends CursorAdapter {
-	private ImageLoader imageLoader;
+import com.bumptech.glide.Glide;
+import com.codemobi.android.tvthailand.R;
+import com.codemobi.android.tvthailand.database.ProgramModel;
 
-	public ProgramCursorAdapter(Context context, ImageLoader imageLoader) {
+public class ProgramCursorAdapter extends CursorAdapter {
+
+	public ProgramCursorAdapter(Context context) {
 		super(context, null, 0);
-		this.imageLoader = imageLoader;
 	}
 
 	private static final class ViewHolder {
 		public TextView label;
 		public TextView description;
-		public NetworkImageView thumbnail;
+		public ImageView thumbnail;
 	}
 
 	@Override
@@ -34,7 +32,12 @@ public class ProgramCursorAdapter extends CursorAdapter {
 		viewHolder.label.setText(program.getTitle());
 		viewHolder.description.setText(program.getDescription());
 		viewHolder.thumbnail.setVisibility(View.VISIBLE);
-		viewHolder.thumbnail.setImageUrl(program.getThumbnail(), imageLoader);
+		Glide.with(context)
+				.load(program.getThumbnail())
+				.placeholder(R.drawable.ic_tvthailand_show_placeholder)
+				.crossFade()
+				.fitCenter()
+				.into(viewHolder.thumbnail);
 	}
 
 	@Override
@@ -44,7 +47,7 @@ public class ProgramCursorAdapter extends CursorAdapter {
 		ViewHolder viewHolder = new ViewHolder();
 		viewHolder.label = (TextView) view.findViewById(R.id.title);
 		viewHolder.description = (TextView) view.findViewById(R.id.description);
-		viewHolder.thumbnail = (NetworkImageView) view.findViewById(R.id.thumbnail);
+		viewHolder.thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
 
 		view.setTag(viewHolder);
 		return view;
