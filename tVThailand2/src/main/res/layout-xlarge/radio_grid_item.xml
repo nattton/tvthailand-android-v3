@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <com.codemobi.android.tvthailand.SquareImageView
+        <com.codemobi.android.tvthailand.view.SquareImageView
             android:id="@+id/radio_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

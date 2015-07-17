@@ -47,7 +47,7 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
         mAdapter = new RadioCustomAdapter(getActivity().getApplicationContext(),
 			   	SectionManager.getInstance().getData().getRadios(),
 			   	R.layout.radio_grid_header,
-			   	R.layout.radio_grid_item, MyVolley.getImageLoader());
+			   	R.layout.radio_grid_item);
 		
 		mGridView.setAdapter(mAdapter);
 		

@@ -40,12 +40,12 @@ public class ChannelFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
                 ChannelItemDao channel = SectionManager.getInstance().getData().getChannels().get(position);
-				
-				 Tracker t = ((MainApplication) getActivity().getApplication()).getTracker(
-				            TrackerName.APP_TRACKER);
-				 t.setScreenName("Channel");
-				 t.send(new HitBuilders.AppViewBuilder().setCustomDimension(5, channel.getTitle()).build());
-				
+
+				Tracker t = ((MainApplication) getActivity().getApplication()).getTracker(
+						TrackerName.APP_TRACKER);
+				t.setScreenName("Channel");
+				t.send(new HitBuilders.AppViewBuilder().setCustomDimension(5, channel.getTitle()).build());
+
 				Intent intent = new Intent(getActivity(), ProgramActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putInt(ProgramActivity.EXTRAS_MODE, ProgramActivity.BY_CHANNEL);

@@ -199,6 +199,7 @@ public class OTVShowActivity extends SherlockActivity implements
 		tvDescription.setText(program.getDetail());
 		Glide.with(this)
 				.load(program.getThumbnail())
+				.placeholder(R.drawable.ic_tvthailand_show_placeholder)
 				.crossFade()
 				.into(imgThumbnail);
 	}

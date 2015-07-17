@@ -1,8 +1,10 @@
 package com.codemobi.android.tvthailand.adapter;
 
+import com.bumptech.glide.Glide;
+import com.codemobi.android.tvthailand.R;
+import com.codemobi.android.tvthailand.view.SquareImageView;
 import com.codemobi.android.tvthailand.dao.section.ChannelItemDao;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.codemobi.android.tvthailand.manager.SectionManager;
 
 import android.content.Context;
@@ -21,8 +23,8 @@ public class ChannelAdapter extends BaseAdapter{
 	}
 
 	private static final class ViewHolder {
-		TextView channel_tv;
-		NetworkImageView channel_icon;
+		TextView channelTextView;
+		SquareImageView channelThumbnail;
 	}
 
 	@Override
@@ -32,21 +34,22 @@ public class ChannelAdapter extends BaseAdapter{
             LayoutInflater mInflater = (LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = mInflater.inflate(com.codemobi.android.tvthailand.R.layout.channel_grid_item, parent, false);
             holder = new ViewHolder();
-			holder.channel_tv = (TextView) convertView.findViewById(com.codemobi.android.tvthailand.R.id.tv_channel);
-			holder.channel_icon = (NetworkImageView) convertView.findViewById(com.codemobi.android.tvthailand.R.id.imv_channel);
+			holder.channelTextView = (TextView) convertView.findViewById(com.codemobi.android.tvthailand.R.id.tv_channel);
+			holder.channelThumbnail = (SquareImageView) convertView.findViewById(com.codemobi.android.tvthailand.R.id.imv_channel);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder)convertView.getTag();
 		}
 		
 		ChannelItemDao item = SectionManager.getInstance().getData().getChannels().get(position);
-		holder.channel_tv.setText(item.getTitle());
+		holder.channelTextView.setText(item.getTitle());
 
-		if (item.getThumbnail() != null) {
-			holder.channel_icon.setImageUrl(item.getThumbnail(), imageLoader);
-		} else {
-			holder.channel_icon.setImageResource(com.codemobi.android.tvthailand.R.drawable.ic_tvthailand_120);
-		}
+		Glide.with(parent.getContext())
+				.load(item.getThumbnail())
+				.placeholder(R.drawable.ic_tvthailand_120)
+				.crossFade()
+				.fitCenter()
+				.into(holder.channelThumbnail);
 		
 		return convertView;
 	}

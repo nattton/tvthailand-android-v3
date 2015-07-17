@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
+import com.bumptech.glide.Glide;
 import com.codemobi.android.tvthailand.R;
+import com.codemobi.android.tvthailand.view.SquareImageView;
 import com.codemobi.android.tvthailand.dao.section.RadioItemDao;
 import com.tonicartos.widget.stickygridheaders.StickyGridHeadersSimpleArrayAdapter;
 
@@ -17,23 +17,24 @@ import java.util.List;
 
 public class RadioCustomAdapter extends StickyGridHeadersSimpleArrayAdapter<RadioItemDao> {
 
-    private int mHeaderResId;
-
     private LayoutInflater mInflater;
-
+	private int mHeaderResId;
     private int mItemResId;
 
-    private ImageLoader imageLoader;
-
-
-
-	public RadioCustomAdapter(Context context, List<RadioItemDao> items,
-			int headerResId, int itemResId, ImageLoader mImageLoader) {
+	public RadioCustomAdapter(Context context, List<RadioItemDao> items, int headerResId, int itemResId) {
 		super(context, items, headerResId, itemResId);
 		this.mInflater = LayoutInflater.from(context);
         this.mHeaderResId = headerResId;
         this.mItemResId = itemResId;
-        this.imageLoader = mImageLoader;
+	}
+
+	protected class HeaderViewHolder {
+		public TextView textView;
+	}
+
+	protected class ViewHolder {
+		public TextView textView;
+		public SquareImageView imageView;
 	}
 
 	@Override
@@ -57,8 +58,6 @@ public class RadioCustomAdapter extends StickyGridHeadersSimpleArrayAdapter<Radi
 		
 		return convertView;
 	}
-
-
     
    @Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -67,30 +66,21 @@ public class RadioCustomAdapter extends StickyGridHeadersSimpleArrayAdapter<Radi
 		   convertView = mInflater.inflate(mItemResId, parent, false);
 		   holder = new ViewHolder();
 		   holder.textView = (TextView) convertView.findViewById(R.id.radio_textview);
-		   holder.imageView = (NetworkImageView) convertView.findViewById(R.id.radio_image);
+		   holder.imageView = (SquareImageView) convertView.findViewById(R.id.radio_image);
 		   convertView.setTag(holder);
 	   } else {
 		   holder = (ViewHolder)convertView.getTag();
 	   }
-	   
+
 	   holder.textView.setText(getItem(position).getTitle());
-	   if (getItem(position).getThumbnail() != null) {
-			holder.imageView.setImageUrl(getItem(position).getThumbnail(), imageLoader);
-		} else {
-			holder.imageView.setImageResource(R.drawable.ic_tvthailand_120);
-		}
+	   Glide.with(parent.getContext())
+			   .load(getItem(position).getThumbnail())
+			   .placeholder(R.drawable.ic_tvthailand_120)
+			   .crossFade()
+			   .fitCenter()
+			   .into(holder.imageView);
 	   
 	   return convertView;
 	}
-
-
-    protected class HeaderViewHolder {
-        public TextView textView;
-    }
-    
-    protected class ViewHolder {
-        public TextView textView;
-        public NetworkImageView imageView;
-    }
 
 }
