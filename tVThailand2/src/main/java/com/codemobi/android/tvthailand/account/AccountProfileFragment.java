@@ -1,8 +1,5 @@
 package com.codemobi.android.tvthailand.account;
 
-
-
-import com.actionbarsherlock.app.SherlockFragment;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -13,6 +10,7 @@ import com.facebook.widget.ProfilePictureView;
 import com.codemobi.android.tvthailand.R;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,7 @@ import android.widget.TextView;
  *
  ******/
 
-public class AccountProfileFragment extends SherlockFragment implements User.OnUserProfileChangeListener {
+public class AccountProfileFragment extends Fragment implements User.OnUserProfileChangeListener {
 
 	private User userProfile = User.getInstance();
 	private TextView displayName;

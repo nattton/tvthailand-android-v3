@@ -1,15 +1,20 @@
 package com.codemobi.android.tvthailand.otv.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.codemobi.android.tvthailand.MyVolley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.codemobi.android.tvthailand.otv.adapter.OTVPartAdapter;
 import com.codemobi.android.tvthailand.player.VitamioVastPlayerActivity;
 import com.google.android.gms.analytics.HitBuilders;
@@ -20,29 +25,42 @@ import com.codemobi.android.tvthailand.MainApplication.TrackerName;
 import com.codemobi.android.tvthailand.otv.model.OTVEpisode;
 import com.codemobi.android.tvthailand.player.VastPlayerActivity;
 
-public class OTVPartActivity extends SherlockActivity implements OnItemClickListener {
+public class OTVPartActivity extends AppCompatActivity implements OnItemClickListener {
 	public static String EXTRAS_OTV_EPISODE = "EXTRAS_OTV_EPISODE";
 
+	Toolbar toolbar;
 	private OTVEpisode episode;
 	private OTVPartAdapter mAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.part_list_view);
+		setContentView(R.layout.activity_part);
 
-        Intent i = getIntent();
-        episode = i.getParcelableExtra(EXTRAS_OTV_EPISODE);
-        setTitle(episode.getNameTh() + "  " + episode.getDate());
+		initExtras();
+		initToolbar();
+		initInstances();
+	}
 
-        mAdapter = new OTVPartAdapter(episode.getParts());
+	private void initExtras() {
+		Intent i = getIntent();
+		episode = i.getParcelableExtra(EXTRAS_OTV_EPISODE);
+	}
 
-        ListView listview = (ListView) findViewById(R.id.listView);
-        listview.setAdapter(mAdapter);
-        listview.setOnItemClickListener(this);
+	private void initToolbar() {
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
+		toolbar.setTitle(episode.getNameTh() + "  " + episode.getDate());
+		setSupportActionBar(toolbar);
+	}
 
-        sendTracker(episode);
+	private void initInstances() {
+		mAdapter = new OTVPartAdapter(episode.getParts());
+
+		ListView listview = (ListView) findViewById(R.id.listView);
+		listview.setAdapter(mAdapter);
+		listview.setOnItemClickListener(this);
+
+		sendTracker(episode);
 	}
 	
 	private void sendTracker(OTVEpisode episode) {

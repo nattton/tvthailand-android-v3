@@ -28,7 +28,14 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 	
 	private GridView mGridView;
 	private RadioCustomAdapter mAdapter;
-	
+
+	public static RadioFragment newInstance() {
+		RadioFragment fragment = new RadioFragment();
+		Bundle args = new Bundle();
+		fragment.setArguments(args);
+		return fragment;
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

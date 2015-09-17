@@ -1,22 +1,13 @@
 package com.codemobi.android.tvthailand.account;
 
-
-import com.actionbarsherlock.app.SherlockFragment;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/*****
- * 
- * @author april
- * 15 October 2013 - Fix Google+ Sign-in bug, according to android sdk updated to r22.2.1
- *
- ******/
-
-public class AccountSplashLoginFragment extends SherlockFragment {
+public class AccountSplashLoginFragment extends Fragment {
 
 	
 	@Override

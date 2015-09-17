@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
@@ -17,10 +21,6 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -33,8 +33,10 @@ import com.codemobi.android.tvthailand.datasource.Programs;
 import com.codemobi.android.tvthailand.otv.activity.OTVShowActivity;
 import com.codemobi.android.tvthailand.player.VastContentPlayerActivity;
 
-public class ProgramActivity extends SherlockActivity implements
+public class ProgramActivity extends AppCompatActivity implements
 		OnLoadDataListener, OnItemClickListener, OnScrollListener {
+
+	Toolbar toolbar;
 
 	public static final String EXTRAS_MODE = "EXTRAS_MODE";
     public static final String EXTRAS_ID = "EXTRAS_ID";
@@ -46,8 +48,10 @@ public class ProgramActivity extends SherlockActivity implements
     public static final int BY_CATEGORY = 1;
     public static final int BY_CHANNEL = 2;
 
-	private int mode;
 	private String id;
+	private int mode;
+	private String title;
+	private String icon;
 	private String url;
 
 	private Programs mPrograms;
@@ -61,28 +65,12 @@ public class ProgramActivity extends SherlockActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.simple_grid_view);
-		
-		progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		setContentView(R.layout.activity_program);
 
-		Bundle bundle = getIntent().getExtras();
-		String title = bundle.getString(EXTRAS_TITLE);
+		initExtras();
+		initToolbar();
 		setTitle(title);
-		String icon = bundle.getString(EXTRAS_ICON);
-		url = bundle.getString(EXTRAS_URL);
-
-		Glide.with(this)
-				.load(icon)
-				.asBitmap()
-				.into(new SimpleTarget<Bitmap>() {
-					@Override
-					public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-							getSupportActionBar().setIcon(new BitmapDrawable(getResources(), resource));
-					}
-				});
-        
-		id = bundle.getString(EXTRAS_ID);
-		mode = bundle.getInt(EXTRAS_MODE);
+		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 		mPrograms = new Programs();
 		mAdapter = new ProgramAdapter(mPrograms);
@@ -134,6 +122,29 @@ public class ProgramActivity extends SherlockActivity implements
 		gridview.setOnItemClickListener(this);
 		gridview.setOnScrollListener(this);
 	}
+
+	private void initExtras() {
+		Bundle bundle = getIntent().getExtras();
+		id = bundle.getString(EXTRAS_ID);
+		mode = bundle.getInt(EXTRAS_MODE);
+		title = bundle.getString(EXTRAS_TITLE);
+		icon = bundle.getString(EXTRAS_ICON);
+		url = bundle.getString(EXTRAS_URL);
+	}
+
+	private void initToolbar() {
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
+		toolbar.setTitle(title);
+		Glide.with(this).load(icon)
+				.asBitmap()
+				.into(new SimpleTarget<Bitmap>() {
+					@Override
+					public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+						toolbar.setLogo(new BitmapDrawable(getResources(), resource));
+					}
+				});
+		setSupportActionBar(toolbar);
+	}
 	
 	@Override
 	protected void onResume() {
@@ -158,8 +169,7 @@ public class ProgramActivity extends SherlockActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSherlock().getMenuInflater();
-		inflater.inflate(R.menu.program, menu);
+		getMenuInflater().inflate(R.menu.program, menu);
 		refreshMenu = menu.findItem(R.id.refresh);
         MenuItem playMenu = menu.findItem(R.id.play);
 		if (mode == BY_CHANNEL && url != null && !url.equals("")) {
@@ -195,27 +205,27 @@ public class ProgramActivity extends SherlockActivity implements
 
 	@Override
 	public void onLoadStart() {
-		if (getSherlock() != null) {
-			if (progressBar != null) {
-				progressBar.setVisibility(View.VISIBLE);
-			}
-
-			if (refreshMenu != null) {
-				startLoadingProgressBar(refreshMenu);
-			}
-		}
+//		if (getSherlock() != null) {
+//			if (progressBar != null) {
+//				progressBar.setVisibility(View.VISIBLE);
+//			}
+//
+//			if (refreshMenu != null) {
+//				startLoadingProgressBar(refreshMenu);
+//			}
+//		}
 	}
 
 	@Override
 	public void onLoadFinished() {
-		if (getSherlock() != null) {
-			if (progressBar != null) {
-				progressBar.setVisibility(View.GONE);
-			}
-			if (refreshMenu != null) {
-				stopLoadingProgressBar(refreshMenu);
-			}
-		}
+//		if (getSherlock() != null) {
+//			if (progressBar != null) {
+//				progressBar.setVisibility(View.GONE);
+//			}
+//			if (refreshMenu != null) {
+//				stopLoadingProgressBar(refreshMenu);
+//			}
+//		}
 	}
 
 	private void playVideo(final String videoUrl) {
@@ -259,7 +269,6 @@ public class ProgramActivity extends SherlockActivity implements
 	
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		// TODO Auto-generated method stub
 		
 	}
 

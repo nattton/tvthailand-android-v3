@@ -8,8 +8,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -21,10 +25,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -44,11 +44,12 @@ import com.codemobi.android.tvthailand.otv.model.OTVEpisodes;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-public class OTVShowActivity extends SherlockActivity implements
+public class OTVShowActivity extends AppCompatActivity implements
 		OnLoadDataListener, OnClickListener, OnItemClickListener, OnLongClickListener {
 	
 	public static final String EXTRAS_PROGRAM = "EXTRAS_PROGRAM";
 
+	Toolbar toolbar;
 	private ProgressBar progressBar;
 	private MenuItem refreshMenu;
 
@@ -73,11 +74,10 @@ public class OTVShowActivity extends SherlockActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(com.codemobi.android.tvthailand.R.layout.episode_view);
-		
-		progressBar = (ProgressBar) findViewById(com.codemobi.android.tvthailand.R.id.progressBar);
+		setContentView(R.layout.activity_episode);
 
 		initEpisode();
+		initToolbar();
 		initiazeUI();
 		setUpHeaderView();
 
@@ -146,19 +146,23 @@ public class OTVShowActivity extends SherlockActivity implements
 
 	private void initEpisode() {
 		Intent i = getIntent();
-		program = (Program) i.getParcelableExtra(EXTRAS_PROGRAM);
+		program = i.getParcelableExtra(EXTRAS_PROGRAM);
 
-		Glide.with(this)
-				.load(program.getOtvLogo())
+		sendTracker(program);
+	}
+
+	private void initToolbar() {
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
+		toolbar.setTitle(program.getTitle());
+		Glide.with(this).load(program.getOtvLogo())
 				.asBitmap()
 				.into(new SimpleTarget<Bitmap>() {
 					@Override
 					public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-							getSupportActionBar().setIcon(new BitmapDrawable(getResources(), resource));
+						toolbar.setLogo(new BitmapDrawable(getResources(), resource));
 					}
 				});
-
-		sendTracker(program);
+		setSupportActionBar(toolbar);
 	}
 
 	private void initiazeUI() {
@@ -175,6 +179,7 @@ public class OTVShowActivity extends SherlockActivity implements
 		header.findViewById(com.codemobi.android.tvthailand.R.id.btn_more_detail).setOnClickListener(this);
         header.findViewById(com.codemobi.android.tvthailand.R.id.btn_more_detail).setOnLongClickListener(this);
 		imb_fav.setOnClickListener(this);
+		progressBar = (ProgressBar) findViewById(com.codemobi.android.tvthailand.R.id.progressBar);
 	}
 	
 	private void sendTracker(Program show) {
@@ -257,8 +262,7 @@ public class OTVShowActivity extends SherlockActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSherlock().getMenuInflater();
-		inflater.inflate(com.codemobi.android.tvthailand.R.menu.program, menu);
+		getMenuInflater().inflate(com.codemobi.android.tvthailand.R.menu.program, menu);
 		refreshMenu = menu.findItem(com.codemobi.android.tvthailand.R.id.refresh);
 		MenuItem playMenu = menu.findItem(com.codemobi.android.tvthailand.R.id.play);
 		playMenu.setVisible(false);
@@ -290,27 +294,27 @@ public class OTVShowActivity extends SherlockActivity implements
 
 	@Override
 	public void onLoadStart() {
-		if (getSherlock() != null) {
-			if (progressBar != null) {
-				progressBar.setVisibility(View.VISIBLE);
-			}
-
-			if (refreshMenu != null) {
-				startLoadingProgressBar(refreshMenu);
-			}
-		}
+//		if (getSherlock() != null) {
+//			if (progressBar != null) {
+//				progressBar.setVisibility(View.VISIBLE);
+//			}
+//
+//			if (refreshMenu != null) {
+//				startLoadingProgressBar(refreshMenu);
+//			}
+//		}
 	}
 
 	@Override
 	public void onLoadFinished() {
-		if (getSherlock() != null) {
-			if (progressBar != null) {
-				progressBar.setVisibility(View.GONE);
-			}
-			if (refreshMenu != null) {
-				stopLoadingProgressBar(refreshMenu);
-			}
-		}
+//		if (getSherlock() != null) {
+//			if (progressBar != null) {
+//				progressBar.setVisibility(View.GONE);
+//			}
+//			if (refreshMenu != null) {
+//				stopLoadingProgressBar(refreshMenu);
+//			}
+//		}
 	}
 
 	@Override

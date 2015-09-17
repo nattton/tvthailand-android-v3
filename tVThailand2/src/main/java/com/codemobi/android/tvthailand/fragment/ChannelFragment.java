@@ -26,6 +26,13 @@ import com.squareup.otto.Subscribe;
 public class ChannelFragment extends Fragment {
 	private ChannelAdapter mAdapter;
 
+	public static ChannelFragment newInstance() {
+		ChannelFragment fragment = new ChannelFragment();
+		Bundle args = new Bundle();
+		fragment.setArguments(args);
+		return fragment;
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

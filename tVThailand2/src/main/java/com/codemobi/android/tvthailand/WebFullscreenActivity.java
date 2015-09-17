@@ -1,6 +1,5 @@
 package com.codemobi.android.tvthailand;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.codemobi.android.tvthailand.player.WebViewPlayer;
 import com.codemobi.android.tvthailand.util.SystemUiHider;
 
@@ -8,6 +7,7 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -21,7 +21,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @see SystemUiHider
  */
-public class WebFullscreenActivity extends SherlockActivity {
+public class WebFullscreenActivity extends AppCompatActivity {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.

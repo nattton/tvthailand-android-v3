@@ -11,7 +11,7 @@
     <string name="aired">Aired : %1$s</string>
 
     <string-array name="sections">
-        <item>CATEGORIES</item>
+        <item>CATEGORY</item>
         <item>CHANNEL</item>
         <item>RADIO</item>
     </string-array>
@@ -117,7 +117,6 @@
     <string name="watch_live">LIVE</string>
     <string name="cm_account">Account</string>
     <string name="beta_version">beta version</string>
-    <string name="real_copyright">ลิขสิทธิ์แท้</string>
     <string name="old_password">รหัสผ่านเดิม :</string>
     <string name="new_password">รหัสผ่านใหม่ :</string>
     <string name="confirm_new_password">ยืนยันรหัสผ่านใหม่ :</string>
@@ -133,14 +132,11 @@
     <string name="telephone_">โทร. :</string>
     <string name="email_">Email :</string>
     <string name="update_profile">Update Profile</string>
-    <string name="request_otp">ขอรหัส OTP</string>
-    <string name="otp_is_incorrect">รหัส OTP ไม่ถูกต้อง</string>
-    <string name="please_request_otp">กรุณาขอรหัส OTP</string>
     <string name="unknown_person">Unknown</string>
     <string name="plus_generic_error">Sign in with Google is not available.</string>
     <string name="skip_"><![CDATA[Skip >>]]></string>
     <string name="website_contact">Website : https://www.facebook.com/TV.Thailand</string>
-    <string name="email_contact">Email : makathon.labs@gmail.com</string>
+    <string name="email_contact">Email : code.mobi.com@gmail.com</string>
     <string name="drama_ch7">ละครช่อง 7</string>
     <string name="drama_ch7_url">http://www.otv.co.th/api/index.php/Ch7/drama</string>
     <string name="request_ad">Req. Ad</string>

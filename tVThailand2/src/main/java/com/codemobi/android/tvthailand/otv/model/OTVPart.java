@@ -13,17 +13,15 @@ public class OTVPart implements Parcelable {
 	private String streamUrl;
 	private String vastUrl;
 	private String mediaCode;
-    private int skipad;
 
     private static final String EMPTY_STRING = "";
 	
 	public OTVPart() {
 		super();
-        setSkipad(8);
 	}
 
 	private String CheckNullString(String str) {
-		if (str == null || str == "null" || str == "null")
+		if (str == null || str == "null")
 			return EMPTY_STRING;
 		return str;
 	}
@@ -91,14 +89,6 @@ public class OTVPart implements Parcelable {
 	public void setMediaCode(String mediaCode) {
 		this.mediaCode = CheckNullString(mediaCode);
 	}
-
-    public int getSkipad() {
-        return skipad;
-    }
-
-    public void setSkipad(int skipad) {
-        this.skipad = skipad * 1000;
-    }
 	
 	@Override
 	public int describeContents() {
@@ -115,7 +105,6 @@ public class OTVPart implements Parcelable {
 		dest.writeString(streamUrl);
 		dest.writeString(vastUrl);
 		dest.writeString(getMediaCode());
-        dest.writeInt(skipad);
 	}
 	
 	public static final Parcelable.Creator<OTVPart> CREATOR = new Parcelable.Creator<OTVPart>() {
@@ -141,7 +130,6 @@ public class OTVPart implements Parcelable {
 		this.streamUrl = source.readString();
 		this.vastUrl = source.readString();
 		this.setMediaCode(source.readString());
-        this.skipad = source.readInt();
 	}
 
 

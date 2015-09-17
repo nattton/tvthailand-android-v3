@@ -8,11 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -20,17 +19,18 @@ import com.android.volley.VolleyError;
 import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.dao.advertise.AdCollectionDao;
 import com.codemobi.android.tvthailand.dao.advertise.AdItemDao;
-import com.codemobi.android.tvthailand.dao.advertise.KapookItemDao;
 import com.codemobi.android.tvthailand.manager.http.HTTPEngine;
+import com.codemobi.android.tvthailand.utils.Constant;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
+import com.vserv.android.ads.api.VservAdView;
+import com.vserv.android.ads.common.VservAdListener;
 
 import java.util.Locale;
 
-import mobi.vserv.android.ads.AdLoadCallback;
-import mobi.vserv.android.ads.AdOrientation;
-import mobi.vserv.android.ads.ViewNotEmptyException;
-import mobi.vserv.android.ads.VservAd;
-import mobi.vserv.android.ads.VservController;
-import mobi.vserv.android.ads.VservManager;
 
 @SuppressLint({ "DefaultLocale", "SetJavaScriptEnabled" })
 public class MyBannerView extends LinearLayout {
@@ -38,13 +38,11 @@ public class MyBannerView extends LinearLayout {
 
 	private LinearLayout parentView;
 	private WebView webViewShow;
-	private WebView webView1px;
-	
-	private FrameLayout vservView;
-	private VservAd adObject;
-	private VservController controller;
-	private VservManager manager;
-	private static String BANNER_ZONE = "ceb27b33";
+
+	private VservAdView vservAdView;
+	private RelativeLayout adViewContainer;
+	private AdView adView;
+	private VservAdListener mAdListener;
 
 	public MyBannerView(Context context) {
 		super(context);
@@ -69,20 +67,21 @@ public class MyBannerView extends LinearLayout {
 		parentView.setVisibility(View.GONE);
 		
 		View convertView = LayoutInflater.from(context).inflate(R.layout.my_banner_view, this);
-		vservView = (FrameLayout) convertView.findViewById(R.id.vservView);
+		vservAdView = (VservAdView) convertView.findViewById(R.id.vservAdView);
+		adViewContainer = (RelativeLayout) findViewById(R.id.adViewContainer);
 		webViewShow = (WebView) convertView.findViewById(R.id.webViewShow);
-		webView1px = (WebView) convertView.findViewById(R.id.webView1px);
 		setUpView();
 		
 		if(autoLoad) requestAds();
 	}
 	
 	private void setUpView() {
-		webViewShow.setWebChromeClient(new WebChromeClient(){
+		webViewShow.setWebChromeClient(new WebChromeClient() {
 			@Override
 			public void onProgressChanged(WebView view, int newProgress) {
 				if (newProgress == 100) {
-                    Log.d("webViewShow", "load complete");
+					Log.d("webViewShow", "load complete");
+					webViewShow.setVisibility(View.VISIBLE);
 					parentView.setVisibility(View.VISIBLE);
 				}
 				super.onProgressChanged(view, newProgress);
@@ -93,20 +92,6 @@ public class MyBannerView extends LinearLayout {
 		webViewShow.setHorizontalScrollBarEnabled(false);
 		webViewShow.getSettings().setJavaScriptEnabled(true);
 		webViewShow.getSettings().setAppCacheEnabled(true);
-
-        WebSettings webSettings1px = webView1px.getSettings();
-        webSettings1px.setJavaScriptEnabled(true);
-        webSettings1px.setAppCacheEnabled(false);
-        webSettings1px.setUserAgentString(System.getProperty("http.agent"));
-        webView1px.setWebChromeClient(new WebChromeClient(){
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                if (newProgress == 100) {
-                    Log.d("webView1px", "load complete");
-                }
-                super.onProgressChanged(view, newProgress);
-            }
-        });
 	}
 
     private void requestAds() {
@@ -135,7 +120,7 @@ public class MyBannerView extends LinearLayout {
 				}
 			}
 		} catch (AdCollectionDao.EmptyException err) {
-			requestVservAd();
+			requestFacebook();
 		}
 	}
 
@@ -149,54 +134,111 @@ public class MyBannerView extends LinearLayout {
 	}
 	
 	private void requestVservAd() {
-		vservView.setVisibility(View.GONE);
-		try {
-			if (null != controller) {
-				controller.stopRefresh();
-				controller = null;
+		adListenerInitialization();
+		vservAdView.setAdListener(mAdListener);
+		vservAdView.setZoneId(Constant.VSERV_BANNER);
+		vservAdView.setRefresh(true);
+		vservAdView.setRefreshRate(30);
+		vservAdView.loadAd();
+	}
+
+	private void requestFacebook() {
+
+		adView = new AdView(getContext(), "202355306578303_529399410540556", AdSize.BANNER_320_50);
+		adView.setAdListener(new AdListener() {
+			@Override
+			public void onError(Ad ad, AdError adError) {
+
 			}
-			if (null != vservView) {
-				vservView.removeAllViews();
+
+			@Override
+			public void onAdLoaded(Ad ad) {
+				parentView.setVisibility(VISIBLE);
+				adViewContainer.setVisibility(VISIBLE);
 			}
-			
-			manager = VservManager.getInstance(getContext());
-			
-			manager.getAd(BANNER_ZONE, AdOrientation.PORTRAIT, new AdLoadCallback() {
-				
-				@Override
-				public void onNoFill() {
-					
-				}
-				
-				@Override
-				public void onLoadSuccess(VservAd adObj) {
-					adObject = adObj;
-					if(null != vservView) {
-						vservView.removeAllViews();
+
+			@Override
+			public void onAdClicked(Ad ad) {
+
+			}
+		});
+		adViewContainer.addView(adView);
+		adView.loadAd();
+	}
+
+	private void adListenerInitialization() {
+		mAdListener = new VservAdListener() {
+
+			@Override
+			public void didInteractWithAd(VservAdView adView) {
+//				Toast.makeText(getContext(), "didInteractWithAd",
+//						Toast.LENGTH_SHORT).show();
+
+			}
+
+			@Override
+			public void adViewDidLoadAd(VservAdView adView) {
+				parentView.setVisibility(VISIBLE);
+				vservAdView.setVisibility(VISIBLE);
+//				Toast.makeText(getContext(), "adViewDidLoadAd",
+//						Toast.LENGTH_SHORT).show();
+
+			}
+
+			@Override
+			public void willPresentOverlay(VservAdView adView) {
+
+//				Toast.makeText(getContext(), "willPresentOverlay",
+//						Toast.LENGTH_SHORT).show();
+
+			}
+
+			@Override
+			public void willDismissOverlay(VservAdView adView) {
+
+//				Toast.makeText(getContext(), "willDismissOverlay",
+//						Toast.LENGTH_SHORT).show();
+
+			}
+
+			@Override
+			public void adViewDidCacheAd(VservAdView adView) {
+
+//				Toast.makeText(getContext(), "adViewDidCacheAd",
+//						Toast.LENGTH_SHORT).show();
+				if (vservAdView != null) {
+
+					if (vservAdView.getUxType() == VservAdView.UX_INTERSTITIAL) {
+//						isAppInBackgorund = true;
 					}
-					/***** APPLICATION IF USE RENDER AD FUNCTIONALITY ******/
-					if (null != controller) {
-						controller = null;
-					}
-					
-					if (null != adObject) {
-						try {
-							vservView.setVisibility(View.VISIBLE);
-							parentView.setVisibility(View.VISIBLE);
-							adObject.show(getContext(), vservView);
-						} catch (ViewNotEmptyException e) {
-							Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-							e.printStackTrace();
-						}
-					}
+					vservAdView.showAd();
 				}
-				
-				@Override
-				public void onLoadFailure() {
-					vservView.setVisibility(View.GONE);
-				}
-			});
-		} catch (Exception e) {
-		}
+
+			}
+
+			@Override
+			public VservAdView didFailedToLoadAd(String arg0) {
+				requestFacebook();
+//				Toast.makeText(getContext(), "didFailedToLoadAd",
+//						Toast.LENGTH_SHORT).show();
+
+				return null;
+			}
+
+			@Override
+			public VservAdView didFailedToCacheAd(String Error) {
+
+//				Toast.makeText(getContext(), "didFailedToCacheAd",
+//						Toast.LENGTH_SHORT).show();
+
+				return null;
+			}
+
+			@Override
+			public void willLeaveApp(VservAdView adView) {
+//				Toast.makeText(getContext(), "willLeaveApp",
+//						Toast.LENGTH_SHORT).show();
+			}
+		};
 	}
 }

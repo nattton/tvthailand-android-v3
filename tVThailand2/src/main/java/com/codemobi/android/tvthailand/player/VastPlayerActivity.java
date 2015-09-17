@@ -313,9 +313,13 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 		case STARTED:
 			isAdStarted = true;
 			isAdPlaying = true;
-
+			double totalTime = adsManager.getCurrentAd().getDuration();
+			int skipTime = 8;
+			if (totalTime > 20) {
+				skipTime = 15;
+			}
 	        //** Start countdown counter to skip ad **//
-	        skipAdCounter = new CountDownTimer(part.getSkipad(), 1000);
+	        skipAdCounter = new CountDownTimer(skipTime, 1000);
 	        skipAdCounter.Start();
 	        RefreshTimer();
 	        txtSkipCount.setVisibility(View.VISIBLE);
@@ -329,7 +333,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 	            		buttonSkip.setVisibility(View.VISIBLE);
 					}
 	            }
-	        }, part.getSkipad());
+	        }, skipTime);
 			
 			titleBarRL.setVisibility(View.GONE);
 

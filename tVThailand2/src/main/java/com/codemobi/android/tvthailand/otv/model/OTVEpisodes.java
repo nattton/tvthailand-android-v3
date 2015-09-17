@@ -1,5 +1,7 @@
 package com.codemobi.android.tvthailand.otv.model;
 
+import android.util.Log;
+
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
@@ -31,7 +33,7 @@ public class OTVEpisodes {
 	public void loadOTVEpisodes(Program show) {
 		notifyLoadStart();
 		String url = String.format("%s/Content/index/%s/%s/%s/%s/0/50/0", OTVConfig.BASE_URL, OTVConfig.APP_ID, MainApplication.getAppVersion(), OTVConfig.API_VERSION, show.getOtvId());
-//        Log.d("OTVEpisodes", url);
+        Log.d("OTVEpisodes", url);
         JsonObjectRequest loadEpisodeRequest = new JsonObjectRequest(Method.GET, url, null, reqSuccessListener(), reqErrorListener());
 		loadEpisodeRequest.setShouldCache(false);
         MyVolley.getRequestQueue().add(loadEpisodeRequest);
@@ -80,7 +82,6 @@ public class OTVEpisodes {
 					
 					if (jObjPart.has("media_code") && jObjPart.getString("media_code").equals("1001")) {
 						part.setVastUrl(jObjPart.has("stream_url") ? jObjPart.getString("stream_url") : null);
-                        part.setSkipad(jObjPart.has("skipad") ? jObjPart.getInt("skipad") : 8);
 					}
 					else if (jObjPart.has("media_code")) {
 						part.setPartId(jObjPart.has("id") ? jObjPart.getString("id") : EMPTY_STRING);

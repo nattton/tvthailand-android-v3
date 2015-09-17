@@ -1,28 +1,33 @@
 package com.codemobi.android.tvthailand;
 
-import mobi.vserv.android.ads.AdPosition;
-import mobi.vserv.android.ads.AdType;
-import mobi.vserv.android.ads.VservManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codemobi.android.tvthailand.account.AccountActivity;
 import com.codemobi.android.tvthailand.fragment.CategoryFragment;
 import com.codemobi.android.tvthailand.fragment.ChannelFragment;
 import com.codemobi.android.tvthailand.fragment.RadioFragment;
+import com.codemobi.android.tvthailand.utils.Constant;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.InterstitialAd;
+import com.facebook.ads.InterstitialAdListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.MainApplication.TrackerName;
@@ -30,30 +35,30 @@ import com.codemobi.android.tvthailand.dao.section.SectionCollectionDao;
 import com.codemobi.android.tvthailand.datasource.OnLoadDataListener;
 import com.codemobi.android.tvthailand.manager.http.HTTPEngine;
 import com.codemobi.android.tvthailand.manager.SectionManager;
-import com.viewpagerindicator.TabPageIndicator;
+import com.vserv.android.ads.api.VservAdView;
+import com.vserv.android.ads.common.VservAdListener;
 
+public class MainActivity extends AppCompatActivity implements
+		OnLoadDataListener, InterstitialAdListener {
 
-public class MainActivity extends SherlockFragmentActivity implements
-		OnLoadDataListener {
+	Toolbar toolbar;
+	TabLayout tabLayout;
+	ViewPager viewPager;
+	FloatingActionButton searchButton;
 
 	private static final String TAG = "MainActivity";
 	private static final String KEY_IS_ADS_DISPLAYED = "KEY_IS_ADS_DISPLAYED";
 //	private boolean doubleBackToExitPressedOnce = false;
 	private static boolean isAdsEnabled = true;
 	private boolean isAdsDisplayed = false;
-	private static final String BILLBOARD_ZONE = "c84927ed";
-	
-	
-	private static String[] CONTENT = new String[4];
-
-	private CategoryFragment catFragment;
-	private ChannelFragment chFragment;
-	private RadioFragment radioFragment;
 	private int current_pos = 0;
 
 	private MenuItem refreshMenu;
+
+	private InterstitialAd interstitialAd;
 	
-	VservManager manager;
+	private VservAdView vservAdView;
+	private VservAdListener mAdListener;
 	
 	public void setTest() {
 		isAdsEnabled = false;
@@ -62,75 +67,136 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.simple_tabs);
+        setContentView(R.layout.activity_main);
 
+		initToolbar();
+		initTabLayout();
         initInstances();
 
 		if (savedInstanceState != null){
 		    isAdsDisplayed = savedInstanceState.getBoolean(KEY_IS_ADS_DISPLAYED);
-		  }
+		}
+	}
+
+	private void initToolbar() {
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
+//		toolbar.setLogo(ContextCompat.getDrawable(this, R.drawable.ic_launcher));
+		setSupportActionBar(toolbar);
+	}
+
+	private void initTabLayout() {
+		tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+		tabLayout.addTab(tabLayout.newTab().setText("Categories"));
+		tabLayout.addTab(tabLayout.newTab().setText("Channel"));
+		tabLayout.addTab(tabLayout.newTab().setText("Radio"));
+
+		viewPager = (ViewPager) findViewById(R.id.viewPager);
+		viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+			@Override
+			public Fragment getItem(int position) {
+				switch (position) {
+					case 0:
+						return CategoryFragment.newInstance();
+					case 1:
+						return ChannelFragment.newInstance();
+					case 2:
+						return RadioFragment.newInstance();
+					default:
+						return RadioFragment.newInstance();
+				}
+			}
+
+			@Override
+			public int getCount() {
+				return 3;
+			}
+		});
+
+		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+		viewPager.addOnPageChangeListener(new OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+				current_pos = position;
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+
+			}
+		});
+		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+			@Override
+			public void onTabSelected(TabLayout.Tab tab) {
+				viewPager.setCurrentItem(tab.getPosition(), true);
+			}
+
+			@Override
+			public void onTabUnselected(TabLayout.Tab tab) {
+
+			}
+
+			@Override
+			public void onTabReselected(TabLayout.Tab tab) {
+
+			}
+		});
 	}
 
     private void initInstances() {
-        CONTENT = getResources().getStringArray(R.array.sections);
-
-        FragmentStatePagerAdapter adapter = new TVThailandAdapter(getSupportFragmentManager());
-
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(adapter);
-
-        TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
-        indicator.setViewPager(pager);
-        indicator.setCurrentItem(current_pos);
-        indicator.setOnPageChangeListener(new OnPageChangeListener() {
-
-            public void onPageSelected(int position) {
-                current_pos = position;
-            }
-
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-            }
-
-            public void onPageScrollStateChanged(int position) {
-            }
-        });
-
-        catFragment = new CategoryFragment();
-        chFragment = new ChannelFragment();
-        radioFragment = new RadioFragment();
-
         loadSection();
+
+		searchButton = (FloatingActionButton) findViewById(R.id.searchButton);
+		searchButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onSearchRequested();
+			}
+		});
     }
 
     private void loadSection() {
         SectionManager.getInstance().loadData();
         HTTPEngine.getInstance().getSectionData(new Response.Listener<SectionCollectionDao>() {
-            @Override
-            public void onResponse(SectionCollectionDao response) {
-                SectionManager.getInstance().setData(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this, "Cannot connect to the internet.", Toast.LENGTH_LONG).show();
-            }
-        });
+			@Override
+			public void onResponse(SectionCollectionDao response) {
+				SectionManager.getInstance().setData(response);
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Toast.makeText(MainActivity.this, "Cannot connect to the internet.", Toast.LENGTH_LONG).show();
+			}
+		});
     }
 	
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
-        if (!isAdsDisplayed) {
-        	manager = VservManager.getInstance(MainActivity.this);
-			manager.setShowAt(AdPosition.START);
-			manager.setCacheNextAd(false);
-			manager.displayAd(BILLBOARD_ZONE, AdType.OVERLAY);
+		if (!isAdsDisplayed) {
+			adListenerInitialization();
+			vservAdView = new VservAdView(this, "", VservAdView.UX_INTERSTITIAL);
+			vservAdView.setAdListener(mAdListener);
+			vservAdView.setZoneId(Constant.VSERV_BILLBOARD);
+			vservAdView.setUxType(VservAdView.UX_INTERSTITIAL);
+//			if (!Constant.VSERV_TEST_DEVICE.equals("")){
+//				vservAdView.setTestDevices(Constant.VSERV_TEST_DEVICE);
+//			}
+			vservAdView.loadAd();
+//			loadInterstitialAd();
 			isAdsDisplayed = true;
 		}
-        
         sendTracker();
+	}
+
+	private void loadInterstitialAd(){
+		interstitialAd = new InterstitialAd(this, Constant.FACEBOOK_INTERSTITIAL);
+		interstitialAd.setAdListener(this);
+		interstitialAd.loadAd();
 	}
 	
 	private void sendTracker() {
@@ -158,8 +224,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSherlock().getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.main, menu);
 		refreshMenu = menu.findItem(R.id.refresh);
 
 		return super.onCreateOptionsMenu(menu);
@@ -218,45 +283,43 @@ public class MainActivity extends SherlockFragmentActivity implements
 		case 0:
 		case 1:
 		case 2:
-            loadSection();
-			break;
 		default:
-
+			loadSection();
 			break;
 		}
 	}
 
-	class TVThailandAdapter extends FragmentStatePagerAdapter {
+	@Override
+	public void onInterstitialDisplayed(Ad ad) {
 
-		public TVThailandAdapter(FragmentManager fm) {
-			super(fm);
-		}
+	}
 
-		@Override
-		public Fragment getItem(int position) {
-			switch (position) {
-			case 0:
-				return catFragment;
-			case 1:
-				return chFragment;
-			case 2:
-				return radioFragment;
-			default:
-				return null;
-			}
+	@Override
+	public void onInterstitialDismissed(Ad ad) {
 
-		}
+	}
 
-		@Override
-		public CharSequence getPageTitle(int position) {
-			return CONTENT[position % CONTENT.length];
-		}
+	@Override
+	public void onError(Ad ad, AdError adError) {
 
-		@Override
-		public int getCount() {
-			return CONTENT.length;
-		}
+	}
 
+	@Override
+	public void onAdLoaded(Ad ad) {
+        if (interstitialAd != null)
+		    interstitialAd.show();
+	}
+
+	@Override
+	public void onAdClicked(Ad ad) {
+
+	}
+
+	@Override
+	protected void onDestroy() {
+        if (interstitialAd != null)
+		    interstitialAd.destroy();
+		super.onDestroy();
 	}
 
 	private void goToAccount() {
@@ -286,17 +349,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == VservManager.REQUEST_CODE) {
-		       if (data != null) {
-		           if (data.hasExtra("showAt") && data.getStringExtra("showAt").equalsIgnoreCase("end")) {
-		        	   VservManager.getInstance(this).release(this);
-		               super.finish();
-		           }
-		       }
-		       else {
-		           super.finish();
-		       }
-		   }
+//		if (requestCode == VservManager.REQUEST_CODE) {
+//		       if (data != null) {
+//		           if (data.hasExtra("showAt") && data.getStringExtra("showAt").equalsIgnoreCase("end")) {
+//		        	   VservManager.getInstance(this).release(this);
+//		               super.finish();
+//		           }
+//		       }
+//		       else {
+//		           super.finish();
+//		       }
+//		   }
 		
 		super.onActivityResult(requestCode, resultCode, data);
 
@@ -324,14 +387,90 @@ public class MainActivity extends SherlockFragmentActivity implements
 	
 	@Override
 	public void finish() {
-		if (isAdsEnabled) {
-			manager = VservManager.getInstance(MainActivity.this);
-			manager.setShowAt(AdPosition.END);
-			manager.displayAd(BILLBOARD_ZONE);
-		} else {
+//		if (isAdsEnabled) {
+//			manager = VservManager.getInstance(MainActivity.this);
+//			if (!Constant.VSERV_TEST_DEVICE.equals("")){
+//				manager.addTestDevice(Constant.VSERV_TEST_DEVICE);
+//			}
+//			manager.setShowAt(AdPosition.END);
+//			manager.displayAd(Constant.VSERV_BILLBOARD);
+//		} else {
 			super.finish();
-		}
+//		}
 	}
-	
-	
+
+	private void adListenerInitialization() {
+		mAdListener = new VservAdListener() {
+
+			@Override
+			public void didInteractWithAd(VservAdView adView) {
+//				Toast.makeText(MainActivity.this, "didInteractWithAd",
+//						Toast.LENGTH_SHORT).show();
+
+			}
+
+			@Override
+			public void adViewDidLoadAd(VservAdView adView) {
+
+//				Toast.makeText(MainActivity.this, "adViewDidLoadAd",
+//						Toast.LENGTH_SHORT).show();
+
+			}
+
+			@Override
+			public void willPresentOverlay(VservAdView adView) {
+
+//				Toast.makeText(MainActivity.this, "willPresentOverlay",
+//						Toast.LENGTH_SHORT).show();
+
+			}
+
+			@Override
+			public void willDismissOverlay(VservAdView adView) {
+
+//				Toast.makeText(MainActivity.this, "willDismissOverlay",
+//						Toast.LENGTH_SHORT).show();
+
+			}
+
+			@Override
+			public void adViewDidCacheAd(VservAdView adView) {
+
+//				Toast.makeText(MainActivity.this, "adViewDidCacheAd",
+//						Toast.LENGTH_SHORT).show();
+				if (vservAdView != null) {
+
+					if (vservAdView.getUxType() == VservAdView.UX_INTERSTITIAL) {
+//						isAppInBackgorund = true;
+					}
+					vservAdView.showAd();
+				}
+
+			}
+
+			@Override
+			public VservAdView didFailedToLoadAd(String arg0) {
+
+//				Toast.makeText(MainActivity.this, "didFailedToLoadAd",
+//						Toast.LENGTH_SHORT).show();
+
+				return null;
+			}
+
+			@Override
+			public VservAdView didFailedToCacheAd(String Error) {
+
+//				Toast.makeText(MainActivity.this, "didFailedToCacheAd",
+//						Toast.LENGTH_SHORT).show();
+
+				return null;
+			}
+
+			@Override
+			public void willLeaveApp(VservAdView adView) {
+//				Toast.makeText(MainActivity.this, "willLeaveApp",
+//						Toast.LENGTH_SHORT).show();
+			}
+		};
+	}
 }

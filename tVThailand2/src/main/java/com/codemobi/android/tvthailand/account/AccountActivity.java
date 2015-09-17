@@ -2,8 +2,6 @@ package com.codemobi.android.tvthailand.account;
 
 import java.util.Arrays;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
@@ -18,6 +16,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -29,7 +29,7 @@ import android.view.View;
  *
  ******/
 
-public class AccountActivity extends SherlockFragmentActivity implements
+public class AccountActivity extends FragmentActivity implements
 	View.OnClickListener  {
 	
     private static final int DIALOG_GET_GOOGLE_PLAY_SERVICES = 1;
@@ -40,7 +40,7 @@ public class AccountActivity extends SherlockFragmentActivity implements
 	private static final int PROFILE = 1;
 	private static final int FRAGMENT_COUNT = PROFILE + 1;
 
-	private SherlockFragment[] fragments = new SherlockFragment[FRAGMENT_COUNT];
+	private Fragment[] fragments = new Fragment[FRAGMENT_COUNT];
 	private ProgressDialog mConnectionProgressDialog;
 	private ConnectionResult mConnectionResult;
 	private boolean isResumed = false;
@@ -81,9 +81,9 @@ public class AccountActivity extends SherlockFragmentActivity implements
 
 
 		FragmentManager fm = getSupportFragmentManager();
-		fragments[SPLASH] = (SherlockFragment) fm
+		fragments[SPLASH] = (Fragment) fm
 				.findFragmentById(R.id.splashLoginFragment);
-		fragments[PROFILE] = (SherlockFragment) fm
+		fragments[PROFILE] = (Fragment) fm
 				.findFragmentById(R.id.accountProfileFragment);
 
 		FragmentTransaction transaction = fm.beginTransaction();

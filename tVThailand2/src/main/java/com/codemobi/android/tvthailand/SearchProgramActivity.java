@@ -3,16 +3,16 @@ package com.codemobi.android.tvthailand;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.codemobi.android.tvthailand.adapter.ProgramAdapter;
 import com.codemobi.android.tvthailand.contentprovider.ProgramSuggestionProvider;
 import com.codemobi.android.tvthailand.datasource.OnLoadDataListener;
@@ -22,8 +22,9 @@ import com.codemobi.android.tvthailand.otv.activity.OTVShowActivity;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-public class SearchProgramActivity extends SherlockActivity implements OnLoadDataListener {
-	
+public class SearchProgramActivity extends AppCompatActivity implements OnLoadDataListener {
+
+	Toolbar toolbar;
 	private Programs mPrograms;
 	private ProgramAdapter mAdapter;
 
@@ -34,11 +35,9 @@ public class SearchProgramActivity extends SherlockActivity implements OnLoadDat
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		/** Enabling Progress bar for this activity */
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		
-		setContentView(R.layout.simple_grid_view);
+		setContentView(R.layout.activity_program);
+
+		initToolbar();
 
 		mPrograms = new Programs();
 		mAdapter = new ProgramAdapter(mPrograms);
@@ -89,6 +88,11 @@ public class SearchProgramActivity extends SherlockActivity implements OnLoadDat
 		Intent intent = getIntent();
 		handleIntent(intent);
 	}
+
+	private void initToolbar() {
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+	}
 	
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -103,7 +107,7 @@ public class SearchProgramActivity extends SherlockActivity implements OnLoadDat
 
 			ProgramSuggestionProvider.getBridge(this).saveRecentQuery(query,
 					null);
-			setTitle("Search : " + query);
+			toolbar.setTitle("Search : " + query);
 			mPrograms.loadProgramBySearch(query, 0);
 			
 			Tracker t = ((MainApplication)getApplication()).getTracker(
@@ -115,8 +119,7 @@ public class SearchProgramActivity extends SherlockActivity implements OnLoadDat
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSherlock().getMenuInflater();
-		inflater.inflate(R.menu.search_program, menu);
+		getMenuInflater().inflate(R.menu.search_program, menu);
 		refreshMenu = menu.findItem(R.id.refresh);
 
 		return super.onCreateOptionsMenu(menu);
@@ -146,20 +149,20 @@ public class SearchProgramActivity extends SherlockActivity implements OnLoadDat
 	
 	@Override
 	public void onLoadStart() {
-		if (getSherlock() != null) {
-			if(refreshMenu != null) {
-				startLoadingProgressBar(refreshMenu);
-			}
-		}		
+//		if (getSherlock() != null) {
+//			if(refreshMenu != null) {
+//				startLoadingProgressBar(refreshMenu);
+//			}
+//		}
 	}
 
 	@Override
 	public void onLoadFinished() {
-		if (getSherlock() != null) {
-			if(refreshMenu != null) {
-				stopLoadingProgressBar(refreshMenu);
-			}
-		}
+//		if (getSherlock() != null) {
+//			if(refreshMenu != null) {
+//				stopLoadingProgressBar(refreshMenu);
+//			}
+//		}
 	}
 
 }

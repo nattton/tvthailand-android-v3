@@ -2,14 +2,13 @@ package com.codemobi.android.tvthailand.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.codemobi.android.tvthailand.MyVolley;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.MainApplication;
@@ -22,9 +21,16 @@ import com.codemobi.android.tvthailand.manager.SectionManager;
 import com.codemobi.android.tvthailand.manager.bus.MainBus;
 import com.squareup.otto.Subscribe;
 
-public class CategoryFragment extends SherlockFragment implements OnItemClickListener {
+public class CategoryFragment extends Fragment implements OnItemClickListener {
 
     private CategoryAdapter mAdapter;
+
+	public static CategoryFragment newInstance() {
+		CategoryFragment fragment = new CategoryFragment();
+		Bundle args = new Bundle();
+		fragment.setArguments(args);
+		return fragment;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -2,7 +2,6 @@ package com.codemobi.android.tvthailand;
 
 import java.util.Date;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +9,12 @@ import android.database.ContentObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
@@ -25,10 +28,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.bumptech.glide.Glide;
 import com.codemobi.android.tvthailand.datasource.Program;
 import com.google.android.gms.analytics.HitBuilders;
@@ -47,11 +46,13 @@ import com.codemobi.android.tvthailand.datasource.Episodes.OnLoadListener;
 import com.codemobi.android.tvthailand.datasource.Episodes.OnProgramChangeListener;
 import com.codemobi.android.tvthailand.otv.activity.OTVShowActivity;
 
-public class EpisodeActivity extends SherlockFragmentActivity implements OnClickListener,
+public class EpisodeActivity extends AppCompatActivity implements OnClickListener,
 		OnItemClickListener, OnLoadListener, OnScrollListener {
 	public static final String EXTRAS_PROGRAM = "EXTRAS_PROGRAM";
 	public static final String EXTRAS_DISABLE_OTV = "EXTRAS_DISABLE_OTV";
-	
+
+	Toolbar toolbar;
+
 	private View header;
 	private Program program;
 	
@@ -81,12 +82,12 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.episode_view);
+		setContentView(R.layout.activity_episode);
 
         isDisableOTV = getIntent().getBooleanExtra(EXTRAS_DISABLE_OTV, false);
 
 		initProgram();
-		
+		initToolbar();
 		initUI();
 		
 		progressBar = (ProgressBar)findViewById(R.id.progressBar);
@@ -163,8 +164,13 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		t.setScreenName("Episode");
 		t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());
 	}
-	
-	@SuppressLint("SetJavaScriptEnabled")
+
+	private void initToolbar() {
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
+		toolbar.setTitle(program.getTitle());
+		setSupportActionBar(toolbar);
+	}
+
 	private void initUI() {
 		header = ((LayoutInflater) this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(
@@ -195,7 +201,7 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 		tvDescription.setText(program.getDescription());
 		Glide.with(this)
 				.load(program.getThumbnail())
-				.fitCenter()
+				.placeholder(R.drawable.ic_tvthailand_show_placeholder)
 				.crossFade()
 				.into(imgThumbnail);
 	}
@@ -260,8 +266,7 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSherlock().getMenuInflater();
-		inflater.inflate(R.menu.episode, menu);
+		getMenuInflater().inflate(R.menu.episode, menu);
 		refreshMenu = menu.findItem(R.id.refresh);
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -326,16 +331,16 @@ public class EpisodeActivity extends SherlockFragmentActivity implements OnClick
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		
+		if (mEpisodes.size() > position) {
 		Episode episode = mEpisodes.get(position - 1);
 
 		Tracker t = ((MainApplication) getApplication())
 				.getTracker(TrackerName.APP_TRACKER);
 		t.setScreenName("Episode");
-		t.send(new HitBuilders.AppViewBuilder().setCustomDimension(3,
-				episode.getTitle()).build());
+			t.send(new HitBuilders.AppViewBuilder().setCustomDimension(3,
+					episode.getTitle()).build());
 
-		if (episode != null) {
+
 			episode.sendView();
 			if (episode.size() == 1) {
 				Parts parts = new Parts(this, episode.getTitle(), program.getThumbnail(),

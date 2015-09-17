@@ -2,20 +2,27 @@ package com.codemobi.android.tvthailand;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.codemobi.android.tvthailand.adapter.ProgramCursorAdapter;
 import com.codemobi.android.tvthailand.contentprovider.MyProgramContentProvider;
 import com.codemobi.android.tvthailand.database.MyProgramModel;
@@ -26,12 +33,15 @@ import com.codemobi.android.tvthailand.MainApplication.TrackerName;
 import com.codemobi.android.tvthailand.datasource.Episodes;
 import com.codemobi.android.tvthailand.datasource.Episodes.OnProgramChangeListener;
 import com.codemobi.android.tvthailand.otv.activity.OTVShowActivity;
+import com.google.android.gms.analytics.Tracker;
 
-public class ProgramLoaderActivity extends SherlockFragmentActivity implements
+public class ProgramLoaderActivity extends AppCompatActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener {
 	static final String FAVORITE = "Favorite";
 	static final String RECENTLY = "Recently";
 	static final String KEY = "ACTION_KEY";
+
+	Toolbar toolbar;
 	
 	private TextView textViewNoContent;
 	private ProgramCursorAdapter mAdapter;
@@ -40,23 +50,35 @@ public class ProgramLoaderActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.simple_grid_view);
+		setContentView(R.layout.activity_program);
+
+		initExtras();
+		initToolbar();
+		initInstance();
+	}
+
+	private void initExtras() {
 		Bundle bundle = getIntent().getExtras();
 		actionKey = bundle.getString(KEY);
-		
-		ActionBar ab = getSupportActionBar();
+	}
+
+	private void initToolbar() {
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		if(actionKey.equals(FAVORITE)) {
-			setTitle(FAVORITE);
-			ab.setIcon(R.drawable.ic_favorite);
+			toolbar.setTitle(FAVORITE);
+			toolbar.setLogo(ContextCompat.getDrawable(this, R.drawable.ic_favorite));
 		}
 		else if(actionKey.equals(RECENTLY)) {
-			setTitle(RECENTLY);
-			ab.setIcon(R.drawable.ic_recently);
+			toolbar.setTitle(RECENTLY);
+			toolbar.setLogo(ContextCompat.getDrawable(this, R.drawable.ic_recently));
 		}
+		setSupportActionBar(toolbar);
+	}
 
+	private void initInstance() {
 		textViewNoContent = (TextView)findViewById(R.id.textViewNoContent);
 		GridView gridView = (GridView) findViewById(R.id.gridview);
-		
+
 		mAdapter = new ProgramCursorAdapter(this);
 		gridView.setAdapter(mAdapter);
 
