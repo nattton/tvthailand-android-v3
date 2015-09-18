@@ -144,7 +144,7 @@ public class MyBannerView extends LinearLayout {
 
 	private void requestFacebook() {
 
-		adView = new AdView(getContext(), "202355306578303_529399410540556", AdSize.BANNER_320_50);
+		adView = new AdView(getContext(), Constant.FACEBOOK_BANNER, AdSize.BANNER_320_50);
 		adView.setAdListener(new AdListener() {
 			@Override
 			public void onError(Ad ad, AdError adError) {

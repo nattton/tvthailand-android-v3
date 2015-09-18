@@ -86,7 +86,8 @@
 
     <com.codemobi.android.tvthailand.ads.MyBannerView
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="50dp"
+        app:autoLoad="false">
     </com.codemobi.android.tvthailand.ads.MyBannerView>
 
 </LinearLayout>

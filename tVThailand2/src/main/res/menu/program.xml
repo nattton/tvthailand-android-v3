@@ -1,13 +1,15 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/play"
-          android:icon="@drawable/ic_watch_live"
-          android:title="@string/live"
-          android:orderInCategory="1"
-      	  android:showAsAction="never"
-      	  android:visible="false"  />
-    <item android:id="@+id/refresh"
-          android:icon="@drawable/ic_action_refresh"
-          android:title="@string/refresh"
-          android:orderInCategory="0"
-      	  android:showAsAction="always"  />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto">
+<item
+    android:id="@+id/play"
+    android:icon="@drawable/ic_watch_live"
+    android:orderInCategory="1"
+    android:title="@string/live"
+    android:visible="false" />
+<item
+    android:id="@+id/refresh"
+    android:icon="@drawable/ic_action_refresh"
+    android:orderInCategory="0"
+    android:title="@string/refresh"
+    app:showAsAction="always" />
 </menu>

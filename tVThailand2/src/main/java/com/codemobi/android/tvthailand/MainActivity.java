@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements
 //			if (!Constant.VSERV_TEST_DEVICE.equals("")){
 //				vservAdView.setTestDevices(Constant.VSERV_TEST_DEVICE);
 //			}
-			vservAdView.loadAd();
+			vservAdView.cacheAd();
 //			loadInterstitialAd();
 			isAdsDisplayed = true;
 		}

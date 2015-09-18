@@ -314,9 +314,9 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 			isAdStarted = true;
 			isAdPlaying = true;
 			double totalTime = adsManager.getCurrentAd().getDuration();
-			int skipTime = 8;
+			int skipTime = 8000;
 			if (totalTime > 20) {
-				skipTime = 15;
+				skipTime = 15000;
 			}
 	        //** Start countdown counter to skip ad **//
 	        skipAdCounter = new CountDownTimer(skipTime, 1000);

@@ -11,13 +11,6 @@ import com.google.android.gms.analytics.Tracker;
 import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.util.Log;
-
-import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseInstallation;
-import com.parse.ParsePush;
-import com.parse.SaveCallback;
 
 public class MainApplication extends Application {
     // The following line should be changed to include the correct property id.
@@ -42,22 +35,7 @@ public class MainApplication extends Application {
     public void onCreate() {
     	super.onCreate();
         Contextor.getInstance().init(getApplicationContext());
-
     	Fabric.with(this, new Crashlytics());
-
-        Parse.initialize(this, "EaoAvSNJcTy2YYs9rpl3qVnWtODDl2PNW4FArdLI", "CBdebyTPRHrxRqQPWNm5kPrhbZLuuKAFMCDE0Fbz");
-        ParseInstallation.getCurrentInstallation().saveInBackground();
-        ParsePush.subscribeInBackground("Notification", new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.d("com.parse.push", "successfully subscribed to the broadcast channel.");
-                } else {
-                    Log.e("com.parse.push", "failed to subscribe for push", e);
-                }
-            }
-        });
-
         init();
     }
     
