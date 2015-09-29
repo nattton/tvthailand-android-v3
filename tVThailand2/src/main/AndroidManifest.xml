@@ -19,14 +19,14 @@
     <uses-permission android:name="com.codemobi.android.tvthailand.permission.C2D_MESSAGE" />
 
     <application
-        android:name="com.codemobi.android.tvthailand.MainApplication"
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.codemobi.android.tvthailand.MainActivity"
+            android:name=".MainActivity"
             android:configChanges="screenSize|keyboardHidden"
             android:label="@string/app_name" >
             <intent-filter>
@@ -38,10 +38,10 @@
 
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value="com.codemobi.android.tvthailand.SearchProgramActivity" />
+                android:value=".activity.SearchProgramActivity" />
         </activity>
         <activity
-            android:name="com.codemobi.android.tvthailand.SearchProgramActivity"
+            android:name=".activity.SearchProgramActivity"
             android:label="Search"
             android:launchMode="singleTop" >
             <intent-filter>
@@ -56,26 +56,26 @@
             ￼
         </activity>
         <activity
-            android:name="com.codemobi.android.tvthailand.ProgramActivity"
+            android:name=".activity.ProgramActivity"
             android:label="Program" />
         <activity
-            android:name="com.codemobi.android.tvthailand.EpisodeActivity"
+            android:name=".activity.EpisodeActivity"
             android:label="Detail" />
         <activity
-            android:name="com.codemobi.android.tvthailand.MoreDetailActivity"
+            android:name=".activity.MoreDetailActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="Full Detail"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name="com.codemobi.android.tvthailand.RatingActivity"
+            android:name=".activity.RatingActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name="com.codemobi.android.tvthailand.PartActivity"
+            android:name=".activity.PartActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="Parts" />
         <activity
-            android:name="com.codemobi.android.tvthailand.LargeThumbnailActivity"
+            android:name=".activity.LargeThumbnailActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <activity
             android:name="io.vov.vitamio.activity.InitActivity"
@@ -83,7 +83,7 @@
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="com.codemobi.android.tvthailand.player.VideoPlayerActivity"
+            android:name=".player.VideoPlayerActivity"
             android:label="TV Thailand Player"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
@@ -108,7 +108,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.codemobi.android.tvthailand.player.RadioPlayerActivity"
+            android:name=".player.RadioPlayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="TV Thailand Player"
             android:launchMode="singleTop"
@@ -116,34 +116,34 @@
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity
-            android:name="com.codemobi.android.tvthailand.ProgramLoaderActivity"
+            android:name=".activity.ProgramLoaderActivity"
             android:label="My Favorites" />
         <activity
-            android:name="com.codemobi.android.tvthailand.AboutActivity"
+            android:name=".activity.AboutActivity"
             android:label="About" />
         <activity
-            android:name="com.codemobi.android.tvthailand.player.VastPlayerActivity"
+            android:name=".player.VastPlayerActivity"
             android:label="VAST Player"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="com.codemobi.android.tvthailand.player.VastContentPlayerActivity"
+            android:name=".player.VastContentPlayerActivity"
             android:label="VAST Player"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="com.codemobi.android.tvthailand.player.VitamioVastPlayerActivity"
+            android:name=".player.VitamioVastPlayerActivity"
             android:label="VAST Player"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="com.codemobi.android.tvthailand.player.YoutubePlayerViewActivity"
+            android:name=".player.YoutubePlayerViewActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="landscape" />
 
@@ -156,13 +156,10 @@
             android:name="com.facebook.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name="com.codemobi.android.tvthailand.account.AccountActivity"
+            android:name=".account.AccountActivity"
             android:screenOrientation="portrait" />
 
         <!-- OTV -->
-        <activity
-            android:name=".otv.activity.OTVShowActivity"
-            android:label="OTV Show" />
         <activity
             android:name=".otv.activity.OTVPartActivity"
             android:label="OTV Part" />
@@ -192,15 +189,23 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name="com.facebook.ads.InterstitialAdActivity"
-                    android:configChanges="keyboardHidden|orientation" />
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+
+        <activity
+            android:name="com.facebook.ads.InterstitialAdActivity"
+            android:configChanges="keyboardHidden|orientation" />
+        <activity
+            android:name="com.facebook.ads.VideoAdActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <meta-data
             android:name="com.crashlytics.ApiKey"
             android:value="3120d8f68ae38afbc965e336f679243187ec8cd9" />
 
         <activity
-            android:name="com.codemobi.android.tvthailand.WebFullscreenActivity"
+            android:name=".activity.WebFullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_web_fullscreen"
             android:theme="@style/FullscreenTheme" >
