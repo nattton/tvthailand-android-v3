@@ -2,11 +2,9 @@ package com.codemobi.android.tvthailand;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
@@ -14,23 +12,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.codemobi.android.tvthailand.account.AccountActivity;
+import com.codemobi.android.tvthailand.activity.AboutActivity;
+import com.codemobi.android.tvthailand.activity.ProgramLoaderActivity;
 import com.codemobi.android.tvthailand.fragment.CategoryFragment;
 import com.codemobi.android.tvthailand.fragment.ChannelFragment;
 import com.codemobi.android.tvthailand.fragment.RadioFragment;
 import com.codemobi.android.tvthailand.utils.Constant;
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
-import com.facebook.ads.InterstitialAd;
-import com.facebook.ads.InterstitialAdListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.codemobi.android.tvthailand.MainApplication.TrackerName;
 import com.codemobi.android.tvthailand.dao.section.SectionCollectionDao;
 import com.codemobi.android.tvthailand.datasource.OnLoadDataListener;
 import com.codemobi.android.tvthailand.manager.http.HTTPEngine;
@@ -39,12 +32,11 @@ import com.vserv.android.ads.api.VservAdView;
 import com.vserv.android.ads.common.VservAdListener;
 
 public class MainActivity extends AppCompatActivity implements
-		OnLoadDataListener, InterstitialAdListener {
+		OnLoadDataListener {
 
 	Toolbar toolbar;
 	TabLayout tabLayout;
 	ViewPager viewPager;
-	FloatingActionButton searchButton;
 
 	private static final String TAG = "MainActivity";
 	private static final String KEY_IS_ADS_DISPLAYED = "KEY_IS_ADS_DISPLAYED";
@@ -54,8 +46,6 @@ public class MainActivity extends AppCompatActivity implements
 	private int current_pos = 0;
 
 	private MenuItem refreshMenu;
-
-	private InterstitialAd interstitialAd;
 	
 	private VservAdView vservAdView;
 	private VservAdListener mAdListener;
@@ -80,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements
 
 	private void initToolbar() {
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
-//		toolbar.setLogo(ContextCompat.getDrawable(this, R.drawable.ic_launcher));
 		setSupportActionBar(toolbar);
 	}
 
@@ -147,19 +136,13 @@ public class MainActivity extends AppCompatActivity implements
 		});
 	}
 
-    private void initInstances() {
+    private void initInstances()
+	{
         loadSection();
-
-		searchButton = (FloatingActionButton) findViewById(R.id.searchButton);
-		searchButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onSearchRequested();
-			}
-		});
     }
 
-    private void loadSection() {
+    private void loadSection()
+	{
         SectionManager.getInstance().loadData();
         HTTPEngine.getInstance().getSectionData(new Response.Listener<SectionCollectionDao>() {
 			@Override
@@ -178,6 +161,8 @@ public class MainActivity extends AppCompatActivity implements
 	protected void onStart() {
 		super.onStart();
 		if (!isAdsDisplayed) {
+//			loadInterstitialAd();
+//
 			adListenerInitialization();
 			vservAdView = new VservAdView(this, "", VservAdView.UX_INTERSTITIAL);
 			vservAdView.setAdListener(mAdListener);
@@ -187,26 +172,17 @@ public class MainActivity extends AppCompatActivity implements
 //				vservAdView.setTestDevices(Constant.VSERV_TEST_DEVICE);
 //			}
 			vservAdView.cacheAd();
-//			loadInterstitialAd();
 			isAdsDisplayed = true;
 		}
         sendTracker();
 	}
 
-	private void loadInterstitialAd(){
-		interstitialAd = new InterstitialAd(this, Constant.FACEBOOK_INTERSTITIAL);
-		interstitialAd.setAdListener(this);
-		interstitialAd.loadAd();
-	}
-	
 	private void sendTracker() {
-		Tracker t = ((MainApplication)getApplication()).getTracker(
-                TrackerName.APP_TRACKER);
+		Tracker t = ((MainApplication)getApplication()).getDefaultTracker();
         t.setScreenName("Main");
         t.send(new HitBuilders.AppViewBuilder().build());
         
-		Tracker otvTracker = ((MainApplication)getApplication()).getTracker(
-                TrackerName.OTV_TRACKER);
+		Tracker otvTracker = ((MainApplication)getApplication()).getOTVTracker();
 		otvTracker.setScreenName("Main");
 		otvTracker.send(new HitBuilders.AppViewBuilder().build());
 	}
@@ -230,14 +206,6 @@ public class MainActivity extends AppCompatActivity implements
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	public void startLoadingProgressBar(MenuItem menuItem) {
-		menuItem.setActionView(R.layout.refresh_menuitem);
-	}
-
-	public void stopLoadingProgressBar(MenuItem menuItem) {
-		menuItem.setActionView(null);
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -248,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements
 			onSearchRequested();
 			break;
 		case R.id.account:
-			goToAccount();
+//			goToAccount();
 			break;
 		case R.id.favorite:
 			Intent intent_fave = new Intent(MainActivity.this,
@@ -289,42 +257,8 @@ public class MainActivity extends AppCompatActivity implements
 		}
 	}
 
-	@Override
-	public void onInterstitialDisplayed(Ad ad) {
-
-	}
-
-	@Override
-	public void onInterstitialDismissed(Ad ad) {
-
-	}
-
-	@Override
-	public void onError(Ad ad, AdError adError) {
-
-	}
-
-	@Override
-	public void onAdLoaded(Ad ad) {
-        if (interstitialAd != null)
-		    interstitialAd.show();
-	}
-
-	@Override
-	public void onAdClicked(Ad ad) {
-
-	}
-
-	@Override
-	protected void onDestroy() {
-        if (interstitialAd != null)
-		    interstitialAd.destroy();
-		super.onDestroy();
-	}
-
 	private void goToAccount() {
-		Intent intent = new Intent(MainActivity.this, AccountActivity.class);
-		startActivity(intent);
+
 	}
 
 	@Override
@@ -335,33 +269,11 @@ public class MainActivity extends AppCompatActivity implements
 
 	@Override
 	public void onLoadStart() {
-		if (refreshMenu != null) {
-			startLoadingProgressBar(refreshMenu);
-		}
+
 	}
 
 	@Override
 	public void onLoadFinished() {
-		if (refreshMenu != null) {
-			stopLoadingProgressBar(refreshMenu);
-		}
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//		if (requestCode == VservManager.REQUEST_CODE) {
-//		       if (data != null) {
-//		           if (data.hasExtra("showAt") && data.getStringExtra("showAt").equalsIgnoreCase("end")) {
-//		        	   VservManager.getInstance(this).release(this);
-//		               super.finish();
-//		           }
-//		       }
-//		       else {
-//		           super.finish();
-//		       }
-//		   }
-		
-		super.onActivityResult(requestCode, resultCode, data);
 
 	}
 	
@@ -445,14 +357,12 @@ public class MainActivity extends AppCompatActivity implements
 					}
 					vservAdView.showAd();
 				}
-
 			}
 
 			@Override
 			public VservAdView didFailedToLoadAd(String arg0) {
-
-//				Toast.makeText(MainActivity.this, "didFailedToLoadAd",
-//						Toast.LENGTH_SHORT).show();
+//				loadInterstitialAd();
+				Log.d("VservAdView", "didFailedToLoadAd");
 
 				return null;
 			}
@@ -460,8 +370,7 @@ public class MainActivity extends AppCompatActivity implements
 			@Override
 			public VservAdView didFailedToCacheAd(String Error) {
 
-//				Toast.makeText(MainActivity.this, "didFailedToCacheAd",
-//						Toast.LENGTH_SHORT).show();
+				Log.d("VservAdView", "didFailedToCacheAd");
 
 				return null;
 			}

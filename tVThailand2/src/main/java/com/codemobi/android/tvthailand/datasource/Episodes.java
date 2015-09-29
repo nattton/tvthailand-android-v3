@@ -8,8 +8,8 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
@@ -26,16 +26,10 @@ public class Episodes {
 	private boolean loading = false;
 	private boolean last = false;
 
-	public interface OnLoadListener {
-		void onLoadStart();
+	private OnLoadDataListener onLoadDataListener;
 
-		void onLoadFinished();
-	}
-
-	private OnLoadListener onLoadListener;
-
-	public void setOnLoadListener(OnLoadListener onLoadListener) {
-		this.onLoadListener = onLoadListener;
+	public void setOnLoadDataListener(OnLoadDataListener onLoadDataListener) {
+		this.onLoadDataListener = onLoadDataListener;
 	}
 	
 	public interface OnProgramChangeListener {
@@ -73,7 +67,7 @@ public class Episodes {
 	
 	public Episodes(Context context) {
 		this.mContext = context;
-		mRequestQueue = MyVolley.getRequestQueue();
+		mRequestQueue = MyVolley.getInstance(context).getRequestQueue();
 	}
 
 	public void jsonMap(JSONArray jArray) {
@@ -113,7 +107,7 @@ public class Episodes {
 		
 		notifyLoadStart();
 		String url = String.format("%s/episode/%s/%d?device=android&time=%s", Constant.BASE_URL, this.programId, start, AppUtility.getCurrentTime());
-		JsonObjectRequest loadEpisodeRequest = new JsonObjectRequest(Method.GET, url, null, reqSuccessListener(), reqErrorListener());
+		JsonObjectRequest loadEpisodeRequest = new JsonObjectRequest(Request.Method.GET, url, reqSuccessListener(), reqErrorListener());
 		loadEpisodeRequest.setShouldCache(shouldCache);
 		mRequestQueue.add(loadEpisodeRequest);
 	}
@@ -163,14 +157,14 @@ public class Episodes {
 	}
 
 	private void notifyLoadStart() {
-		if (this.onLoadListener != null) {
-			this.onLoadListener.onLoadStart();
+		if (this.onLoadDataListener != null) {
+			this.onLoadDataListener.onLoadStart();
 		}
 	}
 
 	private void notifyLoadFinish() {
-		if (this.onLoadListener != null) {
-			this.onLoadListener.onLoadFinished();
+		if (this.onLoadDataListener != null) {
+			this.onLoadDataListener.onLoadFinished();
 		}
 	}
 

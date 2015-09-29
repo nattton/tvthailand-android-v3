@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/frame"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <com.codemobi.android.tvthailand.ads.MyBannerView
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true" >
-    </com.codemobi.android.tvthailand.ads.MyBannerView>
+    android:layout_height="match_parent">
 
     <io.vov.vitamio.widget.VideoView
         android:id="@+id/buffer"
@@ -24,13 +18,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <ProgressBar
                 android:id="@+id/probar"
@@ -61,5 +55,14 @@
             android:contentDescription="@string/thumbnail"
             android:visibility="gone" />
     </FrameLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        app:adSize="BANNER"
+        app:adUnitId="@string/banner_ad_unit_id" />
 
 </RelativeLayout>

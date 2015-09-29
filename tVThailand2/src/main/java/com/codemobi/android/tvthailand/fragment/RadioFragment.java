@@ -11,12 +11,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-import com.codemobi.android.tvthailand.MyVolley;
 import com.codemobi.android.tvthailand.manager.bus.MainBus;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.MainApplication;
-import com.codemobi.android.tvthailand.MainApplication.TrackerName;
 import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.adapter.RadioCustomAdapter;
 import com.codemobi.android.tvthailand.dao.section.RadioItemDao;
@@ -28,6 +29,9 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 	
 	private GridView mGridView;
 	private RadioCustomAdapter mAdapter;
+
+	InterstitialAd mInterstitialAd;
+	RadioItemDao radio;
 
 	public static RadioFragment newInstance() {
 		RadioFragment fragment = new RadioFragment();
@@ -46,6 +50,17 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
+		mInterstitialAd = new InterstitialAd(getContext());
+		mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_unit_id));
+
+		mInterstitialAd.setAdListener(new AdListener() {
+			@Override
+			public void onAdClosed() {
+				requestNewInterstitial();
+				playRadio();
+			}
+		});
+		requestNewInterstitial();
 
 		mGridView = (GridView) view.findViewById(R.id.asset_grid);
 		mGridView.setOnItemClickListener(this);
@@ -63,21 +78,16 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-                RadioItemDao radio = SectionManager.getInstance().getData().getRadios().get(position);
-				 Tracker t = ((MainApplication) getActivity().getApplication()).getTracker(
-				            TrackerName.APP_TRACKER);
+                radio = SectionManager.getInstance().getData().getRadios().get(position);
+				 Tracker t = ((MainApplication) getActivity().getApplication()).getDefaultTracker();
 				 t.setScreenName("Radio");
 				 t.send(new HitBuilders.AppViewBuilder().setCustomDimension(6, radio.getTitle()).build());
-				
-				Uri radioUrl = Uri.parse(radio.getUrl());
-				Intent intentVideo = new Intent(getActivity(), RadioPlayerActivity.class);
-				intentVideo.putExtra(Intent.EXTRA_TITLE, radio.getTitle());
-				
-				intentVideo.putExtra(RadioPlayerActivity.EXTRAS_MEDIA_TYPE, "radio");
-				intentVideo.putExtra(RadioPlayerActivity.EXTRAS_THUMBNAIL_URL, radio.getThumbnail());
-	
-				intentVideo.setDataAndType(radioUrl, "video/*");
-				startActivity(intentVideo);
+
+				if (mInterstitialAd.isLoaded()) {
+					mInterstitialAd.show();
+				} else {
+					playRadio();
+				}
 			}
 		});
 	}
@@ -86,6 +96,25 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		
+	}
+
+	private void playRadio() {
+		if (radio != null) {
+			Uri radioUrl = Uri.parse(radio.getUrl());
+			Intent intentVideo = new Intent(getActivity(), RadioPlayerActivity.class);
+			intentVideo.putExtra(Intent.EXTRA_TITLE, radio.getTitle());
+
+			intentVideo.putExtra(RadioPlayerActivity.EXTRAS_MEDIA_TYPE, "radio");
+			intentVideo.putExtra(RadioPlayerActivity.EXTRAS_THUMBNAIL_URL, radio.getThumbnail());
+
+			intentVideo.setDataAndType(radioUrl, "video/*");
+			startActivity(intentVideo);
+		}
+	}
+
+	private void requestNewInterstitial() {
+		AdRequest adRequest = new AdRequest.Builder().build();
+		mInterstitialAd.loadAd(adRequest);
 	}
 
     @Override

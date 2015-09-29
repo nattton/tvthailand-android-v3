@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#353535"
     android:orientation="vertical" >
 
     <android.support.design.widget.AppBarLayout
@@ -20,23 +19,10 @@
             app:layout_scrollFlags="scroll|enterAlways" />
     </android.support.design.widget.AppBarLayout>
 
-    <ListView
-        android:id="@+id/listView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvPart"
         android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:divider="#3b3b3b"
-        android:dividerHeight="1dip"
-        android:fadeScrollbars="false"
-        android:fadingEdge="none"
-        android:listSelector="@drawable/list_selector"
-        android:requiresFadingEdge="none"
-        android:scrollingCache="false" >
-    </ListView>
-
-    <FrameLayout
-        android:id="@+id/ad_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </LinearLayout>

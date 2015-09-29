@@ -65,7 +65,7 @@ public class Utils {
             }
         });
         stringRequest.setShouldCache(false);
-        MyVolley.getRequestQueue().add(stringRequest);
+        MyVolley.getInstance(Contextor.getInstance().getContext()).getRequestQueue().add(stringRequest);
     }
 
 }

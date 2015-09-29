@@ -32,7 +32,6 @@ import com.google.ads.interactivemedia.v3.api.ImaSdkSettings;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.MainApplication;
-import com.codemobi.android.tvthailand.MainApplication.TrackerName;
 import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.utils.CountDownTimer;
 
@@ -105,8 +104,7 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
 
     private void sendTracker()
     {
-        Tracker t = ((MainApplication) getApplication())
-                .getTracker(TrackerName.APP_TRACKER);
+        Tracker t = ((MainApplication) getApplication()).getDefaultTracker();
         t.setScreenName("VasContentPlayer");
         t.send(new HitBuilders.AppViewBuilder().build());
     }
@@ -239,8 +237,7 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
                 isAdPlaying = false;
                 break;
             case ALL_ADS_COMPLETED:
-                Tracker t2 = ((MainApplication) getApplication())
-                        .getTracker(TrackerName.OTV_TRACKER);
+                Tracker t2 = ((MainApplication) getApplication()).getOTVTracker();
                 t2.setScreenName("VastPlayer");
                 t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(5, tagUrl).build());
 

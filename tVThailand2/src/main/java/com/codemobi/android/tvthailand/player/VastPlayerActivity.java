@@ -135,8 +135,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 	
 	private void sendTracker()
 	{
-		Tracker t = ((MainApplication) getApplication())
-				.getTracker(MainApplication.TrackerName.APP_TRACKER);
+		Tracker t = ((MainApplication) getApplication()).getDefaultTracker();
 		t.setScreenName("VastPlayer");
 		t.send(new HitBuilders.AppViewBuilder().build());
 	}
@@ -214,8 +213,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
         buttonSkip.setVisibility(View.GONE);
         txtSkipCount.setVisibility(View.GONE);
 
-		Tracker t2 = ((MainApplication) getApplication())
-				.getTracker(MainApplication.TrackerName.OTV_TRACKER);
+		Tracker t2 = ((MainApplication) getApplication()).getOTVTracker();
 		t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(3, part.getNameTh()).build());
 		
 		if (mediaCode.equals("1000")) {
@@ -337,8 +335,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 			
 			titleBarRL.setVisibility(View.GONE);
 
-			Tracker t = ((MainApplication) getApplication())
-					.getTracker(MainApplication.TrackerName.OTV_TRACKER);
+			Tracker t = ((MainApplication) getApplication()).getOTVTracker();
 			t.setScreenName("VastPlayer");
 			t.send(new HitBuilders.AppViewBuilder().setCustomDimension(4, tagUrl).build());
 
@@ -348,8 +345,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 			isAdPlaying = false;
 			break;
 		case ALL_ADS_COMPLETED:
-			Tracker t2 = ((MainApplication) getApplication())
-					.getTracker(MainApplication.TrackerName.OTV_TRACKER);
+			Tracker t2 = ((MainApplication) getApplication()).getOTVTracker();
 			t2.setScreenName("VastPlayer");
 			t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(5, tagUrl).build());
 

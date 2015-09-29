@@ -38,7 +38,7 @@ public class HTTPEngine {
 
     private HTTPEngine() {
         mContext = Contextor.getInstance().getContext();
-        mRequestQueue = MyVolley.getRequestQueue();
+        mRequestQueue = MyVolley.getInstance(mContext).getRequestQueue();
     }
 
     public void getAdvertiseData(Response.Listener<AdCollectionDao> listener, Response.ErrorListener errorListener) {

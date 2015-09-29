@@ -3,29 +3,21 @@ package com.codemobi.android.tvthailand;
 import com.codemobi.android.tvthailand.utils.Contextor;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
-import java.util.HashMap;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.support.multidex.MultiDexApplication;
 
-public class MainApplication extends Application {
-    // The following line should be changed to include the correct property id.
-    private static final String PROPERTY_ID = "UA-22403997-3";
+import java.util.HashMap;
 
-    public static int GENERAL_TRACKER = 0;
-    private static String appVersion = "1.0"; 
-
-    public enum TrackerName {
-        APP_TRACKER, // Tracker used only in this app.
-        OTV_TRACKER, // Tracker used by all ecommerce transactions from a company.
-        GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
-    }
-
-    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+public class MainApplication extends MultiDexApplication {
+    private Tracker mTracker;
+    private static String appVersion = "1.0";
 
     public MainApplication() {
         super();
@@ -40,8 +32,6 @@ public class MainApplication extends Application {
     }
     
     private void init() {
-    	MyVolley.init(this);
-    	
 		try {
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 			appVersion = pInfo.versionName;
@@ -51,17 +41,22 @@ public class MainApplication extends Application {
     	
     }
 
-    public synchronized Tracker getTracker(TrackerName trackerId) {
-        if (!mTrackers.containsKey(trackerId)) {
-
+    synchronized public Tracker getDefaultTracker() {
+        if (mTracker == null) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(PROPERTY_ID) 
-            				: (trackerId == TrackerName.OTV_TRACKER) ? analytics.newTracker(R.xml.otv_tracker) 
-            				: analytics.newTracker(R.xml.global_tracker);
-            mTrackers.put(trackerId, t);
-
+            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+            mTracker = analytics.newTracker(R.xml.global_tracker);
         }
-        return mTrackers.get(trackerId);
+        return mTracker;
+    }
+
+    synchronized public Tracker getOTVTracker() {
+        if (mTracker == null) {
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+            mTracker = analytics.newTracker(R.xml.otv_tracker);
+        }
+        return mTracker;
     }
     
     public static String getAppVersion() {

@@ -13,6 +13,7 @@ import com.codemobi.android.tvthailand.MyVolley;
 import com.codemobi.android.tvthailand.datasource.OnLoadDataListener;
 import com.codemobi.android.tvthailand.datasource.Program;
 import com.codemobi.android.tvthailand.otv.OTVConfig;
+import com.codemobi.android.tvthailand.utils.Contextor;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,9 +35,9 @@ public class OTVEpisodes {
 		notifyLoadStart();
 		String url = String.format("%s/Content/index/%s/%s/%s/%s/0/50/0", OTVConfig.BASE_URL, OTVConfig.APP_ID, MainApplication.getAppVersion(), OTVConfig.API_VERSION, show.getOtvId());
         Log.d("OTVEpisodes", url);
-        JsonObjectRequest loadEpisodeRequest = new JsonObjectRequest(Method.GET, url, null, reqSuccessListener(), reqErrorListener());
+        JsonObjectRequest loadEpisodeRequest = new JsonObjectRequest(Method.GET, url, reqSuccessListener(), reqErrorListener());
 		loadEpisodeRequest.setShouldCache(false);
-        MyVolley.getRequestQueue().add(loadEpisodeRequest);
+        MyVolley.getInstance(Contextor.getInstance().getContext()).getRequestQueue().add(loadEpisodeRequest);
 	}
 	
 	private Listener<JSONObject> reqSuccessListener() {
@@ -152,7 +153,7 @@ public class OTVEpisodes {
 	
 	private OnLoadDataListener onLoadDataListener;
 
-	public void setOnLoadListener(OnLoadDataListener onLoadDataListener) {
+	public void setOnLoadDataListener(OnLoadDataListener onLoadDataListener) {
 		this.onLoadDataListener = onLoadDataListener;
 	}
 	

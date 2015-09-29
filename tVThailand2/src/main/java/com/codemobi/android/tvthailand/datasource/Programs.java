@@ -15,6 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.codemobi.android.tvthailand.MyVolley;
 import com.codemobi.android.tvthailand.utils.Constant;
+import com.codemobi.android.tvthailand.utils.Contextor;
 
 public class Programs {
 	private static final String EMPTY_STRING = "";
@@ -42,7 +43,7 @@ public class Programs {
 	}
 
 	public Programs() {
-		mRequestQueue = MyVolley.getRequestQueue();
+		mRequestQueue = MyVolley.getInstance(Contextor.getInstance().getContext()).getRequestQueue();
 	}
 
 	private int start = 0;
@@ -110,19 +111,12 @@ public class Programs {
 		if (loading || last)
 			return;
 		loading = true;
-		
+
 		notifyLoadStart();
 		String url = String.format("%s/category/%s/%d?device=android&time=%s", Constant.BASE_URL, id, start, AppUtility.getCurrentTime());
-		JsonObjectRequest loadProgramRequest = new JsonObjectRequest(Method.GET, url, null,
+		JsonObjectRequest loadProgramRequest = new JsonObjectRequest(Method.GET, url,
 				reqSuccessListenner(), reqErrorListener());
 		mRequestQueue.add(loadProgramRequest);
-
-//        mRequestQueue.add(new GsonRequest<ShowCollectionDao>(url, ShowCollectionDao.class, null, new Response.Listener<ShowCollectionDao>() {
-//            @Override
-//            public void onResponse(ShowCollectionDao response) {
-//                Log.d("ShowCollectionDao", response.getShows().get(0).getTitle());
-//            }
-//        }, reqErrorListener()));
 	}
 
 	public void loadProgramByChannel(String id, int start) {
@@ -135,7 +129,7 @@ public class Programs {
 		
 		notifyLoadStart();
 		String url = String.format("%s/channel/%s/%d?device=android&time=%s", Constant.BASE_URL, id, start, AppUtility.getCurrentTime());
-		JsonObjectRequest loadProgramRequest = new JsonObjectRequest(Method.GET, url, null, 
+		JsonObjectRequest loadProgramRequest = new JsonObjectRequest(Method.GET, url,
 				reqSuccessListenner(), reqErrorListener());
 		mRequestQueue.add(loadProgramRequest);
 	}
@@ -157,7 +151,7 @@ public class Programs {
 		notifyLoadStart();
 		String url = String.format("%s/search/%d?&keyword=%s&device=android&time=%s",
                 Constant.BASE_URL, start, keyword, AppUtility.getCurrentTime());
-		JsonObjectRequest loadProgramRequest = new JsonObjectRequest(Method.GET, url, null, 
+		JsonObjectRequest loadProgramRequest = new JsonObjectRequest(Method.GET, url,
 				reqSuccessListenner(), reqErrorListener());
 		mRequestQueue.add(loadProgramRequest);
 	}

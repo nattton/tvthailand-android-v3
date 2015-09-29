@@ -1,104 +1,98 @@
 package com.codemobi.android.tvthailand.adapter;
 
-import java.util.HashMap;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.datasource.Episode;
 import com.codemobi.android.tvthailand.datasource.Episodes;
 
-import android.app.Activity;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import java.util.HashMap;
 
-public class EpisodeAdapter extends BaseAdapter{
-	
-	private Activity activity;
-	private Episodes episodes;
-	private static LayoutInflater mInflater = null;
+/**
+ * Created by nattapong on 9/28/15 AD.
+ */
+public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.ViewHolder> {
 
-	HashMap<String, Integer> videoTypeMap = new HashMap<>();
-	public EpisodeAdapter(Activity a, Episodes c) {
-		videoTypeMap.put("0", com.codemobi.android.tvthailand.R.drawable.ic_youtube);
-		videoTypeMap.put("1", com.codemobi.android.tvthailand.R.drawable.ic_dailymotion);
-		videoTypeMap.put("11", com.codemobi.android.tvthailand.R.drawable.ic_chrome);
-		videoTypeMap.put("12", com.codemobi.android.tvthailand.R.drawable.ic_player);
-		videoTypeMap.put("13", com.codemobi.android.tvthailand.R.drawable.ic_player);
-		videoTypeMap.put("14", com.codemobi.android.tvthailand.R.drawable.ic_player);
-		videoTypeMap.put("15", com.codemobi.android.tvthailand.R.drawable.ic_player);
-		
-        activity = a;
-        episodes = c;
-        mInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	}
+    private OnTapListener onTapListener;
 
-	private static final class ViewHolder {
-		public ImageView mediaThumbnail;
-		public TextView title;
-		public TextView aired;
-		public TextView viewCount;
-		
-		public LinearLayout layoutParts;
-		public TextView tvParts;
-	}
+    private Episodes episodes;
+    private HashMap<String, Integer> videoTypeMap = new HashMap<>();
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder;
-		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.episode_list_item, parent, false);
-            holder = new ViewHolder();
-            holder.mediaThumbnail = (ImageView)convertView.findViewById(com.codemobi.android.tvthailand.R.id.media_thumbnail);
-            holder.title = (TextView)convertView.findViewById(com.codemobi.android.tvthailand.R.id.tv_label_ep);
-            holder.aired = (TextView)convertView.findViewById(com.codemobi.android.tvthailand.R.id.tv_on_air_ep);
-            holder.viewCount = (TextView)convertView.findViewById(com.codemobi.android.tvthailand.R.id.view_count_ep);
-            holder.layoutParts = (LinearLayout)convertView.findViewById(com.codemobi.android.tvthailand.R.id.part_updated_ll);
-            holder.tvParts = (TextView)convertView.findViewById(com.codemobi.android.tvthailand.R.id.num_part);
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder)convertView.getTag();
-		}
-		
-		Episode item = episodes.get(position);
+    public EpisodeAdapter(Episodes episodes) {
+        this.episodes = episodes;
 
-		if (videoTypeMap.containsKey(item.getSrcType())) {
-			holder.mediaThumbnail.setImageResource(videoTypeMap.get(item.getSrcType()));
-		} 
-		else {
-//			holder.mediaThumbnail.setImageResource(R.drawable.ic_error);
-		}
-		
-		holder.title.setText(item.getTitle());
-		holder.aired.setText(item.getDate());
-		holder.viewCount.setText(item.getViewCount());
-		if (!item.getParts().equals("")) {
-			holder.layoutParts.setVisibility(View.VISIBLE);
-			holder.tvParts.setText(item.getParts());
-		}
-		else {
-			holder.layoutParts.setVisibility(View.GONE);
-		}
-		return convertView;
-	}
+        videoTypeMap.put("0", com.codemobi.android.tvthailand.R.drawable.ic_youtube);
+        videoTypeMap.put("1", com.codemobi.android.tvthailand.R.drawable.ic_dailymotion);
+        videoTypeMap.put("11", com.codemobi.android.tvthailand.R.drawable.ic_chrome);
+        videoTypeMap.put("12", com.codemobi.android.tvthailand.R.drawable.ic_player);
+        videoTypeMap.put("13", com.codemobi.android.tvthailand.R.drawable.ic_player);
+        videoTypeMap.put("14", com.codemobi.android.tvthailand.R.drawable.ic_player);
+        videoTypeMap.put("15", com.codemobi.android.tvthailand.R.drawable.ic_player);
+    }
 
-	@Override
-	public int getCount() {
-		return episodes.size();
-	}
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_episode_item, parent, false);
+        return new ViewHolder(view);
+    }
 
-	@Override
-	public Object getItem(int position) {
-		return position;
-	}
+    @Override
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onTapListener != null)
+                    onTapListener.onTapView(position);
+            }
+        });
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+        Episode item = episodes.get(position);
+        if (videoTypeMap.containsKey(item.getSrcType())) {
+            holder.mediaThumbnail.setImageResource(videoTypeMap.get(item.getSrcType()));
+        }
+        holder.title.setText(item.getTitle());
+        holder.aired.setText(item.getDate());
+        holder.viewCount.setText(item.getViewCount());
+        if (!item.getParts().equals("")) {
+            holder.layoutParts.setVisibility(View.VISIBLE);
+            holder.tvParts.setText(item.getParts());
+        }
+        else {
+            holder.layoutParts.setVisibility(View.GONE);
+        }
+    }
 
+    @Override
+    public int getItemCount() {
+        return episodes.size();
+    }
+
+    public void setOnTapListener(OnTapListener onTapListener) {
+        this.onTapListener = onTapListener;
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView mediaThumbnail;
+        TextView title;
+        TextView aired;
+        TextView viewCount;
+        LinearLayout layoutParts;
+        TextView tvParts;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            mediaThumbnail = (ImageView)itemView.findViewById(R.id.media_thumbnail);
+            title = (TextView)itemView.findViewById(R.id.tv_label_ep);
+            aired = (TextView)itemView.findViewById(R.id.tv_on_air_ep);
+            viewCount = (TextView)itemView.findViewById(R.id.view_count_ep);
+            layoutParts = (LinearLayout)itemView.findViewById(R.id.part_updated_ll);
+            tvParts = (TextView)itemView.findViewById(R.id.num_part);
+        }
+    }
 }

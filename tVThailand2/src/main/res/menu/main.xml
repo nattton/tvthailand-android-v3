@@ -2,32 +2,39 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_action_search"
+        android:orderInCategory="0"
+        android:title="@string/search"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/refresh"
         android:icon="@drawable/ic_action_refresh"
         android:orderInCategory="0"
         android:title="@string/refresh"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/account"
         android:icon="@drawable/ic_action_user"
-        android:orderInCategory="0"
+        android:orderInCategory="1"
         android:title="@string/account"
-        app:showAsAction="ifRoom" />
+        android:visible="false"
+        app:showAsAction="never" />
     <item
         android:id="@+id/favorite"
         android:icon="@drawable/ic_favorite"
-        android:orderInCategory="1"
+        android:orderInCategory="2"
         android:title="@string/favorite"
-        app:showAsAction="ifRoom"></item>
+        app:showAsAction="never"/>
     <item
         android:id="@+id/recently"
         android:icon="@drawable/ic_recently"
         android:orderInCategory="2"
         android:title="@string/recently"
-        app:showAsAction="ifRoom"></item>
+        app:showAsAction="never" />
     <item
         android:id="@+id/about"
         android:orderInCategory="3"
         android:title="@string/about"
-        app:showAsAction="never"></item>
+        app:showAsAction="never" />
 </menu>

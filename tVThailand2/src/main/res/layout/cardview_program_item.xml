@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.andexert.library.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rect"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="5sp"
+    app:rv_color="#ff00ddff"
+    app:rv_rippleDuration="100"
+    app:rv_type="rectangle">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:background="@android:color/white"
+            android:padding="5sp">
+
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="110dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center_vertical"
+                android:adjustViewBounds="true"
+                android:layout_margin="4dp" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/thumbnail"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title"
+                android:layout_toRightOf="@+id/thumbnail"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+</com.andexert.library.RippleView>

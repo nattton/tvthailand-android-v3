@@ -15,13 +15,14 @@
  */
 package com.codemobi.android.tvthailand;
 
-import android.app.ActivityManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.LruCache;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.codemobi.android.tvthailand.toolbox.BitmapLruCache;
 
 
 /**
@@ -31,46 +32,53 @@ import com.codemobi.android.tvthailand.toolbox.BitmapLruCache;
  * 
  */
 public class MyVolley {
+    private static MyVolley mInstance;
     private static RequestQueue mRequestQueue;
     private static ImageLoader mImageLoader;
+    private static Context mCtx;
 
 
-    private MyVolley() {
-        // no instances
+    private MyVolley(Context context) {
+        this.mCtx = context;
+        mRequestQueue = getRequestQueue();
+        mImageLoader = new ImageLoader(mRequestQueue,
+                new ImageLoader.ImageCache() {
+                    private final LruCache<String, Bitmap>
+                            cache = new LruCache<String, Bitmap>(20);
+
+                    @Override
+                    public Bitmap getBitmap(String url) {
+                        return cache.get(url);
+                    }
+
+                    @Override
+                    public void putBitmap(String url, Bitmap bitmap) {
+                        cache.put(url, bitmap);
+                    }
+                });
     }
 
-    static void init(Context context) {
-        mRequestQueue = Volley.newRequestQueue(context);
-
-        int memClass = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE))
-                .getMemoryClass();
-        // Use 1/8th of the available memory for this memory cache.
-        int cacheSize = 1024 * 1024 * memClass / 8;
-        mImageLoader = new ImageLoader(mRequestQueue, new BitmapLruCache(cacheSize));
-    }
-
-
-    public static RequestQueue getRequestQueue() {
-        if (mRequestQueue != null) {
-            return mRequestQueue;
-        } else {
-            throw new IllegalStateException("RequestQueue not initialized");
+    public static synchronized MyVolley getInstance(Context context) {
+        if (mInstance == null) {
+            mInstance = new MyVolley(context);
         }
+        return mInstance;
     }
 
-
-    /**
-     * Returns instance of ImageLoader initialized with {@see FakeImageCache} which effectively means
-     * that no memory caching is used. This is useful for images that you know that will be show
-     * only once.
-     * 
-     * @return
-     */
-    public static ImageLoader getImageLoader() {
-        if (mImageLoader != null) {
-            return mImageLoader;
-        } else {
-            throw new IllegalStateException("ImageLoader not initialized");
+    public RequestQueue getRequestQueue() {
+        if (mRequestQueue == null) {
+            // getApplicationContext() is key, it keeps you from leaking the
+            // Activity or BroadcastReceiver if someone passes one in.
+            mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
         }
+        return mRequestQueue;
+    }
+
+    public <T> void addToRequestQueue(Request<T> req) {
+        getRequestQueue().add(req);
+    }
+
+    public ImageLoader getImageLoader() {
+        return mImageLoader;
     }
 }

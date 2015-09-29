@@ -1,74 +1,87 @@
 package com.codemobi.android.tvthailand.adapter;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.bumptech.glide.Glide;
-import com.codemobi.android.tvthailand.R;
-import com.codemobi.android.tvthailand.dao.section.CategoryItemDao;
-import com.codemobi.android.tvthailand.manager.SectionManager;
-
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class CategoryAdapter extends BaseAdapter {
+import com.bumptech.glide.Glide;
+import com.codemobi.android.tvthailand.R;
+import com.codemobi.android.tvthailand.activity.ProgramActivity;
+import com.codemobi.android.tvthailand.dao.section.CategoryItemDao;
+import com.codemobi.android.tvthailand.manager.SectionManager;
+import com.codemobi.android.tvthailand.utils.Contextor;
 
-	public CategoryAdapter() {
-		super();
+/**
+ * Created by nattapong on 7/9/15 AD.
+ */
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder>
+{
+	private OnTapListener onTapListener;
+
+	public static class ViewHolder extends RecyclerView.ViewHolder
+	{
+		TextView mTitle;
+		ImageView mThumbnail;
+
+		ViewHolder (View itemView) {
+			super(itemView);
+			mTitle = (TextView) itemView.findViewById(R.id.title);
+			mThumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
+		}
 	}
 
-	private static final class ViewHolder {
-		TextView title;
-		ImageView thumbnail;
+	public CategoryAdapter(Context context)
+	{
+
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder;
-		if (convertView == null) {
-            LayoutInflater mInflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView =  mInflater.inflate(com.codemobi.android.tvthailand.R.layout.cate_grid_item, parent, false);
-			holder = new ViewHolder();
+	public CategoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+	{
+		View v = LayoutInflater.from(parent.getContext())
+				.inflate(R.layout.cardview_category_item, parent, false);
 
-			holder.title = (TextView) convertView
-					.findViewById(com.codemobi.android.tvthailand.R.id.tv_label_cate);
-			holder.thumbnail = (ImageView) convertView
-					.findViewById(com.codemobi.android.tvthailand.R.id.thumb_cate);
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder) convertView.getTag();
-		}
+		return new ViewHolder(v);
+	}
 
-        CategoryItemDao item = SectionManager.getInstance().getData().getCategories().get(position);
-		holder.title.setText(item.getTitle());
-		Glide.with(parent.getContext())
+	@Override
+	public void onBindViewHolder(ViewHolder holder, final int position)
+	{
+		holder.itemView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (onTapListener != null)
+					onTapListener.onTapView(position);
+			}
+		});
+
+		CategoryItemDao item = SectionManager.getInstance().getData().getCategories().get(position);
+		holder.mTitle.setText(item.getTitle());
+		Glide.with(Contextor.getInstance().getContext())
 				.load(item.getThumbnail())
+				.centerCrop()
 				.placeholder(R.drawable.ic_cate_empty)
 				.crossFade()
-				.centerCrop()
-				.into(holder.thumbnail);
-		return convertView;
+				.into(holder.mThumbnail);
 	}
 
 	@Override
-	public int getCount() {
-        if (SectionManager.getInstance().getData() == null
-                || SectionManager.getInstance().getData().getCategories() == null)
-            return 0;
+	public int getItemCount()
+	{
+		if (SectionManager.getInstance().getData() == null
+				|| SectionManager.getInstance().getData().getCategories() == null)
+			return 0;
 		return SectionManager.getInstance().getData().getCategories().size();
 	}
 
-	@Override
-	public Object getItem(int position) {
-		return position;
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return position;
+	public void setOnTapListener (OnTapListener onTapListener)
+	{
+		this.onTapListener = onTapListener;
 	}
 }

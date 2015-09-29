@@ -21,7 +21,7 @@ public class Constant {
     public static final List<String> PERMISSIONS = Arrays.asList("user_birthday", "email", "user_location");
 
     public static final String PREF_NAME = "TV_THAILAND";
-    public static final String PREF_SECTION = "SECTION";
+    public static final String PREF_SECTION =  "SECTION";
     public static Map<String, List<String>> getDefaultParams() {
         HashMap<String, List<String>> params = new HashMap<>();
         params.put("device", Arrays.asList("android"));
@@ -29,9 +29,9 @@ public class Constant {
         return Collections.unmodifiableMap(params);
     }
 
-    public static final String VSERV_BILLBOARD = "8b2cf286"; // 8b2cf286 Test 8063
-    public static final String VSERV_BANNER = "2080f326"; // 2080f326 Test 20846
-    public static final String VSERV_TEST_DEVICE = "";
+    public static final String VSERV_BILLBOARD = "c84927ed"; // 8b2cf286 Test 8063
+    public static final String VSERV_BANNER = "ceb27b33"; // 2080f326 Test 20846
+    public static final String VSERV_TEST_DEVICE = ""; // 3e2b8a58-2ac0-4dfd-91b5-b836161cac11
     public static final String FACEBOOK_INTERSTITIAL = "202355306578303_529399410540556";
     public static final String FACEBOOK_BANNER = "202355306578303_529495700530927";
 }

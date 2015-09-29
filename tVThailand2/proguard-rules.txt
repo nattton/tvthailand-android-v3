@@ -20,9 +20,3 @@
 -keep class * extends dagger.internal.StaticInjection﻿
 -keep class * extends dagger.internal.BindingsGroup
 -dontwarn dagger.internal.**
-
-# ActionBarSherlock
--keep class android.support.v4.app.** { *; }
--keep interface android.support.v4.app.** { *; }
--keep class com.actionbarsherlock.** { *; }
--keep interface com.actionbarsherlock.** { *; }

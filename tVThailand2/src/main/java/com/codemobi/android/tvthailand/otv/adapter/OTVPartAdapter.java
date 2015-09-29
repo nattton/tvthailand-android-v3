@@ -4,71 +4,70 @@ import java.util.ArrayList;
 
 import com.bumptech.glide.Glide;
 import com.codemobi.android.tvthailand.R;
+import com.codemobi.android.tvthailand.adapter.OnTapListener;
 import com.codemobi.android.tvthailand.otv.model.OTVPart;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class OTVPartAdapter extends BaseAdapter {
+public class OTVPartAdapter extends RecyclerView.Adapter<OTVPartAdapter.ViewHolder> {
 
+	private OnTapListener onTapListener;
+	private Context context;
 	private ArrayList<OTVPart> parts;
 
-	public OTVPartAdapter(ArrayList<OTVPart> parts) {
+	public OTVPartAdapter(Context context, ArrayList<OTVPart> parts) {
+		this.context = context;
 		this.parts = parts;
 	}
 
-	private static final class ViewHolder {
-		public ImageView thumbnail;
-		public TextView title;
+	@Override
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_part_item, parent, false);
+		return new ViewHolder(v);
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder;
-		if (convertView == null) {
-			LayoutInflater mInflater = (LayoutInflater) parent.getContext()
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = mInflater.inflate(R.layout.part_list_item, parent, false);
-			holder = new ViewHolder();
-			holder.title = (TextView) convertView.findViewById(R.id.title);
-			holder.thumbnail = (ImageView) convertView
-					.findViewById(R.id.thumbnail);
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder) convertView.getTag();
-		}
+	public void onBindViewHolder(ViewHolder holder, final int position) {
+		holder.itemView.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if (onTapListener != null)
+					onTapListener.onTapView(position);
+			}
+		});
 
 		OTVPart item = parts.get(position);
-
 		holder.title.setText(item.getNameTh());
-		Glide.with(parent.getContext())
+		Glide.with(context)
 				.load(item.getThumbnail())
 				.placeholder(R.drawable.ic_tvthailand_show_placeholder)
 				.crossFade()
 				.fitCenter()
 				.into(holder.thumbnail);
-		
-		return convertView;
 	}
 
 	@Override
-	public int getCount() {
+	public int getItemCount() {
 		return parts.size();
 	}
 
-	@Override
-	public Object getItem(int position) {
-		return position;
+	public void setOnTapListener(OnTapListener onTapListener) {
+		this.onTapListener = onTapListener;
 	}
 
-	@Override
-	public long getItemId(int position) {
-		return position;
+	public static class ViewHolder extends RecyclerView.ViewHolder {
+		ImageView thumbnail;
+		TextView title;
+		public ViewHolder(View itemView) {
+			super(itemView);
+			title = (TextView)itemView.findViewById(R.id.title);
+			thumbnail = (ImageView)itemView.findViewById(R.id.thumbnail);
+		}
 	}
-
 }

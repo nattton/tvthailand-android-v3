@@ -3,27 +3,34 @@ package com.codemobi.android.tvthailand.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.AdapterView.OnItemClickListener;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.codemobi.android.tvthailand.MainApplication;
-import com.codemobi.android.tvthailand.MainApplication.TrackerName;
-import com.codemobi.android.tvthailand.ProgramActivity;
+
 import com.codemobi.android.tvthailand.R;
+import com.codemobi.android.tvthailand.activity.ProgramActivity;
 import com.codemobi.android.tvthailand.adapter.CategoryAdapter;
+import com.codemobi.android.tvthailand.adapter.OnTapListener;
 import com.codemobi.android.tvthailand.dao.section.CategoryItemDao;
 import com.codemobi.android.tvthailand.manager.SectionManager;
 import com.codemobi.android.tvthailand.manager.bus.MainBus;
 import com.squareup.otto.Subscribe;
 
-public class CategoryFragment extends Fragment implements OnItemClickListener {
+/**
+ * Created by nattapong on 7/10/15 AD.
+ */
+public class CategoryFragment extends Fragment {
 
-    private CategoryAdapter mAdapter;
+	private CategoryAdapter mAdapter;
+
+	public CategoryFragment() {
+		super();
+	}
 
 	public static CategoryFragment newInstance() {
 		CategoryFragment fragment = new CategoryFragment();
@@ -34,50 +41,60 @@ public class CategoryFragment extends Fragment implements OnItemClickListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.cate_grid_view, container,
-				false);
-
-        GridView gridview = (GridView) rootView.findViewById(R.id.gridview);
-		gridview.setAdapter(mAdapter = new CategoryAdapter());
-		gridview.setOnItemClickListener(this);
+							 Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_category, container, false);
+		initInstances(rootView);
 		return rootView;
 	}
-	
-	@Override
-	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-        CategoryItemDao category = SectionManager.getInstance().getData().getCategories().get(position);
-		
-		 Tracker t = ((MainApplication) getActivity().getApplication()).getTracker(
-		            TrackerName.APP_TRACKER);
-		 t.setScreenName("Category");
-		 t.send(new HitBuilders.AppViewBuilder().setCustomDimension(1, category.getTitle()).build());
-		
-		Intent intent = new Intent(getActivity(), ProgramActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putInt(ProgramActivity.EXTRAS_MODE, ProgramActivity.BY_CATEGORY);
-		bundle.putString(ProgramActivity.EXTRAS_TITLE, category.getTitle());
-		bundle.putString(ProgramActivity.EXTRAS_ID, category.getId());
-		bundle.putString(ProgramActivity.EXTRAS_ICON, category.getThumbnail());
-		intent.putExtras(bundle);
-		getActivity().startActivity(intent);
+
+	private void initInstances(View rootView) {
+		// init instance with rootView.findViewById here
+		setRetainInstance(true);
+
+		RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rvCategory);
+		mRecyclerView.setHasFixedSize(true);
+		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+		mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.category_column_num)));
+
+		mAdapter = new CategoryAdapter(getActivity().getApplicationContext());
+		mAdapter.setOnTapListener(new OnTapListener() {
+			@Override
+			public void onTapView(int position) {
+				CategoryItemDao item = SectionManager.getInstance().getData().getCategories().get(position);
+				Intent intent = new Intent(getActivity().getApplicationContext(), ProgramActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putInt(ProgramActivity.EXTRAS_MODE, ProgramActivity.BY_CATEGORY);
+				bundle.putString(ProgramActivity.EXTRAS_TITLE, item.getTitle());
+				bundle.putString(ProgramActivity.EXTRAS_ID, item.getId());
+				bundle.putString(ProgramActivity.EXTRAS_ICON, item.getThumbnail());
+				intent.putExtras(bundle);
+				startActivity(intent);
+			}
+		});
+		mRecyclerView.setAdapter(mAdapter);
 	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainBus.getInstance().register(this);
-    }
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+	}
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainBus.getInstance().unregister(this);
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
+		MainBus.getInstance().register(this);
+	}
 
-    @Subscribe
-    public void onSectionLoaded(SectionManager.EventType eventType) {
-        if (eventType == SectionManager.EventType.Loaded)
-            mAdapter.notifyDataSetChanged();
-    }
+	@Override
+	public void onPause() {
+		super.onPause();
+		MainBus.getInstance().unregister(this);
+	}
+
+	@Subscribe
+	public void onSectionLoaded(SectionManager.EventType eventType) {
+		if (eventType == SectionManager.EventType.Loaded)
+			if (mAdapter != null)
+				mAdapter.notifyDataSetChanged();
+	}
 }

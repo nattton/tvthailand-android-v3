@@ -21,11 +21,6 @@ import com.codemobi.android.tvthailand.dao.advertise.AdCollectionDao;
 import com.codemobi.android.tvthailand.dao.advertise.AdItemDao;
 import com.codemobi.android.tvthailand.manager.http.HTTPEngine;
 import com.codemobi.android.tvthailand.utils.Constant;
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
-import com.facebook.ads.AdListener;
-import com.facebook.ads.AdSize;
-import com.facebook.ads.AdView;
 import com.vserv.android.ads.api.VservAdView;
 import com.vserv.android.ads.common.VservAdListener;
 
@@ -41,7 +36,6 @@ public class MyBannerView extends LinearLayout {
 
 	private VservAdView vservAdView;
 	private RelativeLayout adViewContainer;
-	private AdView adView;
 	private VservAdListener mAdListener;
 
 	public MyBannerView(Context context) {
@@ -64,15 +58,14 @@ public class MyBannerView extends LinearLayout {
 
 	private void initView(Context context) {
 		parentView = this;
-		parentView.setVisibility(View.GONE);
+//		parentView.setVisibility(View.GONE);
 		
 		View convertView = LayoutInflater.from(context).inflate(R.layout.my_banner_view, this);
 		vservAdView = (VservAdView) convertView.findViewById(R.id.vservAdView);
 		adViewContainer = (RelativeLayout) findViewById(R.id.adViewContainer);
 		webViewShow = (WebView) convertView.findViewById(R.id.webViewShow);
 		setUpView();
-		
-		if(autoLoad) requestAds();
+//		if(autoLoad) requestAds();
 	}
 	
 	private void setUpView() {
@@ -107,7 +100,7 @@ public class MyBannerView extends LinearLayout {
             }
         });
     }
-	
+
 	private void displayAds (AdCollectionDao adItemList)  {
 		try {
 			AdItemDao adItem = adItemList.getShuffleAd();
@@ -120,7 +113,7 @@ public class MyBannerView extends LinearLayout {
 				}
 			}
 		} catch (AdCollectionDao.EmptyException err) {
-			requestFacebook();
+			requestVservAd();
 		}
 	}
 
@@ -142,37 +135,13 @@ public class MyBannerView extends LinearLayout {
 		vservAdView.loadAd();
 	}
 
-	private void requestFacebook() {
-
-		adView = new AdView(getContext(), Constant.FACEBOOK_BANNER, AdSize.BANNER_320_50);
-		adView.setAdListener(new AdListener() {
-			@Override
-			public void onError(Ad ad, AdError adError) {
-
-			}
-
-			@Override
-			public void onAdLoaded(Ad ad) {
-				parentView.setVisibility(VISIBLE);
-				adViewContainer.setVisibility(VISIBLE);
-			}
-
-			@Override
-			public void onAdClicked(Ad ad) {
-
-			}
-		});
-		adViewContainer.addView(adView);
-		adView.loadAd();
-	}
-
 	private void adListenerInitialization() {
 		mAdListener = new VservAdListener() {
 
 			@Override
 			public void didInteractWithAd(VservAdView adView) {
-//				Toast.makeText(getContext(), "didInteractWithAd",
-//						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), "didInteractWithAd",
+						Toast.LENGTH_SHORT).show();
 
 			}
 
@@ -180,32 +149,32 @@ public class MyBannerView extends LinearLayout {
 			public void adViewDidLoadAd(VservAdView adView) {
 				parentView.setVisibility(VISIBLE);
 				vservAdView.setVisibility(VISIBLE);
-//				Toast.makeText(getContext(), "adViewDidLoadAd",
-//						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), "adViewDidLoadAd",
+						Toast.LENGTH_SHORT).show();
 
 			}
 
 			@Override
 			public void willPresentOverlay(VservAdView adView) {
 
-//				Toast.makeText(getContext(), "willPresentOverlay",
-//						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), "willPresentOverlay",
+						Toast.LENGTH_SHORT).show();
 
 			}
 
 			@Override
 			public void willDismissOverlay(VservAdView adView) {
 
-//				Toast.makeText(getContext(), "willDismissOverlay",
-//						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), "willDismissOverlay",
+						Toast.LENGTH_SHORT).show();
 
 			}
 
 			@Override
 			public void adViewDidCacheAd(VservAdView adView) {
 
-//				Toast.makeText(getContext(), "adViewDidCacheAd",
-//						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), "adViewDidCacheAd",
+						Toast.LENGTH_SHORT).show();
 				if (vservAdView != null) {
 
 					if (vservAdView.getUxType() == VservAdView.UX_INTERSTITIAL) {
@@ -218,9 +187,9 @@ public class MyBannerView extends LinearLayout {
 
 			@Override
 			public VservAdView didFailedToLoadAd(String arg0) {
-				requestFacebook();
-//				Toast.makeText(getContext(), "didFailedToLoadAd",
-//						Toast.LENGTH_SHORT).show();
+//				requestFacebook();
+				Toast.makeText(getContext(), "didFailedToLoadAd",
+						Toast.LENGTH_SHORT).show();
 
 				return null;
 			}
@@ -228,16 +197,16 @@ public class MyBannerView extends LinearLayout {
 			@Override
 			public VservAdView didFailedToCacheAd(String Error) {
 
-//				Toast.makeText(getContext(), "didFailedToCacheAd",
-//						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), "didFailedToCacheAd",
+						Toast.LENGTH_SHORT).show();
 
 				return null;
 			}
 
 			@Override
 			public void willLeaveApp(VservAdView adView) {
-//				Toast.makeText(getContext(), "willLeaveApp",
-//						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), "willLeaveApp",
+						Toast.LENGTH_SHORT).show();
 			}
 		};
 	}

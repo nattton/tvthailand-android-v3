@@ -40,7 +40,7 @@ public class PreRollAdFactory {
 
     public PreRollAdFactory(Context context){
         this.context = context;
-        this.mRequestQueue = MyVolley.getRequestQueue();
+        this.mRequestQueue = MyVolley.getInstance(context).getRequestQueue();
     }
 
     public PreRollAd getPreRollAd() {
@@ -59,7 +59,7 @@ public class PreRollAdFactory {
     public void load(){
         notifyLoadStart();
         String url = String.format("%s/preroll_advertise?device=android", Constant.BASE_URL);
-        JsonObjectRequest loadRequest = new JsonObjectRequest(Request.Method.GET, url, null, reqSuccessListener(), reqErrorListener());
+        JsonObjectRequest loadRequest = new JsonObjectRequest(Request.Method.GET, url, reqSuccessListener(), reqErrorListener());
         mRequestQueue.add(loadRequest);
     }
 

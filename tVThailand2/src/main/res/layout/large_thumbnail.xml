@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <com.codemobi.android.tvthailand.TouchImageView
         android:id="@+id/iv_largThumbnail"
@@ -12,12 +12,12 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="100dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="50dp"
         android:orientation="vertical"
         android:padding="5dp"
-        android:scrollbars="none" >
+        android:scrollbars="none">
 
         <TextView
             android:id="@+id/description"
@@ -26,14 +26,15 @@
             android:autoLink="all"
             android:gravity="bottom"
             android:text="@string/description"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
     </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="bottom"
-        android:background="#22000000" >
+        android:background="#22000000">
 
         <ImageView
             android:layout_width="match_parent"
@@ -48,14 +49,14 @@
         android:layout_gravity="bottom"
         android:layout_margin="10dp"
         android:gravity="right"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/imb_add_to_fav"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="30dp"
-            android:background="@drawable/button_fav"
+            android:background="@drawable/ic_favorite_border_white_48dp"
             android:contentDescription="@string/add_to_favorite"
             android:visibility="invisible" />
 

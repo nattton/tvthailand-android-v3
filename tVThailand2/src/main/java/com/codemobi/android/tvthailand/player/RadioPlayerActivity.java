@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.android.volley.toolbox.NetworkImageView;
 import com.codemobi.android.tvthailand.MyVolley;
 import com.codemobi.android.tvthailand.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
@@ -44,7 +46,13 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		
+
+		setContentView(R.layout.radioview);
+
+		AdView mAdView = (AdView) findViewById(R.id.adView);
+		AdRequest adRequest = new AdRequest.Builder().build();
+		mAdView.loadAd(adRequest);
+
 		Bundle extras = getIntent().getExtras();
 		
 		String mediaType = extras.getString(EXTRAS_MEDIA_TYPE);
@@ -60,7 +68,6 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 			return;
 		}
 
-		setContentView(R.layout.radioview);
 		
 		mVideoView = (VideoView) findViewById(R.id.buffer);
 		pb = (ProgressBar) findViewById(R.id.probar);
@@ -78,7 +85,7 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 		
 		if (mediaType != null && mediaType.equalsIgnoreCase("radio")) {
 			thumbnaiStation.setVisibility(View.VISIBLE);
-			thumbnaiStation.setImageUrl(thumbnailURL, MyVolley.getImageLoader());
+			thumbnaiStation.setImageUrl(thumbnailURL, MyVolley.getInstance(this).getImageLoader());
 		}
 
 		if (uri == null) {

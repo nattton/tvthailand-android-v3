@@ -14,8 +14,7 @@ import com.codemobi.android.tvthailand.MyVolley;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.MainApplication;
-import com.codemobi.android.tvthailand.MainApplication.TrackerName;
-import com.codemobi.android.tvthailand.ProgramActivity;
+import com.codemobi.android.tvthailand.activity.ProgramActivity;
 import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.adapter.ChannelAdapter;
 import com.codemobi.android.tvthailand.dao.section.ChannelItemDao;
@@ -39,7 +38,7 @@ public class ChannelFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.channel_grid_view, container,
 				false);
 		GridView gridview = (GridView) rootView.findViewById(R.id.gridview);
-		gridview.setAdapter(mAdapter = new ChannelAdapter(MyVolley.getImageLoader()));
+		gridview.setAdapter(mAdapter = new ChannelAdapter(MyVolley.getInstance(getContext()).getImageLoader()));
 		
 		gridview.setOnItemClickListener(new OnItemClickListener() {
 
@@ -48,8 +47,7 @@ public class ChannelFragment extends Fragment {
 					long id) {
                 ChannelItemDao channel = SectionManager.getInstance().getData().getChannels().get(position);
 
-				Tracker t = ((MainApplication) getActivity().getApplication()).getTracker(
-						TrackerName.APP_TRACKER);
+				Tracker t = ((MainApplication) getActivity().getApplication()).getDefaultTracker();
 				t.setScreenName("Channel");
 				t.send(new HitBuilders.AppViewBuilder().setCustomDimension(5, channel.getTitle()).build());
 

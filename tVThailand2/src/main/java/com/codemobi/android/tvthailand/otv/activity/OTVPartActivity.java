@@ -1,10 +1,10 @@
 package com.codemobi.android.tvthailand.otv.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -12,20 +12,17 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.codemobi.android.tvthailand.adapter.OnTapListener;
 import com.codemobi.android.tvthailand.otv.adapter.OTVPartAdapter;
 import com.codemobi.android.tvthailand.player.VitamioVastPlayerActivity;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.MainApplication;
 import com.codemobi.android.tvthailand.R;
-import com.codemobi.android.tvthailand.MainApplication.TrackerName;
 import com.codemobi.android.tvthailand.otv.model.OTVEpisode;
 import com.codemobi.android.tvthailand.player.VastPlayerActivity;
 
-public class OTVPartActivity extends AppCompatActivity implements OnItemClickListener {
+public class OTVPartActivity extends AppCompatActivity implements OnTapListener {
 	public static String EXTRAS_OTV_EPISODE = "EXTRAS_OTV_EPISODE";
 
 	Toolbar toolbar;
@@ -54,32 +51,31 @@ public class OTVPartActivity extends AppCompatActivity implements OnItemClickLis
 	}
 
 	private void initInstances() {
-		mAdapter = new OTVPartAdapter(episode.getParts());
-
-		ListView listview = (ListView) findViewById(R.id.listView);
-		listview.setAdapter(mAdapter);
-		listview.setOnItemClickListener(this);
+		mAdapter = new OTVPartAdapter(this, episode.getParts());
+		RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rvPart);
+		mRecyclerView.setHasFixedSize(true);
+		LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+		mRecyclerView.setLayoutManager(mLayoutManager);
+		mRecyclerView.setAdapter(mAdapter);
+		mAdapter.setOnTapListener(this);
 
 		sendTracker(episode);
 	}
 	
 	private void sendTracker(OTVEpisode episode) {
 		if (episode != null) {
-			Tracker t = ((MainApplication) getApplication())
-					.getTracker(TrackerName.APP_TRACKER);
+			Tracker t = ((MainApplication) getApplication()).getDefaultTracker();
 			t.setScreenName("OTVPart");
 			t.send(new HitBuilders.AppViewBuilder().build());
 
-			Tracker t2 = ((MainApplication) getApplication())
-					.getTracker(TrackerName.OTV_TRACKER);
+			Tracker t2 = ((MainApplication) getApplication()).getOTVTracker();
 			t2.setScreenName("OTVPart");
 			t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, episode.getNameTh()).build());
 		}
 	}
 	
 	@Override
-	public void onItemClick(AdapterView<?> parent, View v, int position,
-			long id) {
+	public void onTapView (int position) {
 
         Intent intentVastPlayer;
 

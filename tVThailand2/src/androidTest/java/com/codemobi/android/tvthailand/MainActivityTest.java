@@ -1,6 +1,6 @@
 package com.codemobi.android.tvthailand;
 
-import com.codemobi.android.tvthailand.account.AccountActivity;
+import com.codemobi.android.tvthailand.activity.ProgramActivity;
 import com.robotium.solo.Solo;
 
 import android.test.ActivityInstrumentationTestCase2;
