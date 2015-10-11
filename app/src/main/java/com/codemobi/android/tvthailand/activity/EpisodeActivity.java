@@ -444,4 +444,9 @@ public class EpisodeActivity extends AppCompatActivity implements OnClickListene
 	public void onLoadFinished() {
 		progressBar.setVisibility(View.GONE);
 	}
+
+	@Override
+	public void onLoadError(String error) {
+
+	}
 }

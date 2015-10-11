@@ -2,23 +2,16 @@ package com.codemobi.android.tvthailand.datasource;
 
 import java.util.ArrayList;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.codemobi.android.tvthailand.MyVolley;
+import com.codemobi.android.tvthailand.manager.http.APIClient;
 import com.codemobi.android.tvthailand.utils.Constant;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
-import io.vov.vitamio.utils.Log;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Retrofit;
 
 public class Episodes {
 
@@ -44,7 +37,7 @@ public class Episodes {
 		this.onProgramChangeListener = onProgramListener;
 	}
 	
-	private void notifyProgramChange(JSONObject jObj) {
+	private void notifyProgramChange(JsonObject jObj) {
 		if (this.onProgramChangeListener != null) {
 			Program program = new Program(jObj);
 			setProgram(program);
@@ -64,33 +57,27 @@ public class Episodes {
 	}
 
 	private Context mContext;
-	private RequestQueue mRequestQueue;
 	private int start = 0;
 	
 	public Episodes(Context context) {
 		this.mContext = context;
-		mRequestQueue = MyVolley.getInstance(context).getRequestQueue();
 	}
 
-	public void jsonMap(JSONArray jArray) {
-		int length = jArray.length();
+	public void jsonMap(JsonArray jArray) {
+		int length = jArray.size();
 		if(length == 0) last = true;
 		for (int i = 0; i < length; i++) {
-			try {
-				JSONObject jObj = jArray.getJSONObject(i);
-				insert(new Episode(mContext, jObj.getString("id"),
-								jObj.getInt("ep"),		
-								jObj.getString("title"),
-								jObj.getString("video_encrypt"),
-								jObj.getString("src_type"),
-								jObj.getString("date"),
-								jObj.getString("view_count"),
-								jObj.getString("parts"),
-								jObj.getString("pwd"))
-						);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+			JsonObject jObj = jArray.get(i).getAsJsonObject();
+			insert(new Episode(mContext, jObj.get("id").getAsString(),
+							jObj.get("ep").getAsInt(),
+							jObj.get("title").getAsString(),
+							jObj.get("video_encrypt").getAsString(),
+							jObj.get("src_type").getAsString(),
+							jObj.get("date").getAsString(),
+							jObj.get("view_count").getAsString(),
+							jObj.get("parts").getAsString(),
+							jObj.get("pwd").getAsString())
+			);
 		}
 	}
 
@@ -108,46 +95,35 @@ public class Episodes {
 		loading = true;
 		
 		notifyLoadStart();
-		String url = String.format("%s/episode/%s/%d?device=android&time=%s", Constant.BASE_URL, this.programId, start, AppUtility.getCurrentTime());
-		JsonObjectRequest loadEpisodeRequest = new JsonObjectRequest(Request.Method.GET, url, reqSuccessListener(), reqErrorListener());
-		loadEpisodeRequest.setShouldCache(shouldCache);
-		mRequestQueue.add(loadEpisodeRequest);
+		Call<JsonObject> call = APIClient.getClient().loadEpisodeByProgram(this.programId, start, Constant.defaultParams);
+		call.enqueue(jsonObjectCallback());
 	}
-	
-	private Listener<JSONObject> reqSuccessListener() {
-		return new Response.Listener<JSONObject>() {
+
+	private Callback<JsonObject> jsonObjectCallback() {
+		return new Callback<JsonObject>() {
 
 			@Override
-			public void onResponse(JSONObject response) {
-				try {
-					if (response.has("info")) {
-						notifyProgramChange(response.getJSONObject("info"));
-					}
-					
-					JSONArray jArray = response.getJSONArray("episodes");
-					if (jArray.length() == 0) {
+			public void onResponse(retrofit.Response<JsonObject> response, Retrofit retrofit) {
+				if (response.isSuccess())
+					if (response.body().has("info")) {
+						notifyProgramChange(response.body().getAsJsonObject("info"));
+
+					JsonArray jArray = response.body().get("episodes").getAsJsonArray();
+					if (jArray.size() == 0) {
 						last = true;
 					}
-					
+
 					if (start == 0) {
 						clear();
 					}
 					jsonMap(jArray);
 					loading = false;
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
-				
 				notifyLoadFinish();
 			}
-		};
-	}
-
-	private ErrorListener reqErrorListener() {
-		return new Response.ErrorListener() {
 
 			@Override
-			public void onErrorResponse(VolleyError error) {
+			public void onFailure(Throwable t) {
 				notifyLoadFinish();
 			}
 		};

@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-import com.codemobi.android.tvthailand.MyVolley;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.MainApplication;
@@ -38,7 +37,7 @@ public class ChannelFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.channel_grid_view, container,
 				false);
 		GridView gridview = (GridView) rootView.findViewById(R.id.gridview);
-		gridview.setAdapter(mAdapter = new ChannelAdapter(MyVolley.getInstance(getContext()).getImageLoader()));
+		gridview.setAdapter(mAdapter = new ChannelAdapter());
 		
 		gridview.setOnItemClickListener(new OnItemClickListener() {
 

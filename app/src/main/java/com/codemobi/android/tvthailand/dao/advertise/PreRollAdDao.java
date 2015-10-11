@@ -1,13 +1,11 @@
-package com.codemobi.android.tvthailand.datasource;
+package com.codemobi.android.tvthailand.dao.advertise;
 
-/**
- * Created by nattapong on 11/13/14 AD.
- * Pre Roll Ad
- */
-public class PreRollAd {
-    private String name;
-    private String url;
-    private int skipTime;
+import com.google.gson.annotations.SerializedName;
+
+public class PreRollAdDao {
+    @SerializedName("name") private String name;
+    @SerializedName("url") private String url;
+    @SerializedName("skip_time") private int skipTime;
 
     public String getName() {
         return name;
@@ -26,7 +24,9 @@ public class PreRollAd {
     }
 
     public int getSkipTime() {
-        return skipTime;
+        if (skipTime == 0)
+            return skipTime;
+        return 7000;
     }
 
     public void setSkipTime(int skipTime) {

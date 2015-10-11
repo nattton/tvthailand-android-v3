@@ -2,11 +2,10 @@ package com.codemobi.android.tvthailand.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.codemobi.android.tvthailand.MainApplication;
-import com.codemobi.android.tvthailand.MyVolley;
 import com.codemobi.android.tvthailand.R;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -33,9 +32,7 @@ public class MoreDetailActivity extends Activity{
 		setTitle(title_name);
 		((TextView)findViewById(R.id.more_detail_full_description)).setText(detail);
 		((TextView)findViewById(R.id.more_detail_time)).setText(descriptionStr);
-		NetworkImageView thumbnail_imv = (NetworkImageView)findViewById(R.id.more_detail_thumbnail);
-//		thumbnail_imv.setImageUrl(thumbStr, MyVolley.getImageLoader());
-		
+		ImageView thumbnail_imv = (ImageView)findViewById(R.id.more_detail_thumbnail);
 		Tracker t = ((MainApplication)getApplication()).getDefaultTracker();
 		t.setScreenName("MoreDetail");
 		t.send(new HitBuilders.AppViewBuilder().build());

@@ -33,20 +33,19 @@
 
     <TextView
         android:id="@+id/textViewNoContent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/no_content"
         android:textSize="20sp"
         android:visibility="gone" />
 
-    <com.google.android.gms.ads.AdView
+    <com.codemobi.android.tvthailand.ads.MyBannerView
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        app:adSize="BANNER"
-        app:adUnitId="@string/banner_ad_unit_id" />
+        app:autoLoad="true" />
 </RelativeLayout>

@@ -7,12 +7,12 @@ import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.codemobi.android.tvthailand.MainApplication;
-import com.codemobi.android.tvthailand.MyVolley;
 import com.codemobi.android.tvthailand.R;
-import com.codemobi.android.tvthailand.TouchImageView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.contentprovider.MyProgramContentProvider;
@@ -56,10 +56,6 @@ public class LargeThumbnailActivity extends Activity implements
 				buttonFav = (ImageButton) findViewById(R.id.imb_add_to_fav);
 				buttonFav.setOnClickListener(this);
 				buttonFav.setVisibility(View.VISIBLE);
-
-//				buttonMore = (ImageButton) findViewById(R.id.btn_more_detail);
-//				buttonMore.setOnClickListener(this);
-//				buttonMore.setVisibility(View.VISIBLE);
 				
 				loadProgramDB();
 			}
@@ -71,9 +67,11 @@ public class LargeThumbnailActivity extends Activity implements
 			finish();
 		}
 
-		TouchImageView img = (TouchImageView) findViewById(R.id.iv_largThumbnail);
-		img.setImageUrl(larg_thumbnail_url, MyVolley.getInstance(this).getImageLoader());
-		img.setMaxZoom(4f);
+		ImageView img = (ImageView) findViewById(R.id.iv_largThumbnail);
+		Glide.with(this)
+				.load(larg_thumbnail_url)
+				.crossFade()
+				.into(img);
 		
 		Tracker t = ((MainApplication)getApplication()).getDefaultTracker();
 		t.setScreenName("LargeThumbnail");
@@ -98,7 +96,7 @@ public class LargeThumbnailActivity extends Activity implements
 	
 	private void loadProgramDB() {
 		String where = ProgramTable.ProgramColumns.PROGRAM_ID + " = " + programId;
-		mDaoMyProgram = new Dao<MyProgramModel>(MyProgramModel.class, this,
+		mDaoMyProgram = new Dao<>(MyProgramModel.class, this,
 				MyProgramContentProvider.CONTENT_URI, where);
 		mMyProgram = mDaoMyProgram.get(0);
 		

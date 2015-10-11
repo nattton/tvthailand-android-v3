@@ -1,26 +1,20 @@
 package com.codemobi.android.tvthailand.datasource;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.codemobi.android.tvthailand.MyVolley;
+import com.codemobi.android.tvthailand.manager.http.APIClient;
 import com.codemobi.android.tvthailand.utils.Constant;
-import com.codemobi.android.tvthailand.utils.Contextor;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Retrofit;
 
 public class Programs {
 	private static final String EMPTY_STRING = "";
 	private static final String TAG = "Programs";
-	private RequestQueue mRequestQueue;
 	private ArrayList<Program> programs = new ArrayList<>();
 	private boolean loading = false;
 	private boolean last = false;
@@ -32,7 +26,7 @@ public class Programs {
 	}
 
 	public interface OnProgramChangeListener {
-		void onProgramChange(Programs Programs);
+		void onProgramChange(Programs programs);
 	}
 
 	private OnProgramChangeListener onProgramChangeListener;
@@ -43,67 +37,57 @@ public class Programs {
 	}
 
 	public Programs() {
-		mRequestQueue = MyVolley.getInstance(Contextor.getInstance().getContext()).getRequestQueue();
+
 	}
 
 	private int start = 0;
 
-	public void jsonMap(JSONArray jArray) {
-		int length = jArray.length();
+	public void jsonMap(JsonArray jArray) {
+		int length = jArray.size();
 		if (length == 0)
 			last = true;
 		for (int i = 0; i < length; i++) {
-			try {
-				JSONObject jObj = jArray.getJSONObject(i);
-				String lastEpname = jObj.has("last_epname") ? jObj
-						.getString("last_epname") : "";
-				float rating = jObj.has("rating") ? jObj.getLong("rating") : 0;
-				String id = jObj.has("id") ? jObj.getString("id") : EMPTY_STRING;
-				String title = jObj.has("title") ? jObj.getString("title") : EMPTY_STRING;
-				String thumbnail = jObj.has("thumbnail") ? jObj.getString("thumbnail") : EMPTY_STRING;
-				String description = jObj.has("description") ? jObj.getString("description") : EMPTY_STRING;
-				int isOTV = jObj.has("is_otv") ? jObj.getInt("is_otv") : 0;
-				String otvId = jObj.has("otv_id") ? jObj.getString("otv_id") : EMPTY_STRING;
-				String otvLogo = jObj.has("otv_logo") ? jObj.getString("otv_logo") : EMPTY_STRING;
-				insert(new Program(id, title, thumbnail, description, lastEpname, isOTV, otvId, otvLogo));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+			JsonObject jObj = jArray.get(i).getAsJsonObject();
+			String lastEpname = jObj.has("last_epname") ? jObj
+					.get("last_epname").getAsString() : "";
+			String id = jObj.has("id") ? jObj.get("id").getAsString() : EMPTY_STRING;
+			String title = jObj.has("title") ? jObj.get("title").getAsString() : EMPTY_STRING;
+			String thumbnail = jObj.has("thumbnail") ? jObj.get("thumbnail").getAsString() : EMPTY_STRING;
+			String description = jObj.has("description") ? jObj.get("description").getAsString() : EMPTY_STRING;
+			int isOTV = jObj.has("is_otv") ? jObj.get("is_otv").getAsInt() : 0;
+			String otvId = jObj.has("otv_id") ? jObj.get("otv_id").getAsString() : EMPTY_STRING;
+			String otvLogo = jObj.has("otv_logo") ? jObj.get("otv_logo").getAsString() : EMPTY_STRING;
+			insert(new Program(id, title, thumbnail, description, lastEpname, isOTV, otvId, otvLogo));
 		}
 	}
-	
-	private Response.Listener<JSONObject> reqSuccessListenner() {
-		return new Response.Listener<JSONObject>() {
 
+	private Callback<JsonObject> jsonObjectCallback() {
+		return new Callback<JsonObject>() {
 			@Override
-			public void onResponse(JSONObject response) {
-				if (0 == start) {
-					clear();
+			public void onResponse(retrofit.Response<JsonObject> response, Retrofit retrofit) {
+				if (response.isSuccess()) {
+					if (0 == start) {
+						clear();
+					}
+					try {
+						JsonArray programArr = response.body().getAsJsonArray("programs");
+						jsonMap(programArr);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					loading = false;
 				}
-				try {
-					JSONArray programArr = response.getJSONArray("programs");
-					jsonMap(programArr);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
 				notifyLoadFinish();
-				loading = false;
 			}
-			
-		};
-	}
-	
-	private Response.ErrorListener reqErrorListener() {
-		return new Response.ErrorListener() {
 
 			@Override
-			public void onErrorResponse(VolleyError error) {
-				
+			public void onFailure(Throwable t) {
+				notifyLoadFinish();
+				notifyLoadError("Cannot load data.");
 			}
 		};
 	}
-	
+
 	public void loadProgramByCategory(String id, int start) {
 		this.start = start;
 		if (0 == start)
@@ -113,10 +97,8 @@ public class Programs {
 		loading = true;
 
 		notifyLoadStart();
-		String url = String.format("%s/category/%s/%d?device=android&time=%s", Constant.BASE_URL, id, start, AppUtility.getCurrentTime());
-		JsonObjectRequest loadProgramRequest = new JsonObjectRequest(Method.GET, url,
-				reqSuccessListenner(), reqErrorListener());
-		mRequestQueue.add(loadProgramRequest);
+		Call<JsonObject> call = APIClient.getClient().loadProgramByCategory(id, start, Constant.defaultParams);
+		call.enqueue(jsonObjectCallback());
 	}
 
 	public void loadProgramByChannel(String id, int start) {
@@ -126,12 +108,10 @@ public class Programs {
 		if (loading || last)
 			return;
 		loading = true;
-		
+
 		notifyLoadStart();
-		String url = String.format("%s/channel/%s/%d?device=android&time=%s", Constant.BASE_URL, id, start, AppUtility.getCurrentTime());
-		JsonObjectRequest loadProgramRequest = new JsonObjectRequest(Method.GET, url,
-				reqSuccessListenner(), reqErrorListener());
-		mRequestQueue.add(loadProgramRequest);
+		Call<JsonObject> call = APIClient.getClient().loadProgramByChannel(id, start, Constant.defaultParams);
+		call.enqueue(jsonObjectCallback());
 	}
 
 	public void loadProgramBySearch(String keyword, int start) {
@@ -141,19 +121,12 @@ public class Programs {
 		if (loading || last)
 			return;
 		loading = false;
-		
-		try {
-			keyword = URLEncoder.encode(keyword, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
 
-		}
-		
 		notifyLoadStart();
-		String url = String.format("%s/search/%d?&keyword=%s&device=android&time=%s",
-                Constant.BASE_URL, start, keyword, AppUtility.getCurrentTime());
-		JsonObjectRequest loadProgramRequest = new JsonObjectRequest(Method.GET, url,
-				reqSuccessListenner(), reqErrorListener());
-		mRequestQueue.add(loadProgramRequest);
+		Map<String, String> params = Constant.defaultParams;
+		params.put("keyword", keyword);
+		Call<JsonObject> call = APIClient.getClient().loadProgramBySearch(start, params);
+		call.enqueue(jsonObjectCallback());
 	}
 
 	public void insert(Program program) {
@@ -174,6 +147,12 @@ public class Programs {
 	private void notifyLoadFinish() {
 		if (this.onLoadDataListener != null) {
 			this.onLoadDataListener.onLoadFinished();
+		}
+	}
+
+	private void notifyLoadError(String error) {
+		if (this.onLoadDataListener != null) {
+			this.onLoadDataListener.onLoadError(error);
 		}
 	}
 

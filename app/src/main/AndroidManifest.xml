@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.codemobi.android.tvthailand"
-    android:installLocation="auto" >
+    android:installLocation="auto">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -12,10 +12,10 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <permission
-        android:name="com.codemobi.android.tvthailand.permission.C2D_MESSAGE"
+        android:name="${applicationId}.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.codemobi.android.tvthailand.permission.C2D_MESSAGE" />
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
     <application
         android:name=".MainApplication"
@@ -23,30 +23,32 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
+
         <activity
             android:name=".MainActivity"
             android:configChanges="screenSize|keyboardHidden"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".activity.SearchProgramActivity" />
+                android:value="com.codemobi.android.tvthailand.activity.SearchProgramActivity" />
         </activity>
         <activity
             android:name=".activity.SearchProgramActivity"
             android:label="Search"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
-
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
             </intent-filter>
 
             <meta-data
@@ -66,10 +68,6 @@
             android:label="Full Detail"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".activity.RatingActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:theme="@android:style/Theme.Dialog" />
-        <activity
             android:name=".activity.PartActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="Parts" />
@@ -87,7 +85,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateAlwaysHidden" >
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -112,8 +110,7 @@
             android:label="TV Thailand Player"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateAlwaysHidden" >
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activity.ProgramLoaderActivity"
             android:label="My Favorites" />
@@ -157,25 +154,16 @@
             android:label="OTV Part" />
 
         <provider
-            android:name="com.codemobi.android.tvthailand.contentprovider.ProgramSuggestionProvider"
-            android:authorities="com.codemobi.android.tvthailand.contentprovider.ProgramSuggestionProvider"
-            android:exported="false" />
+            android:name=".contentprovider.ProgramSuggestionProvider"
+            android:authorities="${applicationId}.contentprovider.ProgramSuggestionProvider" />
         <provider
-            android:name="com.codemobi.android.tvthailand.contentprovider.ProgramContentProvider"
-            android:authorities="com.codemobi.android.tvthailand.contentprovider.ProgramContentProvider"
-            android:exported="false" />
+            android:name=".contentprovider.MyProgramContentProvider"
+            android:authorities="${applicationId}.contentprovider.MyProgramContentProvider"
+            android:exported="true" />
         <provider
-            android:name="com.codemobi.android.tvthailand.contentprovider.WhatsNewContentProvider"
-            android:authorities="com.codemobi.android.tvthailand.contentprovider.WhatsNewContentProvider"
-            android:exported="false" />
-        <provider
-            android:name="com.codemobi.android.tvthailand.contentprovider.MyProgramContentProvider"
-            android:authorities="com.codemobi.android.tvthailand.contentprovider.MyProgramContentProvider"
-            android:exported="false" />
-        <provider
-            android:name="com.codemobi.android.tvthailand.contentprovider.EpisodeContentProvider"
-            android:authorities="com.codemobi.android.tvthailand.contentprovider.EpisodeContentProvider"
-            android:exported="false" />
+            android:name=".contentprovider.EpisodeContentProvider"
+            android:authorities="${applicationId}.contentprovider.EpisodeContentProvider"
+            android:exported="true" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -184,17 +172,14 @@
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+        <activity
+            android:name="com.facebook.ads.InterstitialAdActivity"
+            android:configChanges="keyboardHidden|orientation" />
 
         <meta-data
             android:name="com.crashlytics.ApiKey"
             android:value="3120d8f68ae38afbc965e336f679243187ec8cd9" />
 
-        <activity
-            android:name=".activity.WebFullscreenActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_web_fullscreen"
-            android:theme="@style/FullscreenTheme" >
-        </activity>
     </application>
 
 </manifest>

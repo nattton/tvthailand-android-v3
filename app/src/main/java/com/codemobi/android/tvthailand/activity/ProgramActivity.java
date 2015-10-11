@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -26,23 +29,22 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.adapter.OnTapListener;
 import com.codemobi.android.tvthailand.adapter.ProgramListAdapter;
+import com.codemobi.android.tvthailand.dao.advertise.PreRollAdDao;
 import com.codemobi.android.tvthailand.datasource.OnLoadDataListener;
-import com.codemobi.android.tvthailand.datasource.PreRollAd;
-import com.codemobi.android.tvthailand.datasource.PreRollAdFactory;
+import com.codemobi.android.tvthailand.dao.advertise.PreRollAdFactory;
 import com.codemobi.android.tvthailand.datasource.Program;
 import com.codemobi.android.tvthailand.datasource.Programs;
 import com.codemobi.android.tvthailand.player.VastContentPlayerActivity;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.rey.material.widget.ProgressView;
+import com.vserv.android.ads.api.VservAdView;
+import com.vserv.android.ads.common.VservAdListener;
 
 public class ProgramActivity extends AppCompatActivity implements
 		OnLoadDataListener, OnTapListener, SwipeRefreshLayout.OnRefreshListener {
 
 	Toolbar toolbar;
 	SwipeRefreshLayout swipeLayout;
+	CoordinatorLayout rootLayout;
 
 	public static final String EXTRAS_MODE = "EXTRAS_MODE";
     public static final String EXTRAS_ID = "EXTRAS_ID";
@@ -67,7 +69,8 @@ public class ProgramActivity extends AppCompatActivity implements
 	private ProgressView progressView;
 	private TextView textViewNoContent;
 
-	InterstitialAd mInterstitialAd;
+	private VservAdView vservAdView;
+	private VservAdListener mAdListener;
 
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
@@ -78,22 +81,6 @@ public class ProgramActivity extends AppCompatActivity implements
 		initExtras();
 		initToolbar();
 		initInstances();
-
-		AdView mAdView = (AdView) findViewById(R.id.adView);
-		AdRequest adRequest = new AdRequest.Builder().build();
-		mAdView.loadAd(adRequest);
-
-		mInterstitialAd = new InterstitialAd(this);
-		mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_unit_id));
-
-		mInterstitialAd.setAdListener(new AdListener() {
-			@Override
-			public void onAdClosed() {
-				requestNewInterstitial();
-				playVideo(url);
-			}
-		});
-		requestNewInterstitial();
 	}
 
 	private void initExtras() {
@@ -120,6 +107,7 @@ public class ProgramActivity extends AppCompatActivity implements
 	}
 
 	private void initInstances() {
+		rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
 		progressView = (ProgressView)findViewById(R.id.progressView);
 		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 		swipeLayout.setOnRefreshListener(this);
@@ -160,31 +148,17 @@ public class ProgramActivity extends AppCompatActivity implements
 		} else {
 			live_frame_ll.setVisibility(View.GONE);
 		}
+
 		ImageButton watch_live_btn = (ImageButton) findViewById(R.id.watch_live_btn);
-		watch_live_btn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (mInterstitialAd.isLoaded()) {
-					mInterstitialAd.show();
-				} else {
-					playVideo(url);
-				}
-			}
-		});
-
 		TextView watch_live_text = (TextView) findViewById(R.id.watch_live_txt);
-		watch_live_text.setOnClickListener(new OnClickListener() {
-
+		OnClickListener clickLive = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mInterstitialAd.isLoaded()) {
-					mInterstitialAd.show();
-				} else {
-					playVideo(url);
-				}
+				startAds();
 			}
-		});
+		};
+		watch_live_btn.setOnClickListener(clickLive);
+		watch_live_text.setOnClickListener(clickLive);
 
 
 		mPrograms.setOnProgramChangeListener(new Programs.OnProgramChangeListener() {
@@ -206,7 +180,6 @@ public class ProgramActivity extends AppCompatActivity implements
 	@Override
 	public void onRefresh() {
 		loadProgram(0);
-		Log.d("Refersh", "onRefresh");
 	}
 
 	@Override
@@ -247,7 +220,7 @@ public class ProgramActivity extends AppCompatActivity implements
 			loadProgram(0);
 			break;
 		case R.id.play:
-			playVideo(url);
+			startAds();
 			break;
 		default:
 			break;
@@ -266,9 +239,20 @@ public class ProgramActivity extends AppCompatActivity implements
 		swipeLayout.setRefreshing(false);
 	}
 
+	@Override
+	public void onLoadError(String error) {
+		Snackbar.make(rootLayout, error, Snackbar.LENGTH_LONG)
+				.setAction("Open Settings", new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						startActivity(new Intent(Settings.ACTION_SETTINGS));
+					}
+				}).show();
+	}
+
 	private void playVideo(final String videoUrl) {
 
-        final PreRollAdFactory preRollAdFactory = new PreRollAdFactory(this.getApplicationContext());
+        final PreRollAdFactory preRollAdFactory = new PreRollAdFactory();
         preRollAdFactory.setOnLoadListener(new PreRollAdFactory.OnLoadListener() {
             @Override
             public void onStart() {
@@ -280,7 +264,7 @@ public class ProgramActivity extends AppCompatActivity implements
                 Intent intentVideo = new Intent(ProgramActivity.this, VastContentPlayerActivity.class);
                 intentVideo.putExtra(VastContentPlayerActivity.EXTRAS_CONTENT_URL, videoUrl);
 
-                PreRollAd ad = preRollAdFactory.getPreRollAd();
+                PreRollAdDao ad = preRollAdFactory.getPreRollAd();
                 if (ad != null) {
                     intentVideo.putExtra(VastContentPlayerActivity.EXTRAS_TAG_URL, ad.getUrl());
                     intentVideo.putExtra(VastContentPlayerActivity.EXTRAS_SKIP_TIME, ad.getSkipTime());
@@ -307,8 +291,65 @@ public class ProgramActivity extends AppCompatActivity implements
 		}
 	}
 
-	private void requestNewInterstitial() {
-		AdRequest adRequest = new AdRequest.Builder().build();
-		mInterstitialAd.loadAd(adRequest);
+	private void startAds() {
+		adListenerInitialization();
+		vservAdView = new VservAdView(this, "", VservAdView.UX_INTERSTITIAL);
+		vservAdView.setAdListener(mAdListener);
+		vservAdView.setZoneId(getResources().getString(R.string.vserv_interstitial_ad_unit_id));
+		vservAdView.setUxType(VservAdView.UX_INTERSTITIAL);
+		vservAdView.cacheAd();
+	}
+
+	private void adListenerInitialization() {
+		mAdListener = new VservAdListener() {
+
+			@Override
+			public void didInteractWithAd(VservAdView adView) {
+				Log.d("Vserv", "adViewDidLoadAd");
+			}
+
+			@Override
+			public void adViewDidLoadAd(VservAdView adView) {
+				Log.d("Vserv", "adViewDidLoadAd");
+			}
+
+			@Override
+			public void willPresentOverlay(VservAdView adView) {
+				Log.d("Vserv", "willPresentOverlay");
+			}
+
+			@Override
+			public void willDismissOverlay(VservAdView adView) {
+				Log.d("Vserv", "willDismissOverlay");
+				playVideo(url);
+			}
+
+			@Override
+			public void adViewDidCacheAd(VservAdView adView) {
+				Log.d("Vserv", "adViewDidCacheAd");
+				if (vservAdView != null) {
+					vservAdView.showAd();
+				}
+			}
+
+			@Override
+			public VservAdView didFailedToLoadAd(String arg0) {
+				Log.d("VservAdView", "didFailedToLoadAd");
+				playVideo(url);
+				return null;
+			}
+
+			@Override
+			public VservAdView didFailedToCacheAd(String Error) {
+				Log.d("VservAdView", "didFailedToCacheAd");
+				playVideo(url);
+				return null;
+			}
+
+			@Override
+			public void willLeaveApp(VservAdView adView) {
+				Log.d("Vserv", "willLeaveApp");
+			}
+		};
 	}
 }

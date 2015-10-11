@@ -5,59 +5,82 @@
     android:layout_height="match_parent"
     android:background="@color/card_bg">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-    </android.support.design.widget.AppBarLayout>
-
-    <FrameLayout
-        android:id="@+id/live_frame_ll"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:layout_below="@id/appBarLayout"
-        android:background="#4f4f4f"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#55000000"
-            android:orientation="horizontal"
-            android:padding="10dp">
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/watch_live_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/watch_live"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+            </android.support.design.widget.AppBarLayout>
 
-                <ImageButton
-                    android:id="@+id/watch_live_btn"
-                    android:layout_width="wrap_content"
+            <FrameLayout
+                android:id="@+id/live_frame_ll"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_below="@id/appBarLayout"
+                android:background="#4f4f4f"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/button_preview_style" />
-            </LinearLayout>
+                    android:background="#55000000"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/watch_live_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/watch_live"
+                            android:textColor="#FFFFFF"
+                            android:textSize="30sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/watch_live_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button_preview_style" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </FrameLayout>
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/live_frame_ll">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvProgram"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </android.support.v4.widget.SwipeRefreshLayout>
         </RelativeLayout>
-    </FrameLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <com.rey.material.widget.ProgressView
         android:id="@+id/progressView"
@@ -68,36 +91,24 @@
         app:pv_autostart="true"
         app:pv_circular="true"
         app:pv_progressMode="indeterminate"
-        app:pv_progressStyle="@style/Material.Drawable.CircularProgress"/>
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/live_frame_ll">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvProgram"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+        app:pv_progressStyle="@style/Material.Drawable.CircularProgress" />
 
     <TextView
         android:id="@+id/textViewNoContent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:text="@string/no_content"
         android:textSize="20sp"
         android:visibility="gone" />
 
-    <com.google.android.gms.ads.AdView
+    <com.codemobi.android.tvthailand.ads.MyBannerView
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        app:adSize="BANNER"
-        app:adUnitId="@string/banner_ad_unit_id" />
+        app:autoLoad="true" />
 
 </RelativeLayout>

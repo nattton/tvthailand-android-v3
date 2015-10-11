@@ -4,7 +4,6 @@ import com.bumptech.glide.Glide;
 import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.view.SquareImageView;
 import com.codemobi.android.tvthailand.dao.section.ChannelItemDao;
-import com.android.volley.toolbox.ImageLoader;
 import com.codemobi.android.tvthailand.manager.SectionManager;
 
 import android.content.Context;
@@ -15,11 +14,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class ChannelAdapter extends BaseAdapter{
-	private ImageLoader imageLoader;
 	
-	public ChannelAdapter(ImageLoader mImageLoader) {
+	public ChannelAdapter() {
 
-        imageLoader = mImageLoader;
 	}
 
 	private static final class ViewHolder {

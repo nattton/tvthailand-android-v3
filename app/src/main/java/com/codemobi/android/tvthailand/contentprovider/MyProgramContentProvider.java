@@ -3,6 +3,7 @@ package com.codemobi.android.tvthailand.contentprovider;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import com.codemobi.android.tvthailand.BuildConfig;
 import com.codemobi.android.tvthailand.database.DatabaseHelper;
 import com.codemobi.android.tvthailand.database.MyProgramTable;
 import com.codemobi.android.tvthailand.database.MyProgramTable.MyProgramColumns;
@@ -30,7 +31,7 @@ public class MyProgramContentProvider extends ContentProvider {
 	  private static final int PROGRAM_ID = 3;
 	  private static final int SEARCH = 4;
 
-	  private static final String AUTHORITY = "com.codemobi.android.tvthailand.contentprovider.MyProgramContentProvider";
+	  private static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".contentprovider.MyProgramContentProvider";
 
 	  private static final String BASE_PATH = "programs";
 	  public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
@@ -50,13 +51,11 @@ public class MyProgramContentProvider extends ContentProvider {
 	    sURIMatcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_SHORTCUT, SEARCH);
 	    sURIMatcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_SHORTCUT + "/*", SEARCH);
 	  }
-	  
-
 
 	  @Override
 	  public boolean onCreate() {
 	    database = new DatabaseHelper(getContext());
-	    return (database == null) ? false : true;
+	    return database != null;
 	  }
 
 	  @Override
@@ -103,7 +102,7 @@ public class MyProgramContentProvider extends ContentProvider {
 	  public Uri insert(Uri uri, ContentValues values) {
 	    int uriType = sURIMatcher.match(uri);
 	    SQLiteDatabase sqlDB = database.getWritableDatabase();
-	    long id = 0;
+	    long id;
 	    switch (uriType) {
 	    case PROGRAMS:
 	      id = sqlDB.insert(MyProgramTable.TABLE_NAME, null, values);
@@ -119,7 +118,7 @@ public class MyProgramContentProvider extends ContentProvider {
 	  public int delete(Uri uri, String selection, String[] selectionArgs) {
 	    int uriType = sURIMatcher.match(uri);
 	    SQLiteDatabase sqlDB = database.getWritableDatabase();
-	    int rowsDeleted = 0;
+	    int rowsDeleted;
 	    switch (uriType) {
 	    case PROGRAMS:
 	      rowsDeleted = sqlDB.delete(MyProgramTable.TABLE_NAME, selection,
@@ -151,7 +150,7 @@ public class MyProgramContentProvider extends ContentProvider {
 
 	    int uriType = sURIMatcher.match(uri);
 	    SQLiteDatabase sqlDB = database.getWritableDatabase();
-	    int rowsUpdated = 0;
+	    int rowsUpdated;
 	    switch (uriType) {
 	    case PROGRAMS:
 	      rowsUpdated = sqlDB.update(MyProgramTable.TABLE_NAME, 
@@ -190,8 +189,8 @@ public class MyProgramContentProvider extends ContentProvider {
 	        MyProgramColumns.MY_VOTE, MyProgramColumns.TIME_VIEWED,
 	        ProgramColumns._ID };
 	    if (projection != null) {
-	      HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
-	      HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));
+	      HashSet<String> requestedColumns = new HashSet<>(Arrays.asList(projection));
+	      HashSet<String> availableColumns = new HashSet<>(Arrays.asList(available));
 	      // Check if all columns which are requested are available
 	      if (!availableColumns.containsAll(requestedColumns)) {
 	        throw new IllegalArgumentException("Unknown columns in projection");

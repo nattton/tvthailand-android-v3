@@ -27,7 +27,7 @@
         android:layout_height="130dp"
         android:background="#000000" >
 
-        <com.android.volley.toolbox.NetworkImageView
+        <ImageView
             android:id="@+id/iv_tri_point_ep"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -17,8 +17,6 @@ import android.widget.TextView;
 
 import com.codemobi.android.tvthailand.MainApplication;
 import com.codemobi.android.tvthailand.R;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.codemobi.android.tvthailand.adapter.ProgramCursorAdapter;
 import com.codemobi.android.tvthailand.contentprovider.MyProgramContentProvider;
@@ -50,10 +48,6 @@ public class ProgramLoaderActivity extends AppCompatActivity implements
 		initExtras();
 		initToolbar();
 		initInstance();
-
-		AdView mAdView = (AdView) findViewById(R.id.adView);
-		AdRequest adRequest = new AdRequest.Builder().build();
-		mAdView.loadAd(adRequest);
 	}
 
 	private void initExtras() {

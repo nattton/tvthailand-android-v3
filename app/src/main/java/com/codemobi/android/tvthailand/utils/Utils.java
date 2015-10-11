@@ -5,11 +5,15 @@ import android.content.pm.PackageInfo;
 import android.provider.Settings;
 import android.text.format.Time;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.codemobi.android.tvthailand.MyVolley;
+import com.codemobi.android.tvthailand.R;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
 
 /**
  * Created by nattapong
@@ -30,42 +34,29 @@ public class Utils {
         mContext = Contextor.getInstance().getContext();
     }
 
-    public String getCurrentTime() {
-        Time today = new Time(Time.getCurrentTimezone());
-        today.setToNow();
-        return today.format("%Y%m%d%H%M");
-    }
-
     public String getDeviceId() {
         return Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
-    public String getVersionName() {
-        try {
-            PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
-            return pInfo.versionName;
-        } catch (Exception e) {
-            return "1.0";
-        }
-    }
-
     public void viewEpisode(String programId) {
-        String url = String.format("%s/view_episode/%s?device=android",
-                Constant.BASE_URL, programId);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        String url = String.format("%s/view_episode/%s?device=android", Constant.BASE_URL, programId);
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder()
+                .get()
+                .url(url)
+                .build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
-            public void onResponse(String response) {
+            public void onFailure(Request request, IOException e) {
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onResponse(Response response) throws IOException {
 
             }
         });
-        stringRequest.setShouldCache(false);
-        MyVolley.getInstance(Contextor.getInstance().getContext()).getRequestQueue().add(stringRequest);
     }
 
 }

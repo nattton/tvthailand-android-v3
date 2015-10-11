@@ -8,15 +8,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.toolbox.NetworkImageView;
-import com.codemobi.android.tvthailand.MyVolley;
+import com.bumptech.glide.Glide;
 import com.codemobi.android.tvthailand.R;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
@@ -49,10 +47,6 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 
 		setContentView(R.layout.radioview);
 
-		AdView mAdView = (AdView) findViewById(R.id.adView);
-		AdRequest adRequest = new AdRequest.Builder().build();
-		mAdView.loadAd(adRequest);
-
 		Bundle extras = getIntent().getExtras();
 		
 		String mediaType = extras.getString(EXTRAS_MEDIA_TYPE);
@@ -73,7 +67,7 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 		pb = (ProgressBar) findViewById(R.id.probar);
 		downloadRateView = (TextView) findViewById(R.id.download_rate);
 		loadRateView = (TextView) findViewById(R.id.load_rate);
-        NetworkImageView thumbnaiStation = (NetworkImageView) findViewById(R.id.thumbnail_station);
+		ImageView thumbnaiStation = (ImageView) findViewById(R.id.thumbnail_station);
 		
 		Uri uri = getIntent().getData();
 
@@ -85,7 +79,10 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 		
 		if (mediaType != null && mediaType.equalsIgnoreCase("radio")) {
 			thumbnaiStation.setVisibility(View.VISIBLE);
-			thumbnaiStation.setImageUrl(thumbnailURL, MyVolley.getInstance(this).getImageLoader());
+			Glide.with(this).load(thumbnailURL)
+					.placeholder(R.drawable.ic_launcher)
+					.crossFade()
+					.into(thumbnaiStation);
 		}
 
 		if (uri == null) {

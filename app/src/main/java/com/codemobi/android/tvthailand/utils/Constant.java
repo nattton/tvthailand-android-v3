@@ -1,20 +1,18 @@
 package com.codemobi.android.tvthailand.utils;
 
+import com.codemobi.android.tvthailand.BuildConfig;
+
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-/**
- * Created by nattapong on 12/12/14 AD.
- */
 public class Constant {
 
-    public static final String DEVELOPER_KEY = "AIzaSyAecHtNarrTvvwlb-OjS-wRlqCRFuRUT0o";
-    public static final String BASE_URL = "http://tv.makathon.com/api3";
+    public static final String BASE_URL = BuildConfig.BASE_URL;
 
-    public static final String UserAgentChrome = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36 ";
+    public static final String DEVELOPER_KEY = "AIzaSyAecHtNarrTvvwlb-OjS-wRlqCRFuRUT0o";
+
+    public static String UserAgentChrome = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36";
     public static final String UserAgentTablet = "Mozilla/5.0 (iPad; CPU OS 7_1_1 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Version/7.0 Mobile/11D201 Safari/9537.53";
     public static final String UserAgentMobile = "Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_1 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Version/7.0 Mobile/11D201 Safari/9537.53";
 
@@ -22,16 +20,12 @@ public class Constant {
 
     public static final String PREF_NAME = "TV_THAILAND";
     public static final String PREF_SECTION =  "SECTION";
-    public static Map<String, List<String>> getDefaultParams() {
-        HashMap<String, List<String>> params = new HashMap<>();
-        params.put("device", Arrays.asList("android"));
-        params.put("app_version", Arrays.asList(Utils.getInstance().getVersionName()));
-        return Collections.unmodifiableMap(params);
-    }
 
-    public static final String VSERV_BILLBOARD = "c84927ed"; // 8b2cf286 Test 8063
-    public static final String VSERV_BANNER = "ceb27b33"; // 2080f326 Test 20846
-    public static final String VSERV_TEST_DEVICE = ""; // 3e2b8a58-2ac0-4dfd-91b5-b836161cac11
-    public static final String FACEBOOK_INTERSTITIAL = "202355306578303_529399410540556";
-    public static final String FACEBOOK_BANNER = "202355306578303_529495700530927";
+    public static final HashMap<String, String> defaultParams = new HashMap<>();
+    static {
+        defaultParams.put("device", "android");
+        defaultParams.put("appId", String.valueOf(BuildConfig.APPLICATION_ID));
+        defaultParams.put("version", BuildConfig.VERSION_NAME);
+        defaultParams.put("build", String.valueOf(BuildConfig.VERSION_CODE));
+    }
 }

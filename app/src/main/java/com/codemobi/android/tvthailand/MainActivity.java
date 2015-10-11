@@ -1,7 +1,13 @@
 package com.codemobi.android.tvthailand;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -11,41 +17,45 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.support.v7.widget.SearchView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codemobi.android.tvthailand.activity.AboutActivity;
 import com.codemobi.android.tvthailand.activity.ProgramLoaderActivity;
 import com.codemobi.android.tvthailand.fragment.CategoryFragment;
 import com.codemobi.android.tvthailand.fragment.ChannelFragment;
 import com.codemobi.android.tvthailand.fragment.RadioFragment;
+import com.codemobi.android.tvthailand.manager.http.APIClient;
 import com.codemobi.android.tvthailand.utils.Constant;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.dao.section.SectionCollectionDao;
-import com.codemobi.android.tvthailand.datasource.OnLoadDataListener;
-import com.codemobi.android.tvthailand.manager.http.HTTPEngine;
 import com.codemobi.android.tvthailand.manager.SectionManager;
 import com.vserv.android.ads.api.VservAdView;
 import com.vserv.android.ads.common.VservAdListener;
 
-public class MainActivity extends AppCompatActivity implements
-		OnLoadDataListener {
+import java.io.IOException;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Retrofit;
+
+public class MainActivity extends AppCompatActivity {
 
 	Toolbar toolbar;
 	TabLayout tabLayout;
 	ViewPager viewPager;
+	CoordinatorLayout rootLayout;
 
 	private static final String TAG = "MainActivity";
 	private static final String KEY_IS_ADS_DISPLAYED = "KEY_IS_ADS_DISPLAYED";
-//	private boolean doubleBackToExitPressedOnce = false;
 	private static boolean isAdsEnabled = true;
 	private boolean isAdsDisplayed = false;
 	private int current_pos = 0;
 
-	private MenuItem refreshMenu;
+	SearchView searchView;
 	
 	private VservAdView vservAdView;
 	private VservAdListener mAdListener;
@@ -62,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements
 		initToolbar();
 		initTabLayout();
         initInstances();
-
+		sendTracker();
 		if (savedInstanceState != null){
 		    isAdsDisplayed = savedInstanceState.getBoolean(KEY_IS_ADS_DISPLAYED);
 		}
@@ -138,21 +148,45 @@ public class MainActivity extends AppCompatActivity implements
 
     private void initInstances()
 	{
+		rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
         loadSection();
     }
 
     private void loadSection()
 	{
-        SectionManager.getInstance().loadData();
-        HTTPEngine.getInstance().getSectionData(new Response.Listener<SectionCollectionDao>() {
+		APIClient.APIService service = APIClient.getClient();
+		Call<SectionCollectionDao> call = service.loadSection(Constant.defaultParams);
+		call.enqueue(new Callback<SectionCollectionDao>() {
 			@Override
-			public void onResponse(SectionCollectionDao response) {
-				SectionManager.getInstance().setData(response);
+			public void onResponse(retrofit.Response<SectionCollectionDao> response, Retrofit retrofit) {
+				if (response.isSuccess())
+					SectionManager.getInstance().setData(response.body());
+				else {
+					String errorString;
+					try {
+						errorString = response.errorBody().string();
+					} catch (IOException e) {
+						errorString = "Cannot load data.";
+					}
+					Snackbar.make(rootLayout, errorString, Snackbar.LENGTH_LONG)
+							.setAction("Refresh", new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									loadSection();
+								}
+							}).show();
+				}
 			}
-		}, new Response.ErrorListener() {
+
 			@Override
-			public void onErrorResponse(VolleyError error) {
-				Toast.makeText(MainActivity.this, "Cannot connect to the internet.", Toast.LENGTH_LONG).show();
+			public void onFailure(Throwable t) {
+				Snackbar.make(rootLayout, "Cannot load data.", Snackbar.LENGTH_LONG)
+						.setAction("Refresh", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								loadSection();
+							}
+						}).show();
 			}
 		});
     }
@@ -160,21 +194,16 @@ public class MainActivity extends AppCompatActivity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-		if (!isAdsDisplayed) {
-//			loadInterstitialAd();
-//
-			adListenerInitialization();
-			vservAdView = new VservAdView(this, "", VservAdView.UX_INTERSTITIAL);
-			vservAdView.setAdListener(mAdListener);
-			vservAdView.setZoneId(Constant.VSERV_BILLBOARD);
-			vservAdView.setUxType(VservAdView.UX_INTERSTITIAL);
-//			if (!Constant.VSERV_TEST_DEVICE.equals("")){
-//				vservAdView.setTestDevices(Constant.VSERV_TEST_DEVICE);
-//			}
-			vservAdView.cacheAd();
-			isAdsDisplayed = true;
+		isAdsEnabled = true;
+		if (isAdsEnabled && !isAdsDisplayed) {
+			final Handler handler = new Handler();
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					startAds();
+				}
+			}, 5000);
 		}
-        sendTracker();
 	}
 
 	private void sendTracker() {
@@ -200,10 +229,15 @@ public class MainActivity extends AppCompatActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		refreshMenu = menu.findItem(R.id.refresh);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
 
-		return super.onCreateOptionsMenu(menu);
+		SearchManager searchManager =
+				(SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+		searchView.setSearchableInfo(
+				searchManager.getSearchableInfo(getComponentName()));
+		return true;
 	}
 
 	@Override
@@ -213,10 +247,7 @@ public class MainActivity extends AppCompatActivity implements
 			refreshMenuClick(current_pos);
 			break;
 		case R.id.search:
-			onSearchRequested();
-			break;
-		case R.id.account:
-//			goToAccount();
+//			onSearchRequested();
 			break;
 		case R.id.favorite:
 			Intent intent_fave = new Intent(MainActivity.this,
@@ -257,58 +288,20 @@ public class MainActivity extends AppCompatActivity implements
 		}
 	}
 
-	private void goToAccount() {
-
-	}
-
 	@Override
 	public void onLowMemory() {
 		Log.w(TAG, "onLowMemory");
 		super.onLowMemory();
 	}
 
-	@Override
-	public void onLoadStart() {
-
-	}
-
-	@Override
-	public void onLoadFinished() {
-
-	}
-	
-//	@Override
-//	public void onBackPressed() {
-//		if (doubleBackToExitPressedOnce) {
-//			super.onBackPressed();
-//			return;
-//		}
-//
-//		this.doubleBackToExitPressedOnce = true;
-//		Toast.makeText(this, "Press BACK again to exit",
-//				Toast.LENGTH_SHORT).show();
-//
-//		new Handler().postDelayed(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				doubleBackToExitPressedOnce = false;
-//			}
-//		}, 2000);
-//	}
-	
-	@Override
-	public void finish() {
-//		if (isAdsEnabled) {
-//			manager = VservManager.getInstance(MainActivity.this);
-//			if (!Constant.VSERV_TEST_DEVICE.equals("")){
-//				manager.addTestDevice(Constant.VSERV_TEST_DEVICE);
-//			}
-//			manager.setShowAt(AdPosition.END);
-//			manager.displayAd(Constant.VSERV_BILLBOARD);
-//		} else {
-			super.finish();
-//		}
+	private void startAds() {
+		adListenerInitialization();
+		vservAdView = new VservAdView(this, "", VservAdView.UX_INTERSTITIAL);
+		vservAdView.setAdListener(mAdListener);
+		vservAdView.setZoneId(getResources().getString(R.string.vserv_interstitial_ad_unit_id));
+		vservAdView.setUxType(VservAdView.UX_INTERSTITIAL);
+		vservAdView.cacheAd();
+		isAdsDisplayed = true;
 	}
 
 	private void adListenerInitialization() {
@@ -316,69 +309,47 @@ public class MainActivity extends AppCompatActivity implements
 
 			@Override
 			public void didInteractWithAd(VservAdView adView) {
-//				Toast.makeText(MainActivity.this, "didInteractWithAd",
-//						Toast.LENGTH_SHORT).show();
-
+				Log.d("Vserv", "adViewDidLoadAd");
 			}
 
 			@Override
 			public void adViewDidLoadAd(VservAdView adView) {
-
-//				Toast.makeText(MainActivity.this, "adViewDidLoadAd",
-//						Toast.LENGTH_SHORT).show();
-
+				Log.d("Vserv", "adViewDidLoadAd");
 			}
 
 			@Override
 			public void willPresentOverlay(VservAdView adView) {
-
-//				Toast.makeText(MainActivity.this, "willPresentOverlay",
-//						Toast.LENGTH_SHORT).show();
-
+				Log.d("Vserv", "willPresentOverlay");
 			}
 
 			@Override
 			public void willDismissOverlay(VservAdView adView) {
-
-//				Toast.makeText(MainActivity.this, "willDismissOverlay",
-//						Toast.LENGTH_SHORT).show();
-
+				Log.d("Vserv", "willDismissOverlay");
 			}
 
 			@Override
 			public void adViewDidCacheAd(VservAdView adView) {
-
-//				Toast.makeText(MainActivity.this, "adViewDidCacheAd",
-//						Toast.LENGTH_SHORT).show();
+				Log.d("Vserv", "adViewDidCacheAd");
 				if (vservAdView != null) {
-
-					if (vservAdView.getUxType() == VservAdView.UX_INTERSTITIAL) {
-//						isAppInBackgorund = true;
-					}
 					vservAdView.showAd();
 				}
 			}
 
 			@Override
 			public VservAdView didFailedToLoadAd(String arg0) {
-//				loadInterstitialAd();
 				Log.d("VservAdView", "didFailedToLoadAd");
-
 				return null;
 			}
 
 			@Override
 			public VservAdView didFailedToCacheAd(String Error) {
-
 				Log.d("VservAdView", "didFailedToCacheAd");
-
 				return null;
 			}
 
 			@Override
 			public void willLeaveApp(VservAdView adView) {
-//				Toast.makeText(MainActivity.this, "willLeaveApp",
-//						Toast.LENGTH_SHORT).show();
+				Log.d("Vserv", "willLeaveApp");
 			}
 		};
 	}

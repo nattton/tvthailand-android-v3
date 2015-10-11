@@ -17,9 +17,6 @@ import com.codemobi.android.tvthailand.dao.section.CategoryItemDao;
 import com.codemobi.android.tvthailand.manager.SectionManager;
 import com.codemobi.android.tvthailand.utils.Contextor;
 
-/**
- * Created by nattapong on 7/9/15 AD.
- */
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder>
 {
 	private OnTapListener onTapListener;

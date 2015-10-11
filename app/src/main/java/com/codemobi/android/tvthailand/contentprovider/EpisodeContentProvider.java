@@ -3,6 +3,7 @@ package com.codemobi.android.tvthailand.contentprovider;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import com.codemobi.android.tvthailand.BuildConfig;
 import com.codemobi.android.tvthailand.database.DatabaseHelper;
 import com.codemobi.android.tvthailand.database.EpisodeTable;
 import com.codemobi.android.tvthailand.database.EpisodeTable.EpisodeColumns;
@@ -27,7 +28,7 @@ public class EpisodeContentProvider extends ContentProvider {
 	private static final int EPISODES = 1;
 	private static final int _ID = 2;
 
-	private static final String AUTHORITY = "com.codemobi.android.tvthailand.contentprovider.EpisodeContentProvider";
+	private static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".contentprovider.EpisodeContentProvider";
 
 	private static final String BASE_PATH = "episodes";
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
@@ -48,7 +49,7 @@ public class EpisodeContentProvider extends ContentProvider {
 	@Override
 	public boolean onCreate() {
 		database = new DatabaseHelper(getContext());
-		return (database == null) ? false : true;
+		return database != null;
 	}
 
 	@Override
@@ -96,7 +97,7 @@ public class EpisodeContentProvider extends ContentProvider {
 	public Uri insert(Uri uri, ContentValues values) {
 		int uriType = sURIMatcher.match(uri);
 		SQLiteDatabase sqlDB = database.getWritableDatabase();
-		long id = 0;
+		long id;
 		switch (uriType) {
 		case EPISODES:
 			id = sqlDB.insertWithOnConflict(EpisodeTable.TABLE_NAME, null,
@@ -118,7 +119,7 @@ public class EpisodeContentProvider extends ContentProvider {
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		int uriType = sURIMatcher.match(uri);
 		SQLiteDatabase sqlDB = database.getWritableDatabase();
-		int rowsDeleted = 0;
+		int rowsDeleted;
 		switch (uriType) {
 		case EPISODES:
 			rowsDeleted = sqlDB.delete(EpisodeTable.TABLE_NAME, selection,
@@ -148,7 +149,7 @@ public class EpisodeContentProvider extends ContentProvider {
 
 		int uriType = sURIMatcher.match(uri);
 		SQLiteDatabase sqlDB = database.getWritableDatabase();
-		int rowsUpdated = 0;
+		int rowsUpdated;
 		switch (uriType) {
 		case EPISODES:
 			rowsUpdated = sqlDB.update(EpisodeTable.TABLE_NAME, values,
@@ -180,9 +181,9 @@ public class EpisodeContentProvider extends ContentProvider {
 				EpisodeColumns.DATE, EpisodeColumns.VIEW_COUNT,
 				EpisodeColumns.PARTS, EpisodeColumns.PASSWORD };
 		if (projection != null) {
-			HashSet<String> requestedColumns = new HashSet<String>(
+			HashSet<String> requestedColumns = new HashSet<>(
 					Arrays.asList(projection));
-			HashSet<String> availableColumns = new HashSet<String>(
+			HashSet<String> availableColumns = new HashSet<>(
 					Arrays.asList(available));
 			// Check if all columns which are requested are available
 			if (!availableColumns.containsAll(requestedColumns)) {

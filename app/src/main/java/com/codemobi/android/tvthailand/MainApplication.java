@@ -1,5 +1,6 @@
 package com.codemobi.android.tvthailand;
 
+import com.codemobi.android.tvthailand.utils.Constant;
 import com.codemobi.android.tvthailand.utils.Contextor;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
@@ -12,12 +13,12 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.support.multidex.MultiDexApplication;
+import android.webkit.WebView;
 
 import java.util.HashMap;
 
 public class MainApplication extends MultiDexApplication {
     private Tracker mTracker;
-    private static String appVersion = "1.0";
 
     public MainApplication() {
         super();
@@ -32,13 +33,7 @@ public class MainApplication extends MultiDexApplication {
     }
     
     private void init() {
-		try {
-			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			appVersion = pInfo.versionName;
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
-    	
+        Constant.UserAgentChrome = new WebView(this).getSettings().getUserAgentString();
     }
 
     synchronized public Tracker getDefaultTracker() {
@@ -57,9 +52,5 @@ public class MainApplication extends MultiDexApplication {
             mTracker = analytics.newTracker(R.xml.otv_tracker);
         }
         return mTracker;
-    }
-    
-    public static String getAppVersion() {
-    	return appVersion;
     }
 }

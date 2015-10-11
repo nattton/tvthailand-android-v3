@@ -47,7 +47,7 @@
                 android:text="" />
         </LinearLayout>
 
-        <com.android.volley.toolbox.NetworkImageView
+        <ImageView
             android:id="@+id/thumbnail_station"
             android:layout_width="200dp"
             android:layout_height="200dp"
@@ -56,13 +56,12 @@
             android:visibility="gone" />
     </FrameLayout>
 
-    <com.google.android.gms.ads.AdView
+    <com.codemobi.android.tvthailand.ads.MyBannerView
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        app:adSize="BANNER"
-        app:adUnitId="@string/banner_ad_unit_id" />
+        app:autoLoad="true" />
 
 </RelativeLayout>

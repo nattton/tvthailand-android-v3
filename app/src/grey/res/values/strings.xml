@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TV Thailand+</string>
+    <string name="search_suggest_authority">com.makathon.tvthailand.contentprovider.ProgramSuggestionProvider</string>
+    <string name="vserv_banner_ad_unit_id">2080f326</string>
+    <string name="vserv_interstitial_ad_unit_id">8b2cf286</string>
+</resources>

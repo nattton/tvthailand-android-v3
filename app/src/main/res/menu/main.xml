@@ -6,7 +6,8 @@
         android:icon="@drawable/ic_action_search"
         android:orderInCategory="0"
         android:title="@string/search"
-        app:showAsAction="ifRoom" />
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom" />
     <item
         android:id="@+id/refresh"
         android:icon="@drawable/ic_action_refresh"
@@ -24,8 +25,8 @@
         android:id="@+id/favorite"
         android:icon="@drawable/ic_favorite"
         android:orderInCategory="2"
-        android:title="@string/favorite"
-        app:showAsAction="never"/>
+        android:title="@string/favorites"
+        app:showAsAction="never" />
     <item
         android:id="@+id/recently"
         android:icon="@drawable/ic_recently"

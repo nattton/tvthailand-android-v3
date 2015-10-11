@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +19,6 @@ import com.codemobi.android.tvthailand.manager.SectionManager;
 import com.codemobi.android.tvthailand.manager.bus.MainBus;
 import com.squareup.otto.Subscribe;
 
-/**
- * Created by nattapong on 7/10/15 AD.
- */
 public class CategoryFragment extends Fragment {
 
 	private CategoryAdapter mAdapter;
@@ -48,7 +43,6 @@ public class CategoryFragment extends Fragment {
 	}
 
 	private void initInstances(View rootView) {
-		// init instance with rootView.findViewById here
 		setRetainInstance(true);
 
 		RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rvCategory);

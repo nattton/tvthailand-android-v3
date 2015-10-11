@@ -1,9 +1,11 @@
 package com.codemobi.android.tvthailand.datasource;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,17 +20,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 
-import com.android.volley.Request.Method;
-import com.android.volley.AuthFailureError;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.codemobi.android.tvthailand.BuildConfig;
+import com.codemobi.android.tvthailand.manager.http.APIClient;
+import com.codemobi.android.tvthailand.utils.Constant;
 import com.google.android.youtube.player.YouTubeApiServiceUtil;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeIntents;
 import com.codemobi.android.tvthailand.R;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
 
 public class Parts {
 	private ArrayList<Part> parts = new ArrayList<>();
@@ -130,48 +134,58 @@ public class Parts {
 			display = String.format("%s - Part %d", title, position + 1);
 		}
 
-		if (srcType.equals("0")) {
-			String videoId = videos[position];
-			if (YouTubeApiServiceUtil.isYouTubeApiServiceAvailable(mContext) == YouTubeInitializationResult.SUCCESS) {
-				if(YouTubeIntents.isYouTubeInstalled(mContext)) {
-					Intent intent = YouTubeIntents.createPlayVideoIntent(mContext, videoId);
-					mContext.startActivity(intent);
+		String videoId = videos[position];
+		if (videoId.equals("")) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			builder.setTitle("Cannot play this video.");
+			builder.setNegativeButton(R.string.ok, null);
+			AlertDialog dialog = builder.create();
+			dialog.show();
+			return;
+		}
+
+		switch (srcType) {
+			case "0":
+				if (YouTubeApiServiceUtil.isYouTubeApiServiceAvailable(mContext) == YouTubeInitializationResult.SUCCESS) {
+					if(YouTubeIntents.isYouTubeInstalled(mContext)) {
+						Intent intent = YouTubeIntents.createPlayVideoIntent(mContext, videoId);
+						mContext.startActivity(intent);
+					} else {
+						mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(
+								"http://www.youtube.com/watch?v=%s", videoId))));
+					}
 				} else {
-					mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(
-						"http://www.youtube.com/watch?v=%s", videoId))));
+					if (YouTubeIntents.isYouTubeInstalled(mContext)) {
+						Intent intent = YouTubeIntents.createPlayVideoIntent(
+								mContext, videos[position]);
+						mContext.startActivity(intent);
+					} else {
+						mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri
+								.parse(String.format(
+										"http://www.youtube.com/watch?v=%s",
+										videos[position]))));
+					}
 				}
-				
-//				Intent intent = new Intent(mContext,
-//						YoutubePlayerViewActivity.class);
-//				intent.putExtra(YoutubePlayerViewActivity.EXTRAS_TITLE, title);
-//				intent.putExtra(YoutubePlayerViewActivity.EXTRAS_VIDEO_ID,
-//						videos[position]);
-//				mContext.startActivity(intent);
-			} else {
-				if (YouTubeIntents.isYouTubeInstalled(mContext)) {
-					Intent intent = YouTubeIntents.createPlayVideoIntent(
-							mContext, videos[position]);
-					mContext.startActivity(intent);
-				} else {
-					mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri
-							.parse(String.format(
-									"http://www.youtube.com/watch?v=%s",
-									videos[position]))));
-				}
-			}
-		} else if (srcType.equals("1")) {
-			openWithDailyMotion(videos[position]);
-		} else if (srcType.equals("11")) {
-			Uri uriVideo = Uri.parse(videos[position]);
-			mContext.startActivity(new Intent(Intent.ACTION_VIEW, uriVideo));
-		} else if (srcType.equals("12")) {
-			playVideo(videos[position]);
-		} else if (srcType.equals("13") || srcType.equals("14")) {
-			loadMThaiVideoFromWeb(videos[position]);
-//            openMThaiVideo(videos[position]);
-		} else if (srcType.equals("15")) {
-			loadMThaiVideoWithPassword(videos[position], password);
-//            openMThaiVideoPassword(videos[position], password);
+				break;
+			case "1":
+				openWithDailyMotion(videoId);
+				break;
+			case "11":
+				Uri uriVideo = Uri.parse(videoId);
+				mContext.startActivity(new Intent(Intent.ACTION_VIEW, uriVideo));
+				break;
+			case "12":
+				playVideo(videoId);
+				break;
+			case "13":
+			case "14":
+				loadMThaiVideoFromWeb(videoId);
+				break;
+			case "15":
+				loadMThaiVideoWithPassword(videoId, password);
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -255,21 +269,33 @@ public class Parts {
     private void loadMThaiVideoFromWeb(final String videoId) {
         notifyStart();
 
-        selectedVideoId = videoId;
-        String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", videoId);
+		selectedVideoId = videoId;
+		OkHttpClient okClient = new OkHttpClient();
+		if (BuildConfig.BUILD_TYPE.equals("debug")) {
+			okClient.interceptors().add(new APIClient.LoggingInterceptor());
+		}
 
-        RequestQueue mRequestQueue = Volley.newRequestQueue(mContext);
-        StringRequest mthaiRequest = new StringRequest(Method.POST, mthaiUrl, createMthaiReqSuccessListener(), createMthaiReqErrorListener()) {
+		String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", videoId);
+		Request request = new Request.Builder()
+				.get()
+				.url(mthaiUrl)
+				.header("User-Agent", Constant.UserAgentChrome)
+				.build();
+		okClient.newCall(request).enqueue(new com.squareup.okhttp.Callback() {
+			@Override
+			public void onResponse(Response response) throws IOException {
+				if (response.isSuccessful()) {
+					String bodyString = response.body().string();
+					playMthaiFromHTML(bodyString);
+				}
+				notifyFinish();
+			}
 
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("User-Agent", AppUtility.getUserAgentChrome());
-                return params;
-            }
-        };
-
-        mRequestQueue.add(mthaiRequest);
+			@Override
+			public void onFailure(Request request, IOException e) {
+				notifyFinish();
+			}
+		});
     }
 
 	private void loadMThaiVideoWithPassword(final String videoId,
@@ -277,82 +303,102 @@ public class Parts {
         notifyStart();
 
 		selectedVideoId = videoId;
+		OkHttpClient okClient = new OkHttpClient();
+		if (BuildConfig.DEBUG)
+			okClient.interceptors().add(new APIClient.LoggingInterceptor());
+
 		String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", videoId);
-		
-		RequestQueue mRequestQueue = Volley.newRequestQueue(mContext);
-		StringRequest mthaiRequest = new StringRequest(Method.POST, mthaiUrl, createMthaiReqSuccessListener(), createMthaiReqErrorListener()) {
-			protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("clip_password", password);
-                return params;
-            };
-            
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-            	Map<String, String> params = new HashMap<>();
-                params.put("User-Agent", AppUtility.getUserAgentChrome());
-            	return params;
-            }
-		};
-		
-		mRequestQueue.add(mthaiRequest);
-	}
-	
-	private Response.Listener<String> createMthaiReqSuccessListener() {
-		return new Response.Listener<String>() {
+		RequestBody requestBody = new FormEncodingBuilder()
+				.add("clip_password", password)
+				.build();
+		Request request = new Request.Builder()
+				.post(requestBody)
+				.url(mthaiUrl)
+				.header("User-Agent", Constant.UserAgentChrome)
+				.build();
+		okClient.newCall(request).enqueue(new com.squareup.okhttp.Callback() {
+			@Override
+			public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+				if (response.isSuccessful())
+					playMthaiFromHTML(response.body().string());
+				notifyFinish();
+			}
 
 			@Override
-			public void onResponse(String response) {
-                notifyFinish();
-
-				String varKey = "{ mp4:  \"http";
-				int indexStart = response.indexOf(varKey) + varKey.length();
-				int indexEnd = response.indexOf("}", indexStart);
-				String clipUrl = response.substring(indexStart - 4, indexEnd).replace(" ", "").replace("=", "").replace("\"", "").replace("'", "");
-				
-				String[] seperateUrl = clipUrl.split("/");
-				if (seperateUrl[seperateUrl.length - 1]
-						.startsWith(selectedVideoId)) {
-					playVideo(clipUrl);
-					return;
-				}
-				
-				Document doc = Jsoup.parse(response);
-				Elements elSource = doc.getElementsByTag("source");
-				for (int i = 0; i < elSource.size(); i++) {
-					Element eSrc = elSource.get(i);
-					String videoUrl = eSrc.attr("src");
-					seperateUrl = videoUrl.split("/");
-					if (seperateUrl.length == 0)
-						return;
-					if (seperateUrl[seperateUrl.length - 1]
-							.startsWith(selectedVideoId)) {
-						playVideo(videoUrl);
-						return;
-					}
-				}
-
-                if (password.length() > 0) {
-                    openMThaiVideoPassword(selectedVideoId, password);
-                } else {
-                    String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", selectedVideoId);
-                    Uri uriVideo = Uri.parse(mthaiUrl);
-                    mContext.startActivity(new Intent(Intent.ACTION_VIEW, uriVideo));
-                }
+			public void onFailure(Request request, IOException e) {
+				notifyFinish();
 			}
-		};
-	}
-	
-	private Response.ErrorListener createMthaiReqErrorListener() {
-		return new Response.ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-                notifyFinish();
-                notifyError("Can't play video. please try again.");
-			}
-		};
+		});
 	}
 
+	private void playMthaiFromHTML(String response) {
+		notifyFinish();
 
+		if (mThaiSeperateByObClip(response))
+			return;
+
+		if (mThaiSeperateByDefaultClip(response))
+			return;
+
+		if (mThaiParseByTagSource((response)))
+			return;
+
+		if (password.length() > 0) {
+			openMThaiVideoPassword(selectedVideoId, password);
+		} else {
+			String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", selectedVideoId);
+			Uri uriVideo = Uri.parse(mthaiUrl);
+			mContext.startActivity(new Intent(Intent.ACTION_VIEW, uriVideo));
+		}
+	}
+
+	private boolean mThaiSeperateByObClip(String response) {
+		String varKey = "obClip = ";
+		int indexStart = response.indexOf(varKey);
+		if (indexStart > 0) {
+			indexStart += varKey.length();
+			int indexEnd = response.indexOf(";", indexStart);
+			String obClipString = response.substring(indexStart, indexEnd);
+			try {
+				JSONArray obClip = new JSONArray(obClipString);
+				if (obClip.length() > 0){
+					JSONObject objClip = obClip.getJSONObject(0);
+					playVideo(objClip.getString("src"));
+					return true;
+				}
+			} catch (JSONException e) {
+				return false;
+			}
+		}
+		return false;
+	}
+
+	private boolean mThaiSeperateByDefaultClip(String response) {
+		String varKey = "defaultClip";
+		int indexStart = response.indexOf(varKey);
+		if (indexStart > 0) {
+			indexStart += varKey.length();
+			int indexEnd = response.indexOf(";", indexStart);
+			String clipUrl = response.substring(indexStart, indexEnd).replace(" ", "").replace("=", "").replace("\"", "").replace("'", "");
+			if (clipUrl.length() > 0) {
+				playVideo(clipUrl);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean mThaiParseByTagSource(String response) {
+		Document doc = Jsoup.parse(response);
+		Elements elSource = doc.getElementsByTag("source");
+		for (int i = 0; i < elSource.size(); i++) {
+			Element eSrc = elSource.get(i);
+			String videoUrl = eSrc.attr("src");
+			if (videoUrl.length() > 0) {
+				playVideo(videoUrl);
+				return true;
+			}
+		}
+		return false;
+	}
 }

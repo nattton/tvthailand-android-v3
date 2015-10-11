@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.JsonObject;
+
 public class Program implements Parcelable {
 	private String id;
 	private String title;
@@ -35,26 +37,20 @@ public class Program implements Parcelable {
 		this.otvLogo = otvLogo;
 	}
 	
-	public Program(JSONObject jObj) {
-		try {
-			this.id = jObj.getString("id");
-			this.title = jObj.getString("title");
-			this.thumbnail = jObj.getString("thumbnail");
-			this.poster = jObj.getString("poster");
-			this.description = jObj.getString("description");
-			this.detail = jObj.getString("detail");
-			this.lastEPName = jObj.has("last_epname") ? jObj.getString("last_epname"): "";
-			this.viewCount = jObj.has("view_count") ? jObj.getInt("vote_count"): 0;
-			this.voteCount = jObj.has("vote_count") ? jObj.getInt("vote_count"): 0;
-			
-			this.isOTV = jObj.has("is_otv") ? jObj.getInt("is_otv"): 0;
-			this.otvId = jObj.has("otv_id") ? jObj.getString("otv_id"): "";
-			this.otvLogo = jObj.has("otv_logo") ? jObj.getString("otv_logo"): "";
-			
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		
+	public Program(JsonObject jObj) {
+		this.id = jObj.get("id").getAsString();
+		this.title = jObj.get("title").getAsString();
+		this.thumbnail = jObj.get("thumbnail").getAsString();
+		this.poster = jObj.get("poster").getAsString();
+		this.description = jObj.get("description").getAsString();
+		this.detail = jObj.get("detail").getAsString();
+		this.lastEPName = jObj.has("last_epname") ? jObj.get("last_epname").getAsString() : "";
+		this.viewCount = jObj.has("view_count") ? jObj.get("vote_count").getAsInt() : 0;
+		this.voteCount = jObj.has("vote_count") ? jObj.get("vote_count").getAsInt() : 0;
+
+		this.isOTV = jObj.has("is_otv") ? jObj.get("is_otv").getAsInt() : 0;
+		this.otvId = jObj.has("otv_id") ? jObj.get("otv_id").getAsString() : "";
+		this.otvLogo = jObj.has("otv_logo") ? jObj.get("otv_logo").getAsString(): "";
 	}
 
 	public String getId() {

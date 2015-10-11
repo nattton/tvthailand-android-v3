@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 import com.codemobi.android.tvthailand.manager.bus.MainBus;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.MainApplication;
@@ -24,14 +22,18 @@ import com.codemobi.android.tvthailand.dao.section.RadioItemDao;
 import com.codemobi.android.tvthailand.manager.SectionManager;
 import com.codemobi.android.tvthailand.player.RadioPlayerActivity;
 import com.squareup.otto.Subscribe;
+import com.vserv.android.ads.api.VservAdView;
+import com.vserv.android.ads.common.VservAdListener;
 
 public class RadioFragment extends Fragment implements OnItemClickListener {
 	
 	private GridView mGridView;
 	private RadioCustomAdapter mAdapter;
 
-	InterstitialAd mInterstitialAd;
 	RadioItemDao radio;
+
+	private VservAdView vservAdView;
+	private VservAdListener mAdListener;
 
 	public static RadioFragment newInstance() {
 		RadioFragment fragment = new RadioFragment();
@@ -50,18 +52,6 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		mInterstitialAd = new InterstitialAd(getContext());
-		mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_unit_id));
-
-		mInterstitialAd.setAdListener(new AdListener() {
-			@Override
-			public void onAdClosed() {
-				requestNewInterstitial();
-				playRadio();
-			}
-		});
-		requestNewInterstitial();
-
 		mGridView = (GridView) view.findViewById(R.id.asset_grid);
 		mGridView.setOnItemClickListener(this);
 
@@ -77,17 +67,13 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
-                radio = SectionManager.getInstance().getData().getRadios().get(position);
-				 Tracker t = ((MainApplication) getActivity().getApplication()).getDefaultTracker();
-				 t.setScreenName("Radio");
-				 t.send(new HitBuilders.AppViewBuilder().setCustomDimension(6, radio.getTitle()).build());
+									long id) {
+				radio = SectionManager.getInstance().getData().getRadios().get(position);
+				Tracker t = ((MainApplication) getActivity().getApplication()).getDefaultTracker();
+				t.setScreenName("Radio");
+				t.send(new HitBuilders.AppViewBuilder().setCustomDimension(6, radio.getTitle()).build());
 
-				if (mInterstitialAd.isLoaded()) {
-					mInterstitialAd.show();
-				} else {
-					playRadio();
-				}
+				startAds();
 			}
 		});
 	}
@@ -112,11 +98,6 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 		}
 	}
 
-	private void requestNewInterstitial() {
-		AdRequest adRequest = new AdRequest.Builder().build();
-		mInterstitialAd.loadAd(adRequest);
-	}
-
     @Override
     public void onResume() {
         super.onResume();
@@ -135,4 +116,66 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
             if (mAdapter != null)
                 mAdapter.notifyDataSetChanged();
     }
+
+	private void startAds() {
+		adListenerInitialization();
+		vservAdView = new VservAdView(getContext(), "", VservAdView.UX_INTERSTITIAL);
+		vservAdView.setAdListener(mAdListener);
+		vservAdView.setZoneId(getResources().getString(R.string.vserv_interstitial_ad_unit_id));
+		vservAdView.setUxType(VservAdView.UX_INTERSTITIAL);
+		vservAdView.cacheAd();
+	}
+
+	private void adListenerInitialization() {
+		mAdListener = new VservAdListener() {
+
+			@Override
+			public void didInteractWithAd(VservAdView adView) {
+				Log.d("Vserv", "adViewDidLoadAd");
+			}
+
+			@Override
+			public void adViewDidLoadAd(VservAdView adView) {
+				Log.d("Vserv", "adViewDidLoadAd");
+			}
+
+			@Override
+			public void willPresentOverlay(VservAdView adView) {
+				Log.d("Vserv", "willPresentOverlay");
+			}
+
+			@Override
+			public void willDismissOverlay(VservAdView adView) {
+				Log.d("Vserv", "willDismissOverlay");
+				playRadio();
+			}
+
+			@Override
+			public void adViewDidCacheAd(VservAdView adView) {
+				Log.d("Vserv", "adViewDidCacheAd");
+				if (vservAdView != null) {
+					vservAdView.showAd();
+				}
+			}
+
+			@Override
+			public VservAdView didFailedToLoadAd(String arg0) {
+				Log.d("VservAdView", "didFailedToLoadAd");
+				playRadio();
+				return null;
+			}
+
+			@Override
+			public VservAdView didFailedToCacheAd(String Error) {
+				Log.d("VservAdView", "didFailedToCacheAd");
+				playRadio();
+				return null;
+			}
+
+			@Override
+			public void willLeaveApp(VservAdView adView) {
+				Log.d("Vserv", "willLeaveApp");
+			}
+		};
+	}
 }

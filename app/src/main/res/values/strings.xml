@@ -2,16 +2,20 @@
 <resources>
 
     <string name="app_name">TV Thailand</string>
+    <string name="search_suggest_authority">com.codemobi.android.tvthailand.contentprovider.ProgramSuggestionProvider</string>
+    <string name="banner_ad_unit_id">ca-app-pub-6286183933093345/3534946495</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-6286183933093345/2197814098</string>
+    <string name="vserv_banner_ad_unit_id">ceb27b33</string>
+    <string name="vserv_interstitial_ad_unit_id">c84927ed</string>
+
     <string name="action_settings">Settings</string>
     <string name="search">Search</string>
     <string name="refresh">Refresh</string>
-    <string name="favorite">Favorite</string>
+    <string name="favorites">Favorites</string>
     <string name="recently">Recently</string>
+    <string name="clear_history">Clear History</string>
     <string name="episode">Episode : %1$s</string>
     <string name="aired">Aired : %1$s</string>
-
-    <string name="banner_ad_unit_id">ca-app-pub-6286183933093345/3534946495</string>
-    <string name="interstitial_ad_unit_id">ca-app-pub-6286183933093345/2197814098</string>
 
     <string-array name="sections">
         <item>CATEGORY</item>
@@ -44,7 +48,6 @@
     <string name="progress_message">Signing in to Google…</string>
     <string name="sign_out_button_name">Sign out</string>
     <string name="revoke_access_button_name">Revoke access</string>
-    <string name="default_status"></string>
     <string name="signing_in_status">Signing in with Google+.</string>
     <string name="greeting_status">Welcome, %s.</string>
     <string name="signed_out_status">Signed out.</string>
