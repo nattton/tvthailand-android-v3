@@ -10,12 +10,15 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.dao.advertise.AdCollectionDao;
 import com.codemobi.android.tvthailand.dao.advertise.AdItemDao;
 import com.codemobi.android.tvthailand.manager.http.APIClient;
 import com.codemobi.android.tvthailand.utils.Constant;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.facebook.ads.*;
 import com.vserv.android.ads.api.VservAdView;
 import com.vserv.android.ads.common.VservAdListener;
 
@@ -26,16 +29,19 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
+import static com.facebook.ads.AdSize.*;
+
 
 @SuppressLint({ "DefaultLocale", "SetJavaScriptEnabled" })
 public class MyBannerView extends LinearLayout {
 	private boolean autoLoad = false;
 
 	private LinearLayout parentView;
-	private WebView webViewShow;
-
-	private VservAdView vservAdView;
+	private AdView adView;
 	private VservAdListener mAdListener;
+	private VservAdView vservAdView;
+	private RelativeLayout adViewContainer;
+	private WebView webViewShow;
 
 	public MyBannerView(Context context) {
 		super(context);
@@ -60,6 +66,7 @@ public class MyBannerView extends LinearLayout {
 		parentView.setVisibility(GONE);
 		View convertView = LayoutInflater.from(context).inflate(R.layout.my_banner_view, this);
 		vservAdView = (VservAdView) convertView.findViewById(R.id.vservAdView);
+		adViewContainer = (RelativeLayout) findViewById(R.id.adViewContainer);
 		webViewShow = (WebView) convertView.findViewById(R.id.webViewShow);
 		setUpView();
 		if(autoLoad) requestAds();
@@ -119,11 +126,17 @@ public class MyBannerView extends LinearLayout {
 	
 	private void requestVservAd() {
 		adListenerInitialization();
-		vservAdView.setAdListener(mAdListener);
-		vservAdView.setZoneId(getResources().getString(R.string.vserv_banner_ad_unit_id));
-		vservAdView.setRefresh(true);
-		vservAdView.setRefreshRate(60);
-		vservAdView.loadAd();
+		try {
+			vservAdView.setAdListener(mAdListener);
+			vservAdView.setZoneId(getResources().getString(R.string.vserv_banner_ad_unit_id));
+			vservAdView.setRefresh(true);
+			vservAdView.setRefreshRate(60);
+			vservAdView.loadAd();
+		}
+		catch (Exception e) {
+			requestFacebookAds();
+			CrashlyticsCore.getInstance().logException(e);
+		}
 	}
 
 	private void adListenerInitialization() {
@@ -177,4 +190,28 @@ public class MyBannerView extends LinearLayout {
 			}
 		};
 	}
+
+	private void requestFacebookAds () {
+		adView = new AdView(getContext(), getResources().getString(R.string.facebook_banner_ad_unit_id), BANNER_320_50);
+		adViewContainer.addView(adView);
+		adView.setAdListener(new AdListener() {
+			@Override
+			public void onError(Ad ad, AdError adError) {
+
+			}
+
+			@Override
+			public void onAdLoaded(Ad ad) {
+				parentView.setVisibility(VISIBLE);
+				adViewContainer.setVisibility(VISIBLE);
+			}
+
+			@Override
+			public void onAdClicked(Ad ad) {
+
+			}
+		});
+		adView.loadAd();
+	}
+
 }

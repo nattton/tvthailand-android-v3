@@ -34,6 +34,7 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 	
 	public static final String EXTRAS_MEDIA_TYPE = "EXTRAS_MEDIA_TYPE";
 	public static final String EXTRAS_THUMBNAIL_URL = "EXTRAS_THUMBNAIL_URL";
+	public static final int RADIO_PLAYER_CODE = 3;
 
 	private String title;
 	private VideoView mVideoView;
@@ -43,9 +44,6 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 	private ProgressBar pb;
 	private TextView downloadRateView, loadRateView;
 	private int start_buffer_rate;
-
-	private VservAdView vservAdView;
-	private VservAdListener mAdListener;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -179,73 +177,5 @@ public class RadioPlayerActivity extends Activity implements OnInfoListener,
 			downloadRateView.setVisibility(View.GONE);
 			loadRateView.setVisibility(View.GONE);
 		} 
-	}
-
-	@Override
-	public void onBackPressed() {
-		mVideoView.pause();
-		startAds();
-	}
-
-	private void startAds() {
-		adListenerInitialization();
-		vservAdView = new VservAdView(this, "", VservAdView.UX_INTERSTITIAL);
-		vservAdView.setAdListener(mAdListener);
-		vservAdView.setZoneId(getResources().getString(R.string.vserv_interstitial_ad_unit_id));
-		vservAdView.setUxType(VservAdView.UX_INTERSTITIAL);
-		vservAdView.cacheAd();
-	}
-
-	private void adListenerInitialization() {
-		mAdListener = new VservAdListener() {
-
-			@Override
-			public void didInteractWithAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidLoadAd");
-			}
-
-			@Override
-			public void adViewDidLoadAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidLoadAd");
-			}
-
-			@Override
-			public void willPresentOverlay(VservAdView adView) {
-				Log.d("Vserv", "willPresentOverlay");
-			}
-
-			@Override
-			public void willDismissOverlay(VservAdView adView) {
-				Log.d("Vserv", "willDismissOverlay");
-				finish();
-			}
-
-			@Override
-			public void adViewDidCacheAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidCacheAd");
-				if (vservAdView != null) {
-					vservAdView.showAd();
-				}
-			}
-
-			@Override
-			public VservAdView didFailedToLoadAd(String arg0) {
-				Log.d("VservAdView", "didFailedToLoadAd");
-				finish();
-				return null;
-			}
-
-			@Override
-			public VservAdView didFailedToCacheAd(String Error) {
-				Log.d("VservAdView", "didFailedToCacheAd");
-				finish();
-				return null;
-			}
-
-			@Override
-			public void willLeaveApp(VservAdView adView) {
-				Log.d("Vserv", "willLeaveApp");
-			}
-		};
 	}
 }

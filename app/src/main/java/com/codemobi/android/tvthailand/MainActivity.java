@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,11 +26,14 @@ import com.codemobi.android.tvthailand.fragment.CategoryFragment;
 import com.codemobi.android.tvthailand.fragment.ChannelFragment;
 import com.codemobi.android.tvthailand.fragment.RadioFragment;
 import com.codemobi.android.tvthailand.manager.http.APIClient;
+import com.codemobi.android.tvthailand.player.RadioPlayerActivity;
 import com.codemobi.android.tvthailand.utils.Constant;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.dao.section.SectionCollectionDao;
 import com.codemobi.android.tvthailand.manager.SectionManager;
+import com.vserv.android.ads.api.VservAdView;
+import com.vserv.android.ads.common.VservAdListener;
 
 import java.io.IOException;
 
@@ -47,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
 	private static final String TAG = "MainActivity";
 	private int current_pos = 0;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -243,5 +246,4 @@ public class MainActivity extends AppCompatActivity {
 			break;
 		}
 	}
-
 }

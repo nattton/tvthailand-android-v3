@@ -3,8 +3,8 @@
 
     <string name="app_name">TV Thailand</string>
     <string name="search_suggest_authority">com.codemobi.android.tvthailand.contentprovider.ProgramSuggestionProvider</string>
-    <string name="banner_ad_unit_id">ca-app-pub-6286183933093345/3534946495</string>
-    <string name="interstitial_ad_unit_id">ca-app-pub-6286183933093345/2197814098</string>
+    <string name="facebook_banner_ad_unit_id">202355306578303_529399410540556</string>
+    <string name="facebook_interstitial_ad_unit_id">202355306578303_529495700530927</string>
     <string name="vserv_banner_ad_unit_id">ceb27b33</string>
     <string name="vserv_interstitial_ad_unit_id">c84927ed</string>
 

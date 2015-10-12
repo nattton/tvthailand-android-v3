@@ -3,6 +3,7 @@ package com.codemobi.android.tvthailand.otv.model;
 import com.codemobi.android.tvthailand.datasource.OnLoadDataListener;
 import com.codemobi.android.tvthailand.datasource.Program;
 import com.codemobi.android.tvthailand.manager.http.APIClient;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 
 import retrofit.Call;
 import retrofit.Callback;
+import retrofit.Response;
 import retrofit.Retrofit;
 
 
@@ -28,7 +30,7 @@ public class OTVEpisodes {
 		Call<JsonObject> call = APIClient.getClient().loadEpisodeOTV(show.getOtvId(), 0);
 		call.enqueue(new Callback<JsonObject>() {
 			@Override
-			public void onResponse(retrofit.Response<JsonObject> response, Retrofit retrofit) {
+			public void onResponse(Response<JsonObject> response, Retrofit retrofit) {
 				clear();
 				if (response.isSuccess())
 					jsonMap(response.body());
@@ -46,45 +48,48 @@ public class OTVEpisodes {
 		JsonArray jContentLists = jObject.get("contentList").getAsJsonArray();
 
 		for (int i = 0; i < jContentLists.size(); i++) {
-			JsonObject jContent = jContentLists.get(i).getAsJsonObject();
+			try {
+				JsonObject jContent = jContentLists.get(i).getAsJsonObject();
 
-			ArrayList<OTVPart> parts = new ArrayList<>();
-			JsonArray jArrayPart = jContent.get("item").getAsJsonArray();
-			int count_part = jArrayPart.size();
+				ArrayList<OTVPart> parts = new ArrayList<>();
+				JsonArray jArrayPart = jContent.get("item").getAsJsonArray();
+				int count_part = jArrayPart.size();
 
-			OTVPart part = null;
-			for (int j = 0; j < count_part; j++) {
-				JsonObject jObjPart = jArrayPart.get(j).getAsJsonObject();
-				if (part == null) {
-					part = new OTVPart();
+				OTVPart part = null;
+				for (int j = 0; j < count_part; j++) {
+					JsonObject jObjPart = jArrayPart.get(j).getAsJsonObject();
+					if (part == null) {
+						part = new OTVPart();
+					}
+
+					if (jObjPart.has("media_code") && jObjPart.get("media_code").getAsString().equals("1001")) {
+						part.setVastUrl(jObjPart.has("stream_url") ? jObjPart.get("stream_url").getAsString() : null);
+					} else if (jObjPart.has("media_code")) {
+						part.setPartId(jObjPart.has("id") ? jObjPart.get("id").getAsString() : EMPTY_STRING);
+						part.setNameTh(jObjPart.has("name_th") ? jObjPart.get("name_th").getAsString() : EMPTY_STRING);
+						part.setNameEn(jObjPart.has("name_en") ? jObjPart.get("name_en").getAsString() : EMPTY_STRING);
+						part.setThumbnail(jObjPart.has("thumbnail") ? jObjPart.get("thumbnail").getAsString() : EMPTY_STRING);
+						part.setCover(jObjPart.has("cover") ? jObjPart.get("cover").getAsString() : EMPTY_STRING);
+						part.setStream_url(jObjPart.has("stream_url") ? jObjPart.get("stream_url").getAsString() : EMPTY_STRING);
+						part.setMediaCode(jObjPart.get("media_code").getAsString());
+
+						parts.add(part);
+						part = null;
+					}
 				}
 
-				if (jObjPart.has("media_code") && jObjPart.get("media_code").getAsString().equals("1001")) {
-					part.setVastUrl(jObjPart.has("stream_url") ? jObjPart.get("stream_url").getAsString() : null);
-				} else if (jObjPart.has("media_code")) {
-					part.setPartId(jObjPart.has("id") ? jObjPart.get("id").getAsString() : EMPTY_STRING);
-					part.setNameTh(jObjPart.has("name_th") ? jObjPart.get("name_th").getAsString() : EMPTY_STRING);
-					part.setNameEn(jObjPart.has("name_en") ? jObjPart.get("name_en").getAsString() : EMPTY_STRING);
-					part.setThumbnail(jObjPart.has("thumbnail") ? jObjPart.get("thumbnail").getAsString() : EMPTY_STRING);
-					part.setCover(jObjPart.has("cover") ? jObjPart.get("cover").getAsString() : EMPTY_STRING);
-					part.setStream_url(jObjPart.has("stream_url") ? jObjPart.get("stream_url").getAsString() : EMPTY_STRING);
-					part.setMediaCode(jObjPart.get("media_code").getAsString());
-
-					parts.add(part);
-					part = null;
-				}
+				insert(new OTVEpisode(jContent.has("episode_id") ? jContent.get("episode_id").getAsString() : EMPTY_STRING,
+						jContent.has("name_th") ? jContent.get("name_th").getAsString() : EMPTY_STRING,
+						jContent.has("name_en") ? jContent.get("name_en").getAsString() : EMPTY_STRING,
+						jContent.has("detail") ? jContent.get("detail").getAsString() : EMPTY_STRING,
+						jContent.has("thumbnail") ? jContent.get("thumbnail").getAsString() : EMPTY_STRING,
+						jContent.has("cover") ? jContent.get("cover").getAsString() : EMPTY_STRING,
+						jContent.has("date") ? jContent.get("date").getAsString() : EMPTY_STRING,
+						parts));
 			}
-
-			insert(new OTVEpisode(jContent.has("content_id") ? jContent.get("content_id").getAsString() : EMPTY_STRING,
-					jContent.has("name_th") ? jContent.get("name_th").getAsString() : EMPTY_STRING,
-					jContent.has("name_en") ? jContent.get("name_en").getAsString() : EMPTY_STRING,
-					jContent.has("detail") ? jContent.get("detail").getAsString() : EMPTY_STRING,
-					jContent.has("thumbnail") ? jContent.get("thumbnail").getAsString() : EMPTY_STRING,
-					jContent.has("cover") ? jContent.get("cover").getAsString() : EMPTY_STRING,
-					jContent.has("rating_status") ? jContent.get("rating_status").getAsString() : EMPTY_STRING,
-					jContent.has("rating_point") ? jContent.get("rating_point").getAsString() : EMPTY_STRING,
-					jContent.has("date") ? jContent.get("date").getAsString() : EMPTY_STRING,
-					parts));
+			catch (Exception e) {
+				CrashlyticsCore.getInstance().logException(e);
+			}
 		}
 	}
 

@@ -43,6 +43,7 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
     public static final String EXTRAS_TAG_URL = "EXTRAS_TAG_URL";
     public static final String EXTRAS_SKIP_TIME = "EXTRAS_SKIP_TIME";
     public static final String EXTRAS_CONTENT_URL = "EXTRAS_CONTENT_URL";
+    public static final int LIVE_PLAYER_CODE = 2;
 
     private String tagUrl;
     private int skipTime;
@@ -67,9 +68,6 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
 
     private WakeLock wakeLock;
     private CountDownTimer skipAdCounter;
-
-    private VservAdView vservAdView;
-    private VservAdListener mAdListener;
 
     @SuppressLint("NewApi")
     @Override
@@ -316,73 +314,5 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
         };
 
         handler.postDelayed(counter, 1);
-    }
-
-    @Override
-    public void onBackPressed() {
-        videoPlayer.pauseContent();
-        startAds();
-    }
-
-    private void startAds() {
-        adListenerInitialization();
-        vservAdView = new VservAdView(this, "", VservAdView.UX_INTERSTITIAL);
-        vservAdView.setAdListener(mAdListener);
-        vservAdView.setZoneId(getResources().getString(R.string.vserv_interstitial_ad_unit_id));
-        vservAdView.setUxType(VservAdView.UX_INTERSTITIAL);
-        vservAdView.cacheAd();
-    }
-
-    private void adListenerInitialization() {
-        mAdListener = new VservAdListener() {
-
-            @Override
-            public void didInteractWithAd(VservAdView adView) {
-                Log.d("Vserv", "adViewDidLoadAd");
-            }
-
-            @Override
-            public void adViewDidLoadAd(VservAdView adView) {
-                Log.d("Vserv", "adViewDidLoadAd");
-            }
-
-            @Override
-            public void willPresentOverlay(VservAdView adView) {
-                Log.d("Vserv", "willPresentOverlay");
-            }
-
-            @Override
-            public void willDismissOverlay(VservAdView adView) {
-                Log.d("Vserv", "willDismissOverlay");
-                finish();
-            }
-
-            @Override
-            public void adViewDidCacheAd(VservAdView adView) {
-                Log.d("Vserv", "adViewDidCacheAd");
-                if (vservAdView != null) {
-                    vservAdView.showAd();
-                }
-            }
-
-            @Override
-            public VservAdView didFailedToLoadAd(String arg0) {
-                Log.d("VservAdView", "didFailedToLoadAd");
-                finish();
-                return null;
-            }
-
-            @Override
-            public VservAdView didFailedToCacheAd(String Error) {
-                Log.d("VservAdView", "didFailedToCacheAd");
-                finish();
-                return null;
-            }
-
-            @Override
-            public void willLeaveApp(VservAdView adView) {
-                Log.d("Vserv", "willLeaveApp");
-            }
-        };
     }
 }

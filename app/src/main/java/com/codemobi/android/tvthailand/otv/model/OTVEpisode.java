@@ -16,13 +16,11 @@ public class OTVEpisode implements Parcelable {
 	private String detail;
 	private String thumbnail;
 	private String cover;
-	private String ratingStatus;
-	private String ratingPoint;
 	private String date;
 	private ArrayList<OTVPart> parts;
 	
 	
-	public OTVEpisode (String contentId, String nameTh, String nameEn, String detail, String thumbnail, String cover, String ratingStatus, String ratingPoint, String date, ArrayList<OTVPart> parts) {
+	public OTVEpisode (String contentId, String nameTh, String nameEn, String detail, String thumbnail, String cover, String date, ArrayList<OTVPart> parts) {
 		super();
 		this.contentId = contentId;
 		this.nameTh = nameTh;
@@ -30,8 +28,6 @@ public class OTVEpisode implements Parcelable {
 		this.detail = detail;
 		this.thumbnail = thumbnail;
 		this.cover = cover;
-		this.ratingStatus = ratingStatus;
-		this.ratingPoint = ratingPoint;
 		this.date = String.format(dateToFormat(date));
 		this.parts = parts;
 	}
@@ -97,26 +93,6 @@ public class OTVEpisode implements Parcelable {
 	}
 
 
-	public String getRatingStatus() {
-		return ratingStatus;
-	}
-
-
-	public void setRatingStatus(String ratingStatus) {
-		this.ratingStatus = ratingStatus;
-	}
-
-
-	public String getRatingPoint() {
-		return ratingPoint;
-	}
-
-
-	public void setRatingPoint(String ratingPoint) {
-		this.ratingPoint = ratingPoint;
-	}
-
-
 	public String getDate() {
 		return date;
 	}
@@ -162,8 +138,6 @@ public class OTVEpisode implements Parcelable {
         dest.writeString(detail);
         dest.writeString(thumbnail);
         dest.writeString(cover);
-        dest.writeString(ratingStatus);
-        dest.writeString(ratingPoint);
         dest.writeString(date);
         dest.writeTypedList(parts);
     }
@@ -188,8 +162,6 @@ public class OTVEpisode implements Parcelable {
         this.detail = source.readString();
         this.thumbnail = source.readString();
         this.cover = source.readString();
-        this.ratingStatus = source.readString();
-        this.ratingPoint = source.readString();
         this.date = source.readString();
         this.parts = new ArrayList<>();
         source.readTypedList(this.parts, OTVPart.CREATOR);

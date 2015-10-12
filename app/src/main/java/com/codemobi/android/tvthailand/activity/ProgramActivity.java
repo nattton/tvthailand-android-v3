@@ -14,6 +14,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,8 +34,11 @@ import com.codemobi.android.tvthailand.datasource.OnLoadDataListener;
 import com.codemobi.android.tvthailand.dao.advertise.PreRollAdFactory;
 import com.codemobi.android.tvthailand.datasource.Program;
 import com.codemobi.android.tvthailand.datasource.Programs;
+import com.codemobi.android.tvthailand.player.RadioPlayerActivity;
 import com.codemobi.android.tvthailand.player.VastContentPlayerActivity;
 import com.rey.material.widget.ProgressView;
+import com.vserv.android.ads.api.VservAdView;
+import com.vserv.android.ads.common.VservAdListener;
 
 public class ProgramActivity extends AppCompatActivity implements
 		OnLoadDataListener, OnTapListener, SwipeRefreshLayout.OnRefreshListener {
@@ -65,6 +69,9 @@ public class ProgramActivity extends AppCompatActivity implements
 
 	private ProgressView progressView;
 	private TextView textViewNoContent;
+
+	private VservAdView vservAdView;
+	private VservAdListener mAdListener;
 
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
@@ -264,7 +271,7 @@ public class ProgramActivity extends AppCompatActivity implements
                     intentVideo.putExtra(VastContentPlayerActivity.EXTRAS_SKIP_TIME, ad.getSkipTime());
                 }
 
-                startActivity(intentVideo);
+                startActivityForResult(intentVideo, VastContentPlayerActivity.LIVE_PLAYER_CODE);
             }
         });
         preRollAdFactory.load();
@@ -286,6 +293,70 @@ public class ProgramActivity extends AppCompatActivity implements
 	}
 
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == VastContentPlayerActivity.LIVE_PLAYER_CODE)
+			startAds();
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private void startAds() {
+		adListenerInitialization();
+		vservAdView = new VservAdView(this, getResources().getString(R.string.vserv_interstitial_ad_unit_id), VservAdView.UX_INTERSTITIAL);
+		vservAdView.setAdListener(mAdListener);
+		vservAdView.setUxType(VservAdView.UX_INTERSTITIAL);
+		vservAdView.loadAd();
+	}
+
+	private void adListenerInitialization() {
+		mAdListener = new VservAdListener() {
+
+			@Override
+			public void didInteractWithAd(VservAdView adView) {
+				Log.d("Vserv", "adViewDidLoadAd");
+			}
+
+			@Override
+			public void adViewDidLoadAd(VservAdView adView) {
+				Log.d("Vserv", "adViewDidLoadAd");
+			}
+
+			@Override
+			public void willPresentOverlay(VservAdView adView) {
+				Log.d("Vserv", "willPresentOverlay");
+			}
+
+			@Override
+			public void willDismissOverlay(VservAdView adView) {
+				Log.d("Vserv", "willDismissOverlay");
+			}
+
+			@Override
+			public void adViewDidCacheAd(VservAdView adView) {
+				Log.d("Vserv", "adViewDidCacheAd");
+				if (adView != null) {
+					adView.showAd();
+				}
+			}
+
+			@Override
+			public VservAdView didFailedToLoadAd(String arg0) {
+				Log.d("VservAdView", "didFailedToLoadAd");
+				return null;
+			}
+
+			@Override
+			public VservAdView didFailedToCacheAd(String Error) {
+				Log.d("VservAdView", "didFailedToCacheAd");
+				return null;
+			}
+
+			@Override
+			public void willLeaveApp(VservAdView adView) {
+				Log.d("Vserv", "willLeaveApp");
+			}
+		};
+	}
 
 
 }

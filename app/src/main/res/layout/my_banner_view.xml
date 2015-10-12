@@ -11,6 +11,14 @@
         android:layout_centerHorizontal="true"
         android:visibility="gone" />
 
+    <RelativeLayout
+        android:id="@+id/adViewContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
+
     <WebView
         android:id="@+id/webViewShow"
         android:layout_width="match_parent"

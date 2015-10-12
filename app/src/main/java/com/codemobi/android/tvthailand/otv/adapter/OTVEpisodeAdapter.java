@@ -49,7 +49,7 @@ public class OTVEpisodeAdapter extends RecyclerView.Adapter<OTVEpisodeAdapter.Vi
 
         OTVEpisode episode = episodes.get(position);
         holder.layoutParts.setVisibility(View.GONE);
-        holder.viewCount.setVisibility(View.INVISIBLE);
+        holder.layoutViewCount.setVisibility(View.GONE);
 
         Glide.with(context)
                 .load(logo)
@@ -60,8 +60,6 @@ public class OTVEpisodeAdapter extends RecyclerView.Adapter<OTVEpisodeAdapter.Vi
 
         holder.title.setText(episode.getNameTh() + "  " + episode.getDate());
         holder.aired.setText("Aired : "+episode.getDate());
-
-        holder.viewCount.setText("000");
     }
 
     @Override
@@ -78,6 +76,7 @@ public class OTVEpisodeAdapter extends RecyclerView.Adapter<OTVEpisodeAdapter.Vi
         TextView title;
         TextView aired;
         TextView viewCount;
+        LinearLayout layoutViewCount;
         LinearLayout layoutParts;
         TextView tvParts;
 
@@ -87,6 +86,7 @@ public class OTVEpisodeAdapter extends RecyclerView.Adapter<OTVEpisodeAdapter.Vi
             title = (TextView)itemView.findViewById(R.id.tv_label_ep);
             aired = (TextView)itemView.findViewById(R.id.tv_on_air_ep);
             viewCount = (TextView)itemView.findViewById(R.id.view_count_ep);
+            layoutViewCount = (LinearLayout)itemView.findViewById(R.id.view_count_ll);
             layoutParts = (LinearLayout)itemView.findViewById(R.id.part_updated_ll);
             tvParts = (TextView)itemView.findViewById(R.id.num_part);
         }
