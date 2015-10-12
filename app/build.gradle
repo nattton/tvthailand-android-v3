@@ -19,8 +19,8 @@ android {
         applicationId "com.codemobi.android.tvthailand"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 126
-        versionName "2.6.4"
+        versionCode 127
+        versionName "2.6.5"
 
         testApplicationId "com.codemobi.android.tvthailand.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
@@ -38,7 +38,7 @@ android {
         grey {
             applicationId 'com.makathon.tvthailand'
             buildConfigField "String", "BASE_URL", "\"http://tv.makathon.com/api2/\""
-            versionName '2.6.4-plus'
+            versionName '2.6.5-plus'
         }
     }
     buildTypes {

@@ -4,8 +4,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -15,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,8 +30,6 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.dao.section.SectionCollectionDao;
 import com.codemobi.android.tvthailand.manager.SectionManager;
-import com.vserv.android.ads.api.VservAdView;
-import com.vserv.android.ads.common.VservAdListener;
 
 import java.io.IOException;
 
@@ -48,21 +43,11 @@ public class MainActivity extends AppCompatActivity {
 	TabLayout tabLayout;
 	ViewPager viewPager;
 	CoordinatorLayout rootLayout;
+	SearchView searchView;
 
 	private static final String TAG = "MainActivity";
-	private static final String KEY_IS_ADS_DISPLAYED = "KEY_IS_ADS_DISPLAYED";
-	private static boolean isAdsEnabled = true;
-	private boolean isAdsDisplayed = false;
 	private int current_pos = 0;
 
-	SearchView searchView;
-	
-	private VservAdView vservAdView;
-	private VservAdListener mAdListener;
-	
-	public void setTest() {
-		isAdsEnabled = false;
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +58,6 @@ public class MainActivity extends AppCompatActivity {
 		initTabLayout();
         initInstances();
 		sendTracker();
-		if (savedInstanceState != null){
-		    isAdsDisplayed = savedInstanceState.getBoolean(KEY_IS_ADS_DISPLAYED);
-		}
 	}
 
 	private void initToolbar() {
@@ -190,21 +172,6 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
     }
-	
-	@Override
-	protected void onStart() {
-		super.onStart();
-		isAdsEnabled = true;
-		if (isAdsEnabled && !isAdsDisplayed) {
-			final Handler handler = new Handler();
-			handler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					startAds();
-				}
-			}, 5000);
-		}
-	}
 
 	private void sendTracker() {
 		Tracker t = ((MainApplication)getApplication()).getDefaultTracker();
@@ -214,17 +181,6 @@ public class MainActivity extends AppCompatActivity {
 		Tracker otvTracker = ((MainApplication)getApplication()).getOTVTracker();
 		otvTracker.setScreenName("Main");
 		otvTracker.send(new HitBuilders.AppViewBuilder().build());
-	}
-
-	@Override
-		protected void onSaveInstanceState(Bundle outState) {
-			super.onSaveInstanceState(outState);
-			outState.putBoolean(KEY_IS_ADS_DISPLAYED, isAdsDisplayed);
-		}
-	
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
 	}
 
 	@Override
@@ -288,69 +244,4 @@ public class MainActivity extends AppCompatActivity {
 		}
 	}
 
-	@Override
-	public void onLowMemory() {
-		Log.w(TAG, "onLowMemory");
-		super.onLowMemory();
-	}
-
-	private void startAds() {
-		adListenerInitialization();
-		vservAdView = new VservAdView(this, "", VservAdView.UX_INTERSTITIAL);
-		vservAdView.setAdListener(mAdListener);
-		vservAdView.setZoneId(getResources().getString(R.string.vserv_interstitial_ad_unit_id));
-		vservAdView.setUxType(VservAdView.UX_INTERSTITIAL);
-		vservAdView.cacheAd();
-		isAdsDisplayed = true;
-	}
-
-	private void adListenerInitialization() {
-		mAdListener = new VservAdListener() {
-
-			@Override
-			public void didInteractWithAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidLoadAd");
-			}
-
-			@Override
-			public void adViewDidLoadAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidLoadAd");
-			}
-
-			@Override
-			public void willPresentOverlay(VservAdView adView) {
-				Log.d("Vserv", "willPresentOverlay");
-			}
-
-			@Override
-			public void willDismissOverlay(VservAdView adView) {
-				Log.d("Vserv", "willDismissOverlay");
-			}
-
-			@Override
-			public void adViewDidCacheAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidCacheAd");
-				if (vservAdView != null) {
-					vservAdView.showAd();
-				}
-			}
-
-			@Override
-			public VservAdView didFailedToLoadAd(String arg0) {
-				Log.d("VservAdView", "didFailedToLoadAd");
-				return null;
-			}
-
-			@Override
-			public VservAdView didFailedToCacheAd(String Error) {
-				Log.d("VservAdView", "didFailedToCacheAd");
-				return null;
-			}
-
-			@Override
-			public void willLeaveApp(VservAdView adView) {
-				Log.d("Vserv", "willLeaveApp");
-			}
-		};
-	}
 }

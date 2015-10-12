@@ -56,7 +56,7 @@ public class ChannelFragment extends Fragment {
 				bundle.putString(ProgramActivity.EXTRAS_TITLE, channel.getTitle());
 				bundle.putString(ProgramActivity.EXTRAS_ID, channel.getId());
 				bundle.putString(ProgramActivity.EXTRAS_ICON, channel.getThumbnail());
-				bundle.putString(ProgramActivity.EXTRAS_URL, channel.getUrl());
+				bundle.putString(ProgramActivity.EXTRAS_LIVE_URL, channel.getUrl());
 				intent.putExtras(bundle);
 				getActivity().startActivity(intent);
 			}

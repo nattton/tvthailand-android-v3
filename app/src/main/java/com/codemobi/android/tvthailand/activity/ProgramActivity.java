@@ -14,7 +14,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,8 +35,6 @@ import com.codemobi.android.tvthailand.datasource.Program;
 import com.codemobi.android.tvthailand.datasource.Programs;
 import com.codemobi.android.tvthailand.player.VastContentPlayerActivity;
 import com.rey.material.widget.ProgressView;
-import com.vserv.android.ads.api.VservAdView;
-import com.vserv.android.ads.common.VservAdListener;
 
 public class ProgramActivity extends AppCompatActivity implements
 		OnLoadDataListener, OnTapListener, SwipeRefreshLayout.OnRefreshListener {
@@ -50,7 +47,7 @@ public class ProgramActivity extends AppCompatActivity implements
     public static final String EXTRAS_ID = "EXTRAS_ID";
     public static final String EXTRAS_TITLE = "EXTRAS_TITLE";
     public static final String EXTRAS_ICON = "EXTRAS_ICON";
-    public static final String EXTRAS_URL = "EXTRAS_URL";
+    public static final String EXTRAS_LIVE_URL = "EXTRAS_LIVE_URL";
 
 	/** MODE **/
     public static final int BY_CATEGORY = 1;
@@ -60,7 +57,7 @@ public class ProgramActivity extends AppCompatActivity implements
 	private int mode;
 	private String title;
 	private String icon;
-	private String url;
+	private String liveURL;
 
 	private Programs mPrograms;
 	private GridLayoutManager mLayoutManager;
@@ -68,9 +65,6 @@ public class ProgramActivity extends AppCompatActivity implements
 
 	private ProgressView progressView;
 	private TextView textViewNoContent;
-
-	private VservAdView vservAdView;
-	private VservAdListener mAdListener;
 
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
@@ -89,7 +83,7 @@ public class ProgramActivity extends AppCompatActivity implements
 		mode = bundle.getInt(EXTRAS_MODE);
 		title = bundle.getString(EXTRAS_TITLE);
 		icon = bundle.getString(EXTRAS_ICON);
-		url = bundle.getString(EXTRAS_URL);
+		liveURL = bundle.getString(EXTRAS_LIVE_URL);
 	}
 
 	private void initToolbar() {
@@ -143,7 +137,7 @@ public class ProgramActivity extends AppCompatActivity implements
 		});
 
 		FrameLayout live_frame_ll = (FrameLayout) findViewById(R.id.live_frame_ll);
-		if (mode == BY_CHANNEL && url != null && !url.equals("")) {
+		if (mode == BY_CHANNEL && liveURL != null && !liveURL.equals("")) {
 			live_frame_ll.setVisibility(View.VISIBLE);
 		} else {
 			live_frame_ll.setVisibility(View.GONE);
@@ -154,7 +148,7 @@ public class ProgramActivity extends AppCompatActivity implements
 		OnClickListener clickLive = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startAds();
+				playVideo(liveURL);
 			}
 		};
 		watch_live_btn.setOnClickListener(clickLive);
@@ -205,7 +199,7 @@ public class ProgramActivity extends AppCompatActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.program, menu);
         MenuItem playMenu = menu.findItem(R.id.play);
-		if (mode == BY_CHANNEL && url != null && !url.equals("")) {
+		if (mode == BY_CHANNEL && liveURL != null && !liveURL.equals("")) {
 			playMenu.setVisible(true);
 		} else {
 			playMenu.setVisible(false);
@@ -220,7 +214,7 @@ public class ProgramActivity extends AppCompatActivity implements
 			loadProgram(0);
 			break;
 		case R.id.play:
-			startAds();
+			playVideo(liveURL);
 			break;
 		default:
 			break;
@@ -291,65 +285,7 @@ public class ProgramActivity extends AppCompatActivity implements
 		}
 	}
 
-	private void startAds() {
-		adListenerInitialization();
-		vservAdView = new VservAdView(this, "", VservAdView.UX_INTERSTITIAL);
-		vservAdView.setAdListener(mAdListener);
-		vservAdView.setZoneId(getResources().getString(R.string.vserv_interstitial_ad_unit_id));
-		vservAdView.setUxType(VservAdView.UX_INTERSTITIAL);
-		vservAdView.cacheAd();
-	}
 
-	private void adListenerInitialization() {
-		mAdListener = new VservAdListener() {
 
-			@Override
-			public void didInteractWithAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidLoadAd");
-			}
 
-			@Override
-			public void adViewDidLoadAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidLoadAd");
-			}
-
-			@Override
-			public void willPresentOverlay(VservAdView adView) {
-				Log.d("Vserv", "willPresentOverlay");
-			}
-
-			@Override
-			public void willDismissOverlay(VservAdView adView) {
-				Log.d("Vserv", "willDismissOverlay");
-				playVideo(url);
-			}
-
-			@Override
-			public void adViewDidCacheAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidCacheAd");
-				if (vservAdView != null) {
-					vservAdView.showAd();
-				}
-			}
-
-			@Override
-			public VservAdView didFailedToLoadAd(String arg0) {
-				Log.d("VservAdView", "didFailedToLoadAd");
-				playVideo(url);
-				return null;
-			}
-
-			@Override
-			public VservAdView didFailedToCacheAd(String Error) {
-				Log.d("VservAdView", "didFailedToCacheAd");
-				playVideo(url);
-				return null;
-			}
-
-			@Override
-			public void willLeaveApp(VservAdView adView) {
-				Log.d("Vserv", "willLeaveApp");
-			}
-		};
-	}
 }

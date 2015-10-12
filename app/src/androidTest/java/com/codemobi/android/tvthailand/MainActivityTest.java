@@ -16,7 +16,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	@Override
 	public void setUp() throws Exception {
 		solo = new Solo(getInstrumentation(), getActivity());
-		((MainActivity)getActivity()).setTest();
 	}
 	
 	@Override
