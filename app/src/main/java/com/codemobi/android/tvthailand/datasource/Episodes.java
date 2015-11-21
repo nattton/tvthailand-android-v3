@@ -104,10 +104,10 @@ public class Episodes {
 
 			@Override
 			public void onResponse(retrofit.Response<JsonObject> response, Retrofit retrofit) {
-				if (response.isSuccess())
+				if (response.isSuccess()) {
 					if (response.body().has("info")) {
 						notifyProgramChange(response.body().getAsJsonObject("info"));
-
+					}
 					JsonArray jArray = response.body().get("episodes").getAsJsonArray();
 					if (jArray.size() == 0) {
 						last = true;
