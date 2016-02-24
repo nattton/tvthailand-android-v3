@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -26,20 +27,20 @@ import com.codemobi.android.tvthailand.fragment.CategoryFragment;
 import com.codemobi.android.tvthailand.fragment.ChannelFragment;
 import com.codemobi.android.tvthailand.fragment.RadioFragment;
 import com.codemobi.android.tvthailand.manager.http.APIClient;
-import com.codemobi.android.tvthailand.player.RadioPlayerActivity;
 import com.codemobi.android.tvthailand.utils.Constant;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.dao.section.SectionCollectionDao;
 import com.codemobi.android.tvthailand.manager.SectionManager;
-import com.vserv.android.ads.api.VservAdView;
-import com.vserv.android.ads.common.VservAdListener;
+import com.vmax.android.ads.api.VmaxAdView;
+import com.vmax.android.ads.common.VmaxAdListener;
 
 import java.io.IOException;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,7 +51,17 @@ public class MainActivity extends AppCompatActivity {
 	SearchView searchView;
 
 	private static final String TAG = "MainActivity";
+	private static final String KEY_IS_ADS_DISPLAYED = "KEY_IS_ADS_DISPLAYED";
+	private static boolean isAdsEnabled = true;
+	private boolean isAdsDisplayed = false;
 	private int current_pos = 0;
+
+	private VmaxAdView vmaxAdView;
+	private VmaxAdListener mAdListener;
+
+	public void setTest() {
+		isAdsEnabled = false;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
 		initTabLayout();
         initInstances();
 		sendTracker();
+		if (savedInstanceState != null){
+		    isAdsDisplayed = savedInstanceState.getBoolean(KEY_IS_ADS_DISPLAYED);
+		}
 	}
 
 	private void initToolbar() {
@@ -143,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 		Call<SectionCollectionDao> call = service.loadSection(Constant.defaultParams);
 		call.enqueue(new Callback<SectionCollectionDao>() {
 			@Override
-			public void onResponse(retrofit.Response<SectionCollectionDao> response, Retrofit retrofit) {
+			public void onResponse(Response<SectionCollectionDao> response) {
 				if (response.isSuccess())
 					SectionManager.getInstance().setData(response.body());
 				else {
@@ -176,6 +190,21 @@ public class MainActivity extends AppCompatActivity {
 		});
     }
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+		isAdsEnabled = true;
+		if (isAdsEnabled && !isAdsDisplayed) {
+			final Handler handler = new Handler();
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					startAds();
+				}
+			}, 5000);
+		}
+	}
+
 	private void sendTracker() {
 		Tracker t = ((MainApplication)getApplication()).getDefaultTracker();
         t.setScreenName("Main");
@@ -184,6 +213,17 @@ public class MainActivity extends AppCompatActivity {
 		Tracker otvTracker = ((MainApplication)getApplication()).getOTVTracker();
 		otvTracker.setScreenName("Main");
 		otvTracker.send(new HitBuilders.AppViewBuilder().build());
+	}
+
+	@Override
+		protected void onSaveInstanceState(Bundle outState) {
+			super.onSaveInstanceState(outState);
+			outState.putBoolean(KEY_IS_ADS_DISPLAYED, isAdsDisplayed);
+		}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
 	}
 
 	@Override
@@ -245,5 +285,65 @@ public class MainActivity extends AppCompatActivity {
 			loadSection();
 			break;
 		}
+	}
+
+	private void startAds() {
+		adListenerInitialization();
+		vmaxAdView = new VmaxAdView(this, getResources().getString(R.string.vserv_interstitial_ad_unit_id), VmaxAdView.UX_INTERSTITIAL);
+		vmaxAdView.setAdListener(mAdListener);
+		vmaxAdView.setAdSpotId(getResources().getString(R.string.vserv_banner_ad_unit_id));
+		vmaxAdView.setUxType(vmaxAdView.UX_INTERSTITIAL);
+		vmaxAdView.cacheAd();
+		isAdsDisplayed = true;
+	}
+
+	private void adListenerInitialization() {
+		mAdListener = new VmaxAdListener() {
+
+			@Override
+			public void didInteractWithAd(VmaxAdView adView) {
+				Log.d("Vmax", "adViewDidLoadAd");
+			}
+
+			@Override
+			public void adViewDidLoadAd(VmaxAdView adView) {
+				Log.d("Vmax", "adViewDidLoadAd");
+			}
+
+			@Override
+			public void willPresentOverlay(VmaxAdView adView) {
+				Log.d("Vmax", "willPresentOverlay");
+			}
+
+			@Override
+			public void willDismissOverlay(VmaxAdView adView) {
+				Log.d("Vmax", "willDismissOverlay");
+			}
+
+			@Override
+			public void adViewDidCacheAd(VmaxAdView adView) {
+				Log.d("Vmax", "adViewDidCacheAd");
+				if (adView != null) {
+					adView.showAd();
+				}
+			}
+
+			@Override
+			public VmaxAdView didFailedToLoadAd(String arg0) {
+				Log.d("VmaxAdView", "didFailedToLoadAd");
+				return null;
+			}
+
+			@Override
+			public VmaxAdView didFailedToCacheAd(String Error) {
+				Log.d("VmaxAdView", "didFailedToCacheAd");
+				return null;
+			}
+
+			@Override
+			public void willLeaveApp(VmaxAdView adView) {
+				Log.d("Vmax", "willLeaveApp");
+			}
+		};
 	}
 }

@@ -19,15 +19,15 @@ import com.codemobi.android.tvthailand.manager.http.APIClient;
 import com.codemobi.android.tvthailand.utils.Constant;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.ads.*;
-import com.vserv.android.ads.api.VservAdView;
-import com.vserv.android.ads.common.VservAdListener;
+import com.vmax.android.ads.api.VmaxAdView;
+import com.vmax.android.ads.common.VmaxAdListener;
 
 import java.util.Locale;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static com.facebook.ads.AdSize.*;
 
@@ -38,8 +38,8 @@ public class MyBannerView extends LinearLayout {
 
 	private LinearLayout parentView;
 	private AdView adView;
-	private VservAdListener mAdListener;
-	private VservAdView vservAdView;
+	private VmaxAdView vmaxAdView;
+	private VmaxAdListener mAdListener;
 	private RelativeLayout adViewContainer;
 	private WebView webViewShow;
 
@@ -65,7 +65,7 @@ public class MyBannerView extends LinearLayout {
 		parentView = this;
 		parentView.setVisibility(GONE);
 		View convertView = LayoutInflater.from(context).inflate(R.layout.my_banner_view, this);
-		vservAdView = (VservAdView) convertView.findViewById(R.id.vservAdView);
+		vmaxAdView = (VmaxAdView) convertView.findViewById(R.id.vmaxAdView);
 		adViewContainer = (RelativeLayout) findViewById(R.id.adViewContainer);
 		webViewShow = (WebView) convertView.findViewById(R.id.webViewShow);
 		setUpView();
@@ -96,7 +96,7 @@ public class MyBannerView extends LinearLayout {
 		Call<AdCollectionDao> call =  service.loadAd(Constant.defaultParams);
 		call.enqueue(new Callback<AdCollectionDao>() {
 			@Override
-			public void onResponse(Response<AdCollectionDao> response, Retrofit retrofit) {
+			public void onResponse(Response<AdCollectionDao> response) {
 				if (response.isSuccess())
 					displayAds(response.body());
 			}
@@ -127,11 +127,11 @@ public class MyBannerView extends LinearLayout {
 	private void requestVservAd() {
 		adListenerInitialization();
 		try {
-			vservAdView.setAdListener(mAdListener);
-			vservAdView.setZoneId(getResources().getString(R.string.vserv_banner_ad_unit_id));
-			vservAdView.setRefresh(true);
-			vservAdView.setRefreshRate(60);
-			vservAdView.loadAd();
+			vmaxAdView.setAdListener(mAdListener);
+			vmaxAdView.setAdSpotId(getResources().getString(R.string.vserv_banner_ad_unit_id));
+			vmaxAdView.setRefresh(true);
+			vmaxAdView.setRefreshRate(60);
+			vmaxAdView.loadAd();
 		}
 		catch (Exception e) {
 			requestFacebookAds();
@@ -140,53 +140,53 @@ public class MyBannerView extends LinearLayout {
 	}
 
 	private void adListenerInitialization() {
-		mAdListener = new VservAdListener() {
+		mAdListener = new VmaxAdListener() {
 
 			@Override
-			public void didInteractWithAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidLoadAd");
+			public void didInteractWithAd(VmaxAdView adView) {
+				Log.d("", "adViewDidLoadAd");
 			}
 
 			@Override
-			public void adViewDidLoadAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidLoadAd");
+			public void adViewDidLoadAd(VmaxAdView adView) {
+				Log.d("", "adViewDidLoadAd");
 				parentView.setVisibility(VISIBLE);
-				vservAdView.setVisibility(VISIBLE);
+				vmaxAdView.setVisibility(VISIBLE);
 			}
 
 			@Override
-			public void willPresentOverlay(VservAdView adView) {
-				Log.d("Vserv", "willPresentOverlay");
+			public void willPresentOverlay(VmaxAdView adView) {
+				Log.d("", "willPresentOverlay");
 			}
 
 			@Override
-			public void willDismissOverlay(VservAdView adView) {
-				Log.d("Vserv", "willDismissOverlay");
+			public void willDismissOverlay(VmaxAdView adView) {
+				Log.d("", "willDismissOverlay");
 			}
 
 			@Override
-			public void adViewDidCacheAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidCacheAd");
-				if (vservAdView != null) {
-					vservAdView.showAd();
+			public void adViewDidCacheAd(VmaxAdView adView) {
+				Log.d("Vmax", "adViewDidCacheAd");
+				if (vmaxAdView != null) {
+					vmaxAdView.showAd();
 				}
 			}
 
 			@Override
-			public VservAdView didFailedToLoadAd(String arg0) {
-				Log.d("VservAdView", "didFailedToLoadAd");
+			public VmaxAdView didFailedToLoadAd(String arg0) {
+				Log.d("VmaxAdView", "didFailedToLoadAd");
 				return null;
 			}
 
 			@Override
-			public VservAdView didFailedToCacheAd(String Error) {
-				Log.d("VservAdView", "didFailedToCacheAd");
+			public VmaxAdView didFailedToCacheAd(String Error) {
+				Log.d("VmaxAdView", "didFailedToCacheAd");
 				return null;
 			}
 
 			@Override
-			public void willLeaveApp(VservAdView adView) {
-				Log.d("Vserv", "willLeaveApp");
+			public void willLeaveApp(VmaxAdView adView) {
+				Log.d("Vmax", "willLeaveApp");
 			}
 		};
 	}

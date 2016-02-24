@@ -1,17 +1,12 @@
 package com.codemobi.android.tvthailand.utils;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.provider.Settings;
-import android.text.format.Time;
 
-import com.codemobi.android.tvthailand.R;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.IOException;
 

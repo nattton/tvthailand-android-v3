@@ -22,8 +22,8 @@ import com.codemobi.android.tvthailand.dao.section.RadioItemDao;
 import com.codemobi.android.tvthailand.manager.SectionManager;
 import com.codemobi.android.tvthailand.player.RadioPlayerActivity;
 import com.squareup.otto.Subscribe;
-import com.vserv.android.ads.api.VservAdView;
-import com.vserv.android.ads.common.VservAdListener;
+import com.vmax.android.ads.api.VmaxAdView;
+import com.vmax.android.ads.common.VmaxAdListener;
 
 public class RadioFragment extends Fragment implements OnItemClickListener {
 
@@ -32,8 +32,8 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 
 	RadioItemDao radio;
 
-	private VservAdView vservAdView;
-	private VservAdListener mAdListener;
+	private VmaxAdView vmaxAdView;
+	private VmaxAdListener mAdListener;
 
 	public static RadioFragment newInstance() {
 		RadioFragment fragment = new RadioFragment();
@@ -125,58 +125,58 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 
 	private void startAds() {
 		adListenerInitialization();
-		vservAdView = new VservAdView(getContext(), getResources().getString(R.string.vserv_interstitial_ad_unit_id), VservAdView.UX_INTERSTITIAL);
-		vservAdView.setAdListener(mAdListener);
-		vservAdView.setUxType(VservAdView.UX_INTERSTITIAL);
-		vservAdView.loadAd();
+		vmaxAdView = new VmaxAdView(getContext(), getResources().getString(R.string.vserv_interstitial_ad_unit_id), VmaxAdView.UX_INTERSTITIAL);
+		vmaxAdView.setAdListener(mAdListener);
+		vmaxAdView.setUxType(VmaxAdView.UX_INTERSTITIAL);
+		vmaxAdView.cacheAd();
 	}
 
 	private void adListenerInitialization() {
-		mAdListener = new VservAdListener() {
+		mAdListener = new VmaxAdListener() {
 
 			@Override
-			public void didInteractWithAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidLoadAd");
+			public void didInteractWithAd(VmaxAdView adView) {
+				Log.d("Vmax", "adViewDidLoadAd");
 			}
 
 			@Override
-			public void adViewDidLoadAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidLoadAd");
+			public void adViewDidLoadAd(VmaxAdView adView) {
+				Log.d("Vmax", "adViewDidLoadAd");
 			}
 
 			@Override
-			public void willPresentOverlay(VservAdView adView) {
-				Log.d("Vserv", "willPresentOverlay");
+			public void willPresentOverlay(VmaxAdView adView) {
+				Log.d("Vmax", "willPresentOverlay");
 			}
 
 			@Override
-			public void willDismissOverlay(VservAdView adView) {
-				Log.d("Vserv", "willDismissOverlay");
+			public void willDismissOverlay(VmaxAdView adView) {
+				Log.d("Vmax", "willDismissOverlay");
 			}
 
 			@Override
-			public void adViewDidCacheAd(VservAdView adView) {
-				Log.d("Vserv", "adViewDidCacheAd");
+			public void adViewDidCacheAd(VmaxAdView adView) {
+				Log.d("Vmax", "adViewDidCacheAd");
 				if (adView != null) {
 					adView.showAd();
 				}
 			}
 
 			@Override
-			public VservAdView didFailedToLoadAd(String arg0) {
-				Log.d("VservAdView", "didFailedToLoadAd");
+			public VmaxAdView didFailedToLoadAd(String arg0) {
+				Log.d("VmaxAdView", "didFailedToLoadAd");
 				return null;
 			}
 
 			@Override
-			public VservAdView didFailedToCacheAd(String Error) {
-				Log.d("VservAdView", "didFailedToCacheAd");
+			public VmaxAdView didFailedToCacheAd(String Error) {
+				Log.d("VmaxAdView", "didFailedToCacheAd");
 				return null;
 			}
 
 			@Override
-			public void willLeaveApp(VservAdView adView) {
-				Log.d("Vserv", "willLeaveApp");
+			public void willLeaveApp(VmaxAdView adView) {
+				Log.d("Vmax", "willLeaveApp");
 			}
 		};
 	}

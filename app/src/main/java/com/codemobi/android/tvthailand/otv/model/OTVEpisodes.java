@@ -9,10 +9,10 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 
 public class OTVEpisodes {
@@ -30,7 +30,7 @@ public class OTVEpisodes {
 		Call<JsonObject> call = APIClient.getClient().loadEpisodeOTV(show.getOtvId(), 0);
 		call.enqueue(new Callback<JsonObject>() {
 			@Override
-			public void onResponse(Response<JsonObject> response, Retrofit retrofit) {
+			public void onResponse(Response<JsonObject> response) {
 				clear();
 				if (response.isSuccess())
 					jsonMap(response.body());

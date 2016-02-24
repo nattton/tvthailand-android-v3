@@ -1,5 +1,6 @@
 package com.vserv.android.ads.mediation.partners;
 
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
@@ -7,19 +8,22 @@ import android.util.Log;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
+import com.facebook.ads.AdSettings;
 import com.facebook.ads.AdSize;
 import com.facebook.ads.AdView;
+import com.vmax.android.ads.mediation.partners.VmaxCustomAd;
+import com.vmax.android.ads.mediation.partners.VmaxCustomAdListener;
 
 import java.util.Map;
 
 /*
- * Tested with facebook SDK 3.23.0.
+ * Tested with facebook SDK 4.8.2.
  */
-public class FaceBookBanner extends VservCustomAd implements AdListener {
+public class FaceBookBanner extends VmaxCustomAd implements AdListener {
     private static final String PLACEMENT_ID_KEY = "placementid";
 
     private AdView mFacebookBanner;
-    private VservCustomAdListener mBannerListener;
+    private VmaxCustomAdListener mBannerListener;
     public boolean LOGS_ENABLED = true;
 
     /**
@@ -28,12 +32,12 @@ public class FaceBookBanner extends VservCustomAd implements AdListener {
 
     @Override
     public void loadAd(final Context context,
-                       final VservCustomAdListener customEventBannerListener,
+                       final VmaxCustomAdListener customEventBannerListener,
                        final Map<String, Object> localExtras,
                        final Map<String, Object> serverExtras) {
         try {
             // if (LOGS_ENABLED) {
-            // Log.d("vserv", "Facebook showad banner.");
+            // Log.d("vmax", "Facebook showad banner.");
             // }
             mBannerListener = customEventBannerListener;
 
@@ -44,8 +48,28 @@ public class FaceBookBanner extends VservCustomAd implements AdListener {
                 mBannerListener.onAdFailed(0);
                 return;
             }
+            if (localExtras != null) {
+                if (localExtras.containsKey("test")) {
 
-            // AdSettings.addTestDevice("80c7d540ff48518a72d948f806d22529");
+                    String[] mTestAvdIds = (String[]) localExtras
+                            .get("test");
+                    if (mTestAvdIds != null) {
+                        for (int i = 0; i < mTestAvdIds.length; i++) {
+                            if (LOGS_ENABLED) {
+                                Log.i("vmax",
+                                        "test devices: "
+                                                + mTestAvdIds[i]);
+                            }
+                            AdSettings.addTestDevice(mTestAvdIds[i]);
+                            if (LOGS_ENABLED) {
+                                Log.i("vmax",
+                                        "Test mode: "
+                                                + AdSettings.isTestMode(context));
+                            }
+                        }
+                    }
+                }
+            }
 
             if (isTablet(context)) {
                 mFacebookBanner = new AdView(context, placementId,
@@ -96,7 +120,7 @@ public class FaceBookBanner extends VservCustomAd implements AdListener {
     @Override
     public void onAdLoaded(Ad ad) {
         if (LOGS_ENABLED) {
-            Log.d("vserv",
+            Log.d("vmax",
                     "Facebook banner ad loaded successfully. Showing ad...");
 
         }
@@ -107,7 +131,7 @@ public class FaceBookBanner extends VservCustomAd implements AdListener {
     @Override
     public void onError(final Ad ad, final AdError error) {
         if (LOGS_ENABLED) {
-            Log.d("vserv",
+            Log.d("vmax",
                     "Facebook banner ad failed to load. error: "
                             + error.getErrorCode());
         }
@@ -123,7 +147,7 @@ public class FaceBookBanner extends VservCustomAd implements AdListener {
     @Override
     public void onAdClicked(Ad ad) {
         if (LOGS_ENABLED) {
-            Log.d("vserv", "Facebook banner ad clicked.");
+            Log.d("vmax", "Facebook banner ad clicked.");
         }
         mBannerListener.onAdClicked();
     }

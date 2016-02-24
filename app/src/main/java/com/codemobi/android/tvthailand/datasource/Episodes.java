@@ -9,9 +9,10 @@ import com.codemobi.android.tvthailand.utils.Constant;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class Episodes {
 
@@ -103,7 +104,7 @@ public class Episodes {
 		return new Callback<JsonObject>() {
 
 			@Override
-			public void onResponse(retrofit.Response<JsonObject> response, Retrofit retrofit) {
+			public void onResponse(Response<JsonObject> response) {
 				if (response.isSuccess()) {
 					if (response.body().has("info")) {
 						notifyProgramChange(response.body().getAsJsonObject("info"));

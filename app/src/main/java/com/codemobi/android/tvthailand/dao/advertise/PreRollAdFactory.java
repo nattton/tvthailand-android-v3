@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class PreRollAdFactory {
 
@@ -48,7 +49,7 @@ public class PreRollAdFactory {
         Call<PreRollAdCollectionDao> call = APIClient.getClient().loadPreRollAd(Constant.defaultParams);
         call.enqueue(new Callback<PreRollAdCollectionDao>() {
             @Override
-            public void onResponse(retrofit.Response<PreRollAdCollectionDao> response, Retrofit retrofit) {
+            public void onResponse(Response<PreRollAdCollectionDao> response) {
                 if (response.isSuccess()) {
                     preRollAds.clear();
                     PreRollAdCollectionDao preRollAdCollectionDao = response.body();

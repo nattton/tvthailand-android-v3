@@ -1,25 +1,29 @@
 package com.vserv.android.ads.mediation.partners;
 
+
 import android.content.Context;
 import android.util.Log;
 
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
+import com.facebook.ads.AdSettings;
 import com.facebook.ads.InterstitialAd;
 import com.facebook.ads.InterstitialAdListener;
+import com.vmax.android.ads.mediation.partners.VmaxCustomAd;
+import com.vmax.android.ads.mediation.partners.VmaxCustomAdListener;
 
 import java.util.Map;
 
 /*
- * Tested with facebook SDK 3.23.0.
+ * Tested with facebook SDK 4.8.2.
  */
 
-public class FaceBookInterstitial extends VservCustomAd implements
+public class FaceBookInterstitial extends VmaxCustomAd implements
         InterstitialAdListener {
     private static final String PLACEMENT_ID_KEY = "placementid";
 
     private InterstitialAd mFacebookInterstitial;
-    private VservCustomAdListener mInterstitialListener;
+    private VmaxCustomAdListener mInterstitialListener;
     public boolean LOGS_ENABLED = true;
 
     /**
@@ -28,15 +32,15 @@ public class FaceBookInterstitial extends VservCustomAd implements
 
     @Override
     public void loadAd(final Context context,
-                       final VservCustomAdListener vservCustomAdListener,
+                       final VmaxCustomAdListener vmaxCustomAdListener,
                        final Map<String, Object> localExtras,
                        final Map<String, Object> serverExtras) {
         try {
             // if (LOGS_ENABLED) {
-            // Log.d("vserv", "Facebook loadad inter.");
+            // Log.d("vmax", "Facebook loadad inter.");
             // }
 
-            mInterstitialListener = vservCustomAdListener;
+            mInterstitialListener = vmaxCustomAdListener;
 
             final String placementId;
             if (extrasAreValid(serverExtras)) {
@@ -45,7 +49,28 @@ public class FaceBookInterstitial extends VservCustomAd implements
                 mInterstitialListener.onAdFailed(0);
                 return;
             }
-            // AdSettings.addTestDevice("d81a16f98e1dc937a2ef0ec4a77eff88");
+            if (localExtras != null) {
+                if (localExtras.containsKey("test")) {
+
+                    String[] mTestAvdIds = (String[]) localExtras
+                            .get("test");
+                    if (mTestAvdIds != null) {
+                        for (int i = 0; i < mTestAvdIds.length; i++) {
+                            if (LOGS_ENABLED) {
+                                Log.i("vmax",
+                                        "test devices: "
+                                                + mTestAvdIds[i]);
+                            }
+                            AdSettings.addTestDevice(mTestAvdIds[i]);
+                            if (LOGS_ENABLED) {
+                                Log.i("vmax",
+                                        "Test mode: "
+                                                + AdSettings.isTestMode(context));
+                            }
+                        }
+                    }
+                }
+            }
 
             mFacebookInterstitial = new InterstitialAd(context, placementId);
 
@@ -65,7 +90,7 @@ public class FaceBookInterstitial extends VservCustomAd implements
     public void showAd() {
         try {
             // if (LOGS_ENABLED) {
-            // Log.d("vserv", "Facebook showad inter.");
+            // Log.d("vmax", "Facebook showad inter.");
             // }
             if (mFacebookInterstitial != null
                     && mFacebookInterstitial.isAdLoaded()) {
@@ -73,12 +98,13 @@ public class FaceBookInterstitial extends VservCustomAd implements
                 mFacebookInterstitial.show();
             } else {
                 if (LOGS_ENABLED) {
-                    Log.d("vserv",
+                    Log.d("vmax",
                             "Tried to show a Facebook interstitial ad before it finished loading. Please try again.");
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            mInterstitialListener.onAdFailed(0);
         }
     }
 
@@ -102,7 +128,7 @@ public class FaceBookInterstitial extends VservCustomAd implements
     @Override
     public void onAdLoaded(final Ad ad) {
         if (LOGS_ENABLED) {
-            Log.d("vserv", "Facebook interstitial ad loaded successfully.");
+            Log.d("vmax", "Facebook interstitial ad loaded successfully.");
 
         }
         mInterstitialListener.onAdLoaded();
@@ -111,7 +137,7 @@ public class FaceBookInterstitial extends VservCustomAd implements
     @Override
     public void onError(final Ad ad, final AdError error) {
         if (LOGS_ENABLED) {
-            Log.d("vserv", "Facebook interstitial ad failed to load. error: "
+            Log.d("vmax", "Facebook interstitial ad failed to load. error: "
                     + error.getErrorCode());
         }
         if (error == AdError.NO_FILL) {
@@ -126,7 +152,7 @@ public class FaceBookInterstitial extends VservCustomAd implements
     @Override
     public void onInterstitialDisplayed(final Ad ad) {
         if (LOGS_ENABLED) {
-            Log.d("vserv", "Showing Facebook interstitial ad.");
+            Log.d("vmax", "Showing Facebook interstitial ad.");
         }
         mInterstitialListener.onAdShown();
     }
@@ -134,7 +160,7 @@ public class FaceBookInterstitial extends VservCustomAd implements
     @Override
     public void onAdClicked(final Ad ad) {
         if (LOGS_ENABLED) {
-            Log.d("vserv", "Facebook interstitial ad clicked.");
+            Log.d("vmax", "Facebook interstitial ad clicked.");
         }
         mInterstitialListener.onAdClicked();
     }
@@ -142,7 +168,7 @@ public class FaceBookInterstitial extends VservCustomAd implements
     @Override
     public void onInterstitialDismissed(final Ad ad) {
         if (LOGS_ENABLED) {
-            Log.d("vserv", "Facebook interstitial ad dismissed.");
+            Log.d("vmax", "Facebook interstitial ad dismissed.");
         }
         mInterstitialListener.onAdDismissed();
     }

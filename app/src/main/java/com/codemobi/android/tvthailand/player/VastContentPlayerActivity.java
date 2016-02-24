@@ -34,8 +34,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.codemobi.android.tvthailand.MainApplication;
 import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.utils.CountDownTimer;
-import com.vserv.android.ads.api.VservAdView;
-import com.vserv.android.ads.common.VservAdListener;
 
 
 public class VastContentPlayerActivity extends Activity implements AdErrorListener, AdsLoadedListener, AdEventListener, TrackingVideoView.CompleteCallback, OnClickListener {

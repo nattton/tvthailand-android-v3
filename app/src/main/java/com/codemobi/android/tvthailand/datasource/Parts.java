@@ -12,6 +12,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.app.Activity;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,11 +28,12 @@ import com.google.android.youtube.player.YouTubeApiServiceUtil;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeIntents;
 import com.codemobi.android.tvthailand.R;
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 
 public class Parts {
@@ -270,9 +272,15 @@ public class Parts {
         notifyStart();
 
 		selectedVideoId = videoId;
-		OkHttpClient okClient = new OkHttpClient();
+		OkHttpClient okClient;
 		if (BuildConfig.BUILD_TYPE.equals("debug")) {
-			okClient.interceptors().add(new APIClient.LoggingInterceptor());
+			HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+			logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+			okClient = new OkHttpClient.Builder()
+					.addInterceptor(logging)
+					.build();
+		} else {
+			okClient = new OkHttpClient.Builder().build();
 		}
 
 		String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", videoId);
@@ -281,7 +289,7 @@ public class Parts {
 				.url(mthaiUrl)
 				.header("User-Agent", Constant.UserAgentChrome)
 				.build();
-		okClient.newCall(request).enqueue(new com.squareup.okhttp.Callback() {
+		okClient.newCall(request).enqueue(new okhttp3.Callback() {
 			@Override
 			public void onResponse(Response response) throws IOException {
 				if (response.isSuccessful()) {
@@ -303,12 +311,19 @@ public class Parts {
         notifyStart();
 
 		selectedVideoId = videoId;
-		OkHttpClient okClient = new OkHttpClient();
-		if (BuildConfig.DEBUG)
-			okClient.interceptors().add(new APIClient.LoggingInterceptor());
+		OkHttpClient okClient;
+		if (BuildConfig.BUILD_TYPE.equals("debug")) {
+			HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+			logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+			okClient = new OkHttpClient.Builder()
+					.addInterceptor(logging)
+					.build();
+		} else {
+			okClient = new OkHttpClient.Builder().build();
+		}
 
 		String mthaiUrl = String.format("http://video.mthai.com/cool/player/%s.html", videoId);
-		RequestBody requestBody = new FormEncodingBuilder()
+		RequestBody requestBody = new FormBody.Builder()
 				.add("clip_password", password)
 				.build();
 		Request request = new Request.Builder()
@@ -316,9 +331,9 @@ public class Parts {
 				.url(mthaiUrl)
 				.header("User-Agent", Constant.UserAgentChrome)
 				.build();
-		okClient.newCall(request).enqueue(new com.squareup.okhttp.Callback() {
+		okClient.newCall(request).enqueue(new okhttp3.Callback() {
 			@Override
-			public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+			public void onResponse(okhttp3.Response response) throws IOException {
 				if (response.isSuccessful())
 					playMthaiFromHTML(response.body().string());
 				notifyFinish();
@@ -333,6 +348,9 @@ public class Parts {
 
 	private void playMthaiFromHTML(String response) {
 		notifyFinish();
+
+		if (mThaiSeperateBySources(response))
+			return;
 
 		if (mThaiSeperateByObClip(response))
 			return;
@@ -350,6 +368,28 @@ public class Parts {
 			Uri uriVideo = Uri.parse(mthaiUrl);
 			mContext.startActivity(new Intent(Intent.ACTION_VIEW, uriVideo));
 		}
+	}
+
+	private boolean mThaiSeperateBySources(String response) {
+		String varKey = "sources: ";
+		int indexStart = response.indexOf(varKey);
+		if (indexStart > 0) {
+			indexStart += varKey.length();
+			int indexEnd = response.indexOf("]", indexStart) + 1;
+			String obClipString = response.substring(indexStart, indexEnd);
+			try {
+				final JSONArray obClips = new JSONArray(obClipString);
+				// Select Quality
+				if (obClips.length() > 0){
+					JSONObject objClip = obClips.getJSONObject(obClips.length()-1);
+					playVideo(objClip.getString("file"));
+					return true;
+				}
+			} catch (JSONException e) {
+				return false;
+			}
+		}
+		return false;
 	}
 
 	private boolean mThaiSeperateByObClip(String response) {

@@ -16,8 +16,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.codemobi.android.tvthailand.R;
-import com.vserv.android.ads.api.VservAdView;
-import com.vserv.android.ads.common.VservAdListener;
 
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;

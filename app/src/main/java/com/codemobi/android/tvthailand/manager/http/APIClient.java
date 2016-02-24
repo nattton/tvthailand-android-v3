@@ -9,22 +9,23 @@ import com.codemobi.android.tvthailand.dao.section.SectionCollectionDao;
 import com.codemobi.android.tvthailand.otv.OTVConfig;
 import com.codemobi.android.tvthailand.utils.Constant;
 import com.google.gson.JsonObject;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import java.io.IOException;
 import java.util.Map;
 
+import okhttp3.logging.HttpLoggingInterceptor;
 import okio.Buffer;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.http.GET;
-import retrofit.Call;
-import retrofit.http.Path;
-import retrofit.http.QueryMap;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Retrofit;
+import retrofit2.http.GET;
+import retrofit2.Call;
+import retrofit2.http.Path;
+import retrofit2.http.QueryMap;
 
 /**
  * API Client with Retrofit
@@ -67,17 +68,15 @@ public class APIClient {
 
     public static synchronized APIService getClient() {
         if (service == null) {
-            OkHttpClient okClient = new OkHttpClient();
-            okClient.interceptors().add(new Interceptor() {
-                @Override
-                public Response intercept(Chain chain) throws IOException {
-                    Response response = chain.proceed(chain.request());
-                    return response;
-                }
-            });
-
-            if (BuildConfig.DEBUG) {
-                okClient.interceptors().add(new LoggingInterceptor());
+            OkHttpClient okClient;
+            if (BuildConfig.BUILD_TYPE.equals("debug")) {
+                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+                logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+                okClient = new OkHttpClient.Builder()
+                        .addInterceptor(logging)
+                        .build();
+            } else {
+                okClient = new OkHttpClient.Builder().build();
             }
 
             Retrofit retrofit = new Retrofit.Builder()
@@ -88,35 +87,6 @@ public class APIClient {
             service = retrofit.create(APIService.class);
         }
         return service;
-    }
-
-    public static class LoggingInterceptor implements Interceptor {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
-
-            long t1 = System.nanoTime();
-            String requestLog = String.format("Sending request %s on %s%n%s",
-                    request.url(), chain.connection(), request.headers());
-            if(request.method().compareToIgnoreCase("post")==0){
-                requestLog ="\n"+requestLog+"\n"+bodyToString(request);
-            }
-            Log.d("RETROFIT", "request" + "\n" + requestLog);
-
-            Response response = chain.proceed(request);
-            long t2 = System.nanoTime();
-
-            String responseLog = String.format("Received response for %s in %.1fms%n%s",
-                    response.request().url(), (t2 - t1) / 1e6d, response.headers());
-
-            String bodyString = response.body().string();
-
-            Log.d("RETROFIT","response"+"\n"+responseLog+"\n"+bodyString);
-
-            return response.newBuilder()
-                    .body(ResponseBody.create(response.body().contentType(), bodyString))
-                    .build();
-        }
     }
 
     public static String bodyToString(final Request request) {

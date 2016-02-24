@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/banner_height">
 
-    <com.vserv.android.ads.api.VservAdView
-        android:id="@+id/vservAdView"
+    <com.vmax.android.ads.api.VmaxAdView
+        android:id="@+id/vmaxAdView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/banner_height"
         android:layout_alignParentBottom="true"
