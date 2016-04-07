@@ -49,7 +49,7 @@ public class PreRollAdFactory {
         Call<PreRollAdCollectionDao> call = APIClient.getClient().loadPreRollAd(Constant.defaultParams);
         call.enqueue(new Callback<PreRollAdCollectionDao>() {
             @Override
-            public void onResponse(Response<PreRollAdCollectionDao> response) {
+            public void onResponse(Call<PreRollAdCollectionDao> call, Response<PreRollAdCollectionDao> response) {
                 if (response.isSuccess()) {
                     preRollAds.clear();
                     PreRollAdCollectionDao preRollAdCollectionDao = response.body();
@@ -59,7 +59,7 @@ public class PreRollAdFactory {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<PreRollAdCollectionDao> call, Throwable t) {
                 notifyLoadFinish();
             }
         });

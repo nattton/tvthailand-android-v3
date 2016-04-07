@@ -11,7 +11,6 @@ import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class Programs {
 	private static final String EMPTY_STRING = "";
@@ -65,7 +64,7 @@ public class Programs {
 	private Callback<JsonObject> jsonObjectCallback() {
 		return new Callback<JsonObject>() {
 			@Override
-			public void onResponse(Response<JsonObject> response) {
+			public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 				if (response.isSuccess()) {
 					if (0 == start) {
 						clear();
@@ -82,7 +81,7 @@ public class Programs {
 			}
 
 			@Override
-			public void onFailure(Throwable t) {
+			public void onFailure(Call<JsonObject> call, Throwable t) {
 				notifyLoadFinish();
 				notifyLoadError("Cannot load data.");
 			}

@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class Episodes {
 
@@ -101,10 +100,10 @@ public class Episodes {
 	}
 
 	private Callback<JsonObject> jsonObjectCallback() {
-		return new Callback<JsonObject>() {
 
+		return new Callback<JsonObject>() {
 			@Override
-			public void onResponse(Response<JsonObject> response) {
+			public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 				if (response.isSuccess()) {
 					if (response.body().has("info")) {
 						notifyProgramChange(response.body().getAsJsonObject("info"));
@@ -124,7 +123,7 @@ public class Episodes {
 			}
 
 			@Override
-			public void onFailure(Throwable t) {
+			public void onFailure(Call<JsonObject> call, Throwable t) {
 				notifyLoadFinish();
 			}
 		};

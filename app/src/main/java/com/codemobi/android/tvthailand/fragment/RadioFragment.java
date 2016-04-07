@@ -125,7 +125,7 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 
 	private void startAds() {
 		adListenerInitialization();
-		vmaxAdView = new VmaxAdView(getContext(), getResources().getString(R.string.vserv_interstitial_ad_unit_id), VmaxAdView.UX_INTERSTITIAL);
+		vmaxAdView = new VmaxAdView(getContext(), getResources().getString(R.string.vmax_interstitial_ad_unit_id), VmaxAdView.UX_INTERSTITIAL);
 		vmaxAdView.setAdListener(mAdListener);
 		vmaxAdView.setUxType(VmaxAdView.UX_INTERSTITIAL);
 		vmaxAdView.cacheAd();
@@ -177,6 +177,11 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 			@Override
 			public void willLeaveApp(VmaxAdView adView) {
 				Log.d("Vmax", "willLeaveApp");
+			}
+
+			@Override
+			public void onVideoCompleted() {
+
 			}
 		};
 	}

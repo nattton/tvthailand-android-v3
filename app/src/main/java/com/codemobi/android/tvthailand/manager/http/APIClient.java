@@ -20,7 +20,7 @@ import java.util.Map;
 
 import okhttp3.logging.HttpLoggingInterceptor;
 import okio.Buffer;
-import retrofit2.GsonConverterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.Call;

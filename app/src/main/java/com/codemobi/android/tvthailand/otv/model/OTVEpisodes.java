@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-
 
 public class OTVEpisodes {
 	private static final String EMPTY_STRING = "";
@@ -30,7 +28,7 @@ public class OTVEpisodes {
 		Call<JsonObject> call = APIClient.getClient().loadEpisodeOTV(show.getOtvId(), 0);
 		call.enqueue(new Callback<JsonObject>() {
 			@Override
-			public void onResponse(Response<JsonObject> response) {
+			public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 				clear();
 				if (response.isSuccess())
 					jsonMap(response.body());
@@ -38,7 +36,7 @@ public class OTVEpisodes {
 			}
 
 			@Override
-			public void onFailure(Throwable t) {
+			public void onFailure(Call<JsonObject> call, Throwable t) {
 				notifyLoadFinish();
 			}
 		});

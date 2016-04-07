@@ -22,12 +22,13 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 
 import com.codemobi.android.tvthailand.BuildConfig;
-import com.codemobi.android.tvthailand.manager.http.APIClient;
 import com.codemobi.android.tvthailand.utils.Constant;
 import com.google.android.youtube.player.YouTubeApiServiceUtil;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeIntents;
 import com.codemobi.android.tvthailand.R;
+
+import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -289,9 +290,10 @@ public class Parts {
 				.url(mthaiUrl)
 				.header("User-Agent", Constant.UserAgentChrome)
 				.build();
-		okClient.newCall(request).enqueue(new okhttp3.Callback() {
+		okClient.newCall(request).enqueue(new Callback() {
+
 			@Override
-			public void onResponse(Response response) throws IOException {
+			public void onResponse(okhttp3.Call call, Response response) throws IOException {
 				if (response.isSuccessful()) {
 					String bodyString = response.body().string();
 					playMthaiFromHTML(bodyString);
@@ -300,9 +302,10 @@ public class Parts {
 			}
 
 			@Override
-			public void onFailure(Request request, IOException e) {
+			public void onFailure(okhttp3.Call call, IOException e) {
 				notifyFinish();
 			}
+
 		});
     }
 
@@ -331,16 +334,17 @@ public class Parts {
 				.url(mthaiUrl)
 				.header("User-Agent", Constant.UserAgentChrome)
 				.build();
-		okClient.newCall(request).enqueue(new okhttp3.Callback() {
+		okClient.newCall(request).enqueue(new Callback() {
+
 			@Override
-			public void onResponse(okhttp3.Response response) throws IOException {
+			public void onResponse(okhttp3.Call call, Response response) throws IOException {
 				if (response.isSuccessful())
 					playMthaiFromHTML(response.body().string());
 				notifyFinish();
 			}
 
 			@Override
-			public void onFailure(Request request, IOException e) {
+			public void onFailure(okhttp3.Call call, IOException e) {
 				notifyFinish();
 			}
 		});

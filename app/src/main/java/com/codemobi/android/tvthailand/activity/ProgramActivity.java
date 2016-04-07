@@ -34,7 +34,6 @@ import com.codemobi.android.tvthailand.datasource.OnLoadDataListener;
 import com.codemobi.android.tvthailand.dao.advertise.PreRollAdFactory;
 import com.codemobi.android.tvthailand.datasource.Program;
 import com.codemobi.android.tvthailand.datasource.Programs;
-import com.codemobi.android.tvthailand.player.RadioPlayerActivity;
 import com.codemobi.android.tvthailand.player.VastContentPlayerActivity;
 import com.rey.material.widget.ProgressView;
 import com.vmax.android.ads.api.VmaxAdView;
@@ -302,7 +301,7 @@ public class ProgramActivity extends AppCompatActivity implements
 
 	private void startAds() {
 		adListenerInitialization();
-		vmaxAdView = new VmaxAdView(this, getResources().getString(R.string.vserv_interstitial_ad_unit_id), VmaxAdView.UX_INTERSTITIAL);
+		vmaxAdView = new VmaxAdView(this, getResources().getString(R.string.vmax_interstitial_ad_unit_id), VmaxAdView.UX_INTERSTITIAL);
 		vmaxAdView.setAdListener(mAdListener);
 		vmaxAdView.setUxType(VmaxAdView.UX_INTERSTITIAL);
 		vmaxAdView.loadAd();
@@ -313,22 +312,22 @@ public class ProgramActivity extends AppCompatActivity implements
 
 			@Override
 			public void didInteractWithAd(VmaxAdView adView) {
-				Log.d("Vserv", "adViewDidLoadAd");
+				Log.d("Vmax", "adViewDidLoadAd");
 			}
 
 			@Override
 			public void adViewDidLoadAd(VmaxAdView adView) {
-				Log.d("Vserv", "adViewDidLoadAd");
+				Log.d("Vmax", "adViewDidLoadAd");
 			}
 
 			@Override
 			public void willPresentOverlay(VmaxAdView adView) {
-				Log.d("Vserv", "willPresentOverlay");
+				Log.d("Vmax", "willPresentOverlay");
 			}
 
 			@Override
 			public void willDismissOverlay(VmaxAdView adView) {
-				Log.d("Vserv", "willDismissOverlay");
+				Log.d("Vmax", "willDismissOverlay");
 			}
 
 			@Override
@@ -354,6 +353,11 @@ public class ProgramActivity extends AppCompatActivity implements
 			@Override
 			public void willLeaveApp(VmaxAdView adView) {
 				Log.d("Vmax", "willLeaveApp");
+			}
+
+			@Override
+			public void onVideoCompleted() {
+
 			}
 		};
 	}

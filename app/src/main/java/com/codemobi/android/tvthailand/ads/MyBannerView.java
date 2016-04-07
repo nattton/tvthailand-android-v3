@@ -27,7 +27,6 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import static com.facebook.ads.AdSize.*;
 
@@ -96,13 +95,13 @@ public class MyBannerView extends LinearLayout {
 		Call<AdCollectionDao> call =  service.loadAd(Constant.defaultParams);
 		call.enqueue(new Callback<AdCollectionDao>() {
 			@Override
-			public void onResponse(Response<AdCollectionDao> response) {
+			public void onResponse(Call<AdCollectionDao> call, Response<AdCollectionDao> response) {
 				if (response.isSuccess())
 					displayAds(response.body());
 			}
 
 			@Override
-			public void onFailure(Throwable t) {
+			public void onFailure(Call<AdCollectionDao> call, Throwable t) {
 				requestVservAd();
 			}
 		});
@@ -128,7 +127,7 @@ public class MyBannerView extends LinearLayout {
 		adListenerInitialization();
 		try {
 			vmaxAdView.setAdListener(mAdListener);
-			vmaxAdView.setAdSpotId(getResources().getString(R.string.vserv_banner_ad_unit_id));
+			vmaxAdView.setAdSpotId(getResources().getString(R.string.vmax_banner_ad_unit_id));
 			vmaxAdView.setRefresh(true);
 			vmaxAdView.setRefreshRate(60);
 			vmaxAdView.loadAd();
@@ -144,24 +143,24 @@ public class MyBannerView extends LinearLayout {
 
 			@Override
 			public void didInteractWithAd(VmaxAdView adView) {
-				Log.d("", "adViewDidLoadAd");
+				Log.d("Vmax", "adViewDidLoadAd");
 			}
 
 			@Override
 			public void adViewDidLoadAd(VmaxAdView adView) {
-				Log.d("", "adViewDidLoadAd");
+				Log.d("Vmax", "adViewDidLoadAd");
 				parentView.setVisibility(VISIBLE);
 				vmaxAdView.setVisibility(VISIBLE);
 			}
 
 			@Override
 			public void willPresentOverlay(VmaxAdView adView) {
-				Log.d("", "willPresentOverlay");
+				Log.d("Vmax", "willPresentOverlay");
 			}
 
 			@Override
 			public void willDismissOverlay(VmaxAdView adView) {
-				Log.d("", "willDismissOverlay");
+				Log.d("Vmax", "willDismissOverlay");
 			}
 
 			@Override
@@ -187,6 +186,11 @@ public class MyBannerView extends LinearLayout {
 			@Override
 			public void willLeaveApp(VmaxAdView adView) {
 				Log.d("Vmax", "willLeaveApp");
+			}
+
+			@Override
+			public void onVideoCompleted() {
+
 			}
 		};
 	}

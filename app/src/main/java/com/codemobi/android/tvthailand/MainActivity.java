@@ -4,7 +4,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -40,7 +39,6 @@ import java.io.IOException;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -157,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 		Call<SectionCollectionDao> call = service.loadSection(Constant.defaultParams);
 		call.enqueue(new Callback<SectionCollectionDao>() {
 			@Override
-			public void onResponse(Response<SectionCollectionDao> response) {
+			public void onResponse(Call<SectionCollectionDao> call, Response<SectionCollectionDao> response) {
 				if (response.isSuccess())
 					SectionManager.getInstance().setData(response.body());
 				else {
@@ -178,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 			}
 
 			@Override
-			public void onFailure(Throwable t) {
+			public void onFailure(Call<SectionCollectionDao> call,Throwable t) {
 				Snackbar.make(rootLayout, "Cannot load data.", Snackbar.LENGTH_LONG)
 						.setAction("Refresh", new View.OnClickListener() {
 							@Override
@@ -195,13 +193,15 @@ public class MainActivity extends AppCompatActivity {
 		super.onStart();
 		isAdsEnabled = true;
 		if (isAdsEnabled && !isAdsDisplayed) {
-			final Handler handler = new Handler();
-			handler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					startAds();
-				}
-			}, 5000);
+			startAds();
+
+//			final Handler handler = new Handler();
+//			handler.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					startAds();
+//				}
+//			}, 5000);
 		}
 	}
 
@@ -289,9 +289,9 @@ public class MainActivity extends AppCompatActivity {
 
 	private void startAds() {
 		adListenerInitialization();
-		vmaxAdView = new VmaxAdView(this, getResources().getString(R.string.vserv_interstitial_ad_unit_id), VmaxAdView.UX_INTERSTITIAL);
+		vmaxAdView = new VmaxAdView(this, getResources().getString(R.string.vmax_interstitial_ad_unit_id), VmaxAdView.UX_INTERSTITIAL);
 		vmaxAdView.setAdListener(mAdListener);
-		vmaxAdView.setAdSpotId(getResources().getString(R.string.vserv_banner_ad_unit_id));
+		vmaxAdView.setAdSpotId(getResources().getString(R.string.vmax_interstitial_ad_unit_id));
 		vmaxAdView.setUxType(vmaxAdView.UX_INTERSTITIAL);
 		vmaxAdView.cacheAd();
 		isAdsDisplayed = true;
@@ -343,6 +343,11 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void willLeaveApp(VmaxAdView adView) {
 				Log.d("Vmax", "willLeaveApp");
+			}
+
+			@Override
+			public void onVideoCompleted() {
+
 			}
 		};
 	}

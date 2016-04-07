@@ -3,6 +3,7 @@ package com.codemobi.android.tvthailand.utils;
 import android.content.Context;
 import android.provider.Settings;
 
+import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -42,13 +43,14 @@ public class Utils {
                 .url(url)
                 .build();
         okHttpClient.newCall(request).enqueue(new Callback() {
+
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(Call call, IOException e) {
 
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
 
             }
         });

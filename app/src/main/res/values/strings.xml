@@ -5,8 +5,8 @@
     <string name="search_suggest_authority">com.codemobi.android.tvthailand.contentprovider.ProgramSuggestionProvider</string>
     <string name="facebook_banner_ad_unit_id">202355306578303_529399410540556</string>
     <string name="facebook_interstitial_ad_unit_id">202355306578303_529495700530927</string>
-    <string name="vserv_banner_ad_unit_id">ceb27b33</string>
-    <string name="vserv_interstitial_ad_unit_id">c84927ed</string>
+    <string name="vmax_banner_ad_unit_id">0db1f493</string>
+    <string name="vmax_interstitial_ad_unit_id">7ab6c405</string>
 
     <string name="action_settings">Settings</string>
     <string name="search">Search</string>
