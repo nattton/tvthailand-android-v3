@@ -17,19 +17,20 @@ import com.codemobi.android.tvthailand.dao.section.CategoryItemDao;
 import com.codemobi.android.tvthailand.manager.SectionManager;
 import com.codemobi.android.tvthailand.utils.Contextor;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder>
 {
 	private OnTapListener onTapListener;
 
-	public static class ViewHolder extends RecyclerView.ViewHolder
-	{
-		TextView mTitle;
-		ImageView mThumbnail;
+	public static class ViewHolder extends RecyclerView.ViewHolder {
+		@BindView(R.id.title) TextView mTitle;
+		@BindView(R.id.thumbnail) ImageView mThumbnail;
 
 		ViewHolder (View itemView) {
 			super(itemView);
-			mTitle = (TextView) itemView.findViewById(R.id.title);
-			mThumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
+			ButterKnife.bind(this, itemView);
 		}
 	}
 

@@ -397,7 +397,7 @@ public class Parts {
 	}
 
 	private boolean mThaiSeperateByObClip(String response) {
-		String varKey = "obClip = ";
+		String varKey = "sources_temp = ";
 		int indexStart = response.indexOf(varKey);
 		if (indexStart > 0) {
 			indexStart += varKey.length();
@@ -407,7 +407,7 @@ public class Parts {
 				JSONArray obClip = new JSONArray(obClipString);
 				if (obClip.length() > 0){
 					JSONObject objClip = obClip.getJSONObject(0);
-					playVideo(objClip.getString("src"));
+					playVideo(objClip.getString("file"));
 					return true;
 				}
 			} catch (JSONException e) {

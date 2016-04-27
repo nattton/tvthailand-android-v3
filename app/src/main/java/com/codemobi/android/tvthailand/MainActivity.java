@@ -36,16 +36,20 @@ import com.vmax.android.ads.common.VmaxAdListener;
 
 import java.io.IOException;
 
+import butterknife.BindString;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-	Toolbar toolbar;
-	TabLayout tabLayout;
-	ViewPager viewPager;
-	CoordinatorLayout rootLayout;
+	@BindView(R.id.toolbar) Toolbar toolbar;
+	@BindView(R.id.tab_layout) TabLayout tabLayout;
+	@BindView(R.id.view_pager) ViewPager viewPager;
+	@BindView(R.id.root_layout) CoordinatorLayout rootLayout;
+	@BindString(R.string.vmax_interstitial_ad_unit_id) String vmaxInterstitialAd;
 	SearchView searchView;
 
 	private static final String TAG = "MainActivity";
@@ -66,7 +70,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-		initToolbar();
+		ButterKnife.bind(this);
+
+		setSupportActionBar(toolbar);
 		initTabLayout();
         initInstances();
 		sendTracker();
@@ -75,18 +81,11 @@ public class MainActivity extends AppCompatActivity {
 		}
 	}
 
-	private void initToolbar() {
-		toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-	}
-
 	private void initTabLayout() {
-		tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 		tabLayout.addTab(tabLayout.newTab().setText("Categories"));
 		tabLayout.addTab(tabLayout.newTab().setText("Channel"));
 		tabLayout.addTab(tabLayout.newTab().setText("Radio"));
 
-		viewPager = (ViewPager) findViewById(R.id.viewPager);
 		viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
 			@Override
 			public Fragment getItem(int position) {
@@ -145,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initInstances()
 	{
-		rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
         loadSection();
     }
 
@@ -289,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
 
 	private void startAds() {
 		adListenerInitialization();
-		vmaxAdView = new VmaxAdView(this, getResources().getString(R.string.vmax_interstitial_ad_unit_id), VmaxAdView.UX_INTERSTITIAL);
+		vmaxAdView = new VmaxAdView(this, vmaxInterstitialAd, VmaxAdView.UX_INTERSTITIAL);
 		vmaxAdView.setAdListener(mAdListener);
 		vmaxAdView.setAdSpotId(getResources().getString(R.string.vmax_interstitial_ad_unit_id));
 		vmaxAdView.setUxType(vmaxAdView.UX_INTERSTITIAL);

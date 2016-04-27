@@ -13,15 +13,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ChannelAdapter extends BaseAdapter{
-	
+
 	public ChannelAdapter() {
 
 	}
 
-	private static final class ViewHolder {
-		TextView channelTextView;
-		SquareImageView channelThumbnail;
+	static class ViewHolder {
+		@BindView(R.id.tv_channel) TextView channelTextView;
+		@BindView(R.id.imv_channel) SquareImageView channelThumbnail;
+
+		public ViewHolder(View view) {
+			ButterKnife.bind(this, view);
+		}
 	}
 
 	@Override
@@ -29,10 +36,8 @@ public class ChannelAdapter extends BaseAdapter{
 		ViewHolder holder;
 		if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = mInflater.inflate(com.codemobi.android.tvthailand.R.layout.channel_grid_item, parent, false);
-            holder = new ViewHolder();
-			holder.channelTextView = (TextView) convertView.findViewById(com.codemobi.android.tvthailand.R.id.tv_channel);
-			holder.channelThumbnail = (SquareImageView) convertView.findViewById(com.codemobi.android.tvthailand.R.id.imv_channel);
+			convertView = mInflater.inflate(R.layout.channel_grid_item, parent, false);
+            holder = new ViewHolder(convertView);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder)convertView.getTag();
