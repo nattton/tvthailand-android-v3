@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -30,12 +31,16 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.rey.material.widget.ProgressView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class SearchProgramActivity extends AppCompatActivity implements OnLoadDataListener, OnTapListener, SwipeRefreshLayout.OnRefreshListener {
 
-	Toolbar toolbar;
-	SwipeRefreshLayout swipeLayout;
-	private ProgressView progressView;
-	private TextView textViewNoContent;
+	@BindView(R.id.toolbar) Toolbar toolbar;
+	@BindView(R.id.swipe_container) SwipeRefreshLayout swipeLayout;
+	@BindView(R.id.progress_view) ProgressView progressView;
+	@BindView(R.id.text_view_no_content) TextView textViewNoContent;
+	@BindView(R.id.rv_program) RecyclerView mRecyclerView;
 
 	private Programs mPrograms;
 	private String query;
@@ -45,21 +50,15 @@ public class SearchProgramActivity extends AppCompatActivity implements OnLoadDa
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_program_new);
 
-		initToolbar();
+		ButterKnife.bind(this);
+
+		setSupportActionBar(toolbar);
 		initInstances();
 		Intent intent = getIntent();
 		handleIntent(intent);
 	}
 
-	private void initToolbar() {
-		toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-	}
-
 	private void initInstances() {
-		progressView = (ProgressView)findViewById(R.id.progressView);
-		textViewNoContent = (TextView) findViewById(R.id.textViewNoContent);
-		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 		swipeLayout.setOnRefreshListener(this);
 		swipeLayout.setColorSchemeResources(R.color.holo_blue_bright,
 				R.color.holo_green_light,
@@ -78,7 +77,7 @@ public class SearchProgramActivity extends AppCompatActivity implements OnLoadDa
 				}
 			}
 		});
-		RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rvProgram);
+
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 		GridLayoutManager mLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.category_column_num));

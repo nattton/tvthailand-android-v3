@@ -39,12 +39,21 @@ import com.rey.material.widget.ProgressView;
 import com.vmax.android.ads.api.VmaxAdView;
 import com.vmax.android.ads.common.VmaxAdListener;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ProgramActivity extends AppCompatActivity implements
 		OnLoadDataListener, OnTapListener, SwipeRefreshLayout.OnRefreshListener {
 
-	Toolbar toolbar;
-	SwipeRefreshLayout swipeLayout;
-	CoordinatorLayout rootLayout;
+	@BindView(R.id.toolbar) Toolbar toolbar;
+	@BindView(R.id.swipe_container) SwipeRefreshLayout swipeLayout;
+	@BindView(R.id.root_layout) CoordinatorLayout rootLayout;
+	@BindView(R.id.progress_view) ProgressView progressView;
+	@BindView(R.id.text_view_no_content) TextView textViewNoContent;
+	@BindView(R.id.rv_program) RecyclerView mRecyclerView;
+	@BindView(R.id.live_frame_ll) FrameLayout liveFrameLL;
+	@BindView(R.id.watch_live_btn) ImageButton watchLiveBtn;
+	@BindView(R.id.watch_live_txt) TextView watchLiveTxt;
 
 	public static final String EXTRAS_MODE = "EXTRAS_MODE";
     public static final String EXTRAS_ID = "EXTRAS_ID";
@@ -66,9 +75,6 @@ public class ProgramActivity extends AppCompatActivity implements
 	private GridLayoutManager mLayoutManager;
 	private ProgramListAdapter programAdapter;
 
-	private ProgressView progressView;
-	private TextView textViewNoContent;
-
 	private VmaxAdView vmaxAdView;
 	private VmaxAdListener mAdListener;
 
@@ -77,6 +83,8 @@ public class ProgramActivity extends AppCompatActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_program_new);
+
+		ButterKnife.bind(this);
 
 		initExtras();
 		initToolbar();
@@ -93,7 +101,6 @@ public class ProgramActivity extends AppCompatActivity implements
 	}
 
 	private void initToolbar() {
-		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		toolbar.setTitle(title);
 		Glide.with(this).load(icon)
 				.asBitmap()
@@ -107,9 +114,6 @@ public class ProgramActivity extends AppCompatActivity implements
 	}
 
 	private void initInstances() {
-		rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
-		progressView = (ProgressView)findViewById(R.id.progressView);
-		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 		swipeLayout.setOnRefreshListener(this);
 		swipeLayout.setColorSchemeResources(R.color.holo_blue_bright,
 				R.color.holo_green_light,
@@ -119,8 +123,6 @@ public class ProgramActivity extends AppCompatActivity implements
 		mPrograms = new Programs();
 		mPrograms.setOnLoadListener(this);
 
-		textViewNoContent = (TextView) findViewById(R.id.textViewNoContent);
-		RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rvProgram);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 		mLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.category_column_num));
@@ -142,23 +144,20 @@ public class ProgramActivity extends AppCompatActivity implements
 			}
 		});
 
-		FrameLayout live_frame_ll = (FrameLayout) findViewById(R.id.live_frame_ll);
 		if (mode == BY_CHANNEL && liveURL != null && !liveURL.equals("")) {
-			live_frame_ll.setVisibility(View.VISIBLE);
+			liveFrameLL.setVisibility(View.VISIBLE);
 		} else {
-			live_frame_ll.setVisibility(View.GONE);
+			liveFrameLL.setVisibility(View.GONE);
 		}
 
-		ImageButton watch_live_btn = (ImageButton) findViewById(R.id.watch_live_btn);
-		TextView watch_live_text = (TextView) findViewById(R.id.watch_live_txt);
 		OnClickListener clickLive = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				playVideo(liveURL);
 			}
 		};
-		watch_live_btn.setOnClickListener(clickLive);
-		watch_live_text.setOnClickListener(clickLive);
+		watchLiveBtn.setOnClickListener(clickLive);
+		watchLiveTxt.setOnClickListener(clickLive);
 
 
 		mPrograms.setOnProgramChangeListener(new Programs.OnProgramChangeListener() {

@@ -6,7 +6,7 @@
     android:background="@color/card_bg">
 
     <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/rootLayout"
+        android:id="@+id/root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -75,7 +75,7 @@
                 android:layout_below="@+id/live_frame_ll">
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvProgram"
+                    android:id="@+id/rv_program"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </android.support.v4.widget.SwipeRefreshLayout>
@@ -83,7 +83,7 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <com.rey.material.widget.ProgressView
-        android:id="@+id/progressView"
+        android:id="@+id/progress_view"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_centerHorizontal="true"
@@ -94,7 +94,7 @@
         app:pv_progressStyle="@style/Material.Drawable.CircularProgress" />
 
     <TextView
-        android:id="@+id/textViewNoContent"
+        android:id="@+id/text_view_no_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
