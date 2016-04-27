@@ -14,6 +14,9 @@ import com.tonicartos.widget.stickygridheaders.StickyGridHeadersSimpleArrayAdapt
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class RadioCustomAdapter extends StickyGridHeadersSimpleArrayAdapter<RadioItemDao> {
 
@@ -29,12 +32,20 @@ public class RadioCustomAdapter extends StickyGridHeadersSimpleArrayAdapter<Radi
 	}
 
 	protected class HeaderViewHolder {
-		public TextView textView;
+		@BindView(android.R.id.text1) TextView textView;
+
+		public HeaderViewHolder(View view) {
+			ButterKnife.bind(this, view);
+		}
 	}
 
 	protected class ViewHolder {
-		public TextView textView;
-		public SquareImageView imageView;
+		@BindView(R.id.radio_textview) TextView textView;
+		@BindView(R.id.radio_image) SquareImageView imageView;
+
+		public ViewHolder(View view) {
+			ButterKnife.bind(this, view);
+		}
 	}
 
 	@Override
@@ -47,8 +58,7 @@ public class RadioCustomAdapter extends StickyGridHeadersSimpleArrayAdapter<Radi
 		HeaderViewHolder holder;
 		if (convertView == null) {
 			convertView = mInflater.inflate(mHeaderResId, parent, false);
-			holder = new HeaderViewHolder();
-			holder.textView = (TextView)convertView.findViewById(android.R.id.text1);
+			holder = new HeaderViewHolder(convertView);
 			convertView.setTag(holder);
 		} else {
 			holder = (HeaderViewHolder)convertView.getTag();
@@ -64,9 +74,7 @@ public class RadioCustomAdapter extends StickyGridHeadersSimpleArrayAdapter<Radi
 	   ViewHolder holder;
 	   if (convertView == null) {
 		   convertView = mInflater.inflate(mItemResId, parent, false);
-		   holder = new ViewHolder();
-		   holder.textView = (TextView) convertView.findViewById(R.id.radio_textview);
-		   holder.imageView = (SquareImageView) convertView.findViewById(R.id.radio_image);
+		   holder = new ViewHolder(convertView);
 		   convertView.setTag(holder);
 	   } else {
 		   holder = (ViewHolder)convertView.getTag();

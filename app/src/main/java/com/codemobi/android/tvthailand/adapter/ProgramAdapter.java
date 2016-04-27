@@ -13,6 +13,9 @@ import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.datasource.Program;
 import com.codemobi.android.tvthailand.datasource.Programs;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ProgramAdapter extends BaseAdapter{
 	private Programs programs;
 	private boolean isDisplayImage = true;
@@ -21,10 +24,14 @@ public class ProgramAdapter extends BaseAdapter{
         programs = c;
 	}
 
-	private static final class ViewHolder {
-		public TextView title;
-		public TextView description;
-		public ImageView thumbnail;
+	static class ViewHolder {
+		@BindView(R.id.title) TextView title;
+		@BindView(R.id.description) public TextView description;
+		@BindView(R.id.thumbnail) public ImageView thumbnail;
+
+		public ViewHolder(View view) {
+			ButterKnife.bind(this, view);
+		}
 	}
 
 	@Override
@@ -33,13 +40,9 @@ public class ProgramAdapter extends BaseAdapter{
 		if (convertView == null) {
 			LayoutInflater mInflater = (LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = mInflater.inflate(R.layout.whatnew_grid_item, parent, false);
-            holder = new ViewHolder();
-            holder.title = (TextView)convertView.findViewById(R.id.title);
+            holder = new ViewHolder(convertView);
             holder.title.setSelected(true);
-		    holder.description = (TextView)convertView.findViewById(R.id.description);
 		    holder.description.setSelected(true);
-		    holder.thumbnail = (ImageView)convertView.findViewById(R.id.thumbnail);
-
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder)convertView.getTag();

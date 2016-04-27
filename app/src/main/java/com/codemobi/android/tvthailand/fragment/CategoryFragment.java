@@ -46,7 +46,7 @@ public class CategoryFragment extends Fragment {
 		setRetainInstance(true);
 
 		RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rvCategory);
-//		mRecyclerView.setHasFixedSize(true);
+		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 		mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.category_column_num)));
 

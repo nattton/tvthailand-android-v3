@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class OTVPartAdapter extends RecyclerView.Adapter<OTVPartAdapter.ViewHolder> {
 
 	private OnTapListener onTapListener;
@@ -62,12 +65,11 @@ public class OTVPartAdapter extends RecyclerView.Adapter<OTVPartAdapter.ViewHold
 	}
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
-		ImageView thumbnail;
-		TextView title;
+		@BindView(R.id.thumbnail) ImageView thumbnail;
+		@BindView(R.id.title) TextView title;
 		public ViewHolder(View itemView) {
 			super(itemView);
-			title = (TextView)itemView.findViewById(R.id.title);
-			thumbnail = (ImageView)itemView.findViewById(R.id.thumbnail);
+			ButterKnife.bind(this, itemView);
 		}
 	}
 }

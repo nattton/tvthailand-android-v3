@@ -7,10 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.codemobi.android.tvthailand.adapter.OnTapListener;
 import com.codemobi.android.tvthailand.otv.adapter.OTVPartAdapter;
@@ -22,10 +18,13 @@ import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.otv.model.OTVEpisode;
 import com.codemobi.android.tvthailand.player.VastPlayerActivity;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class OTVPartActivity extends AppCompatActivity implements OnTapListener {
 	public static String EXTRAS_OTV_EPISODE = "EXTRAS_OTV_EPISODE";
 
-	Toolbar toolbar;
+	@BindView(R.id.toolbar) Toolbar toolbar;
 	private OTVEpisode episode;
 	private OTVPartAdapter mAdapter;
 	
@@ -33,6 +32,8 @@ public class OTVPartActivity extends AppCompatActivity implements OnTapListener 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_part);
+
+		ButterKnife.bind(this);
 
 		initExtras();
 		initToolbar();
@@ -45,14 +46,13 @@ public class OTVPartActivity extends AppCompatActivity implements OnTapListener 
 	}
 
 	private void initToolbar() {
-		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		toolbar.setTitle(episode.getNameTh() + "  " + episode.getDate());
 		setSupportActionBar(toolbar);
 	}
 
 	private void initInstances() {
 		mAdapter = new OTVPartAdapter(this, episode.getParts());
-		RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rvPart);
+		RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rv_part);
 		mRecyclerView.setHasFixedSize(true);
 		LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
 		mRecyclerView.setLayoutManager(mLayoutManager);

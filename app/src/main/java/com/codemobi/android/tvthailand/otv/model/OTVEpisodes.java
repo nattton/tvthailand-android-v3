@@ -65,9 +65,9 @@ public class OTVEpisodes {
 					} else if (jObjPart.has("media_code")) {
 						part.setPartId(jObjPart.has("id") ? jObjPart.get("id").getAsString() : EMPTY_STRING);
 						part.setNameTh(jObjPart.has("name_th") ? jObjPart.get("name_th").getAsString() : EMPTY_STRING);
-						part.setNameEn(jObjPart.has("name_en") ? jObjPart.get("name_en").getAsString() : EMPTY_STRING);
+//						part.setNameEn(jObjPart.has("name_en") ? jObjPart.get("name_en").getAsString() : EMPTY_STRING);
 						part.setThumbnail(jObjPart.has("thumbnail") ? jObjPart.get("thumbnail").getAsString() : EMPTY_STRING);
-						part.setCover(jObjPart.has("cover") ? jObjPart.get("cover").getAsString() : EMPTY_STRING);
+//						part.setCover(jObjPart.has("cover") ? jObjPart.get("cover").getAsString() : EMPTY_STRING);
 						part.setStream_url(jObjPart.has("stream_url") ? jObjPart.get("stream_url").getAsString() : EMPTY_STRING);
 						part.setMediaCode(jObjPart.get("media_code").getAsString());
 
@@ -78,7 +78,6 @@ public class OTVEpisodes {
 
 				insert(new OTVEpisode(jContent.has("episode_id") ? jContent.get("episode_id").getAsString() : EMPTY_STRING,
 						jContent.has("name_th") ? jContent.get("name_th").getAsString() : EMPTY_STRING,
-						jContent.has("name_en") ? jContent.get("name_en").getAsString() : EMPTY_STRING,
 						jContent.has("detail") ? jContent.get("detail").getAsString() : EMPTY_STRING,
 						jContent.has("thumbnail") ? jContent.get("thumbnail").getAsString() : EMPTY_STRING,
 						jContent.has("cover") ? jContent.get("cover").getAsString() : EMPTY_STRING,

@@ -46,15 +46,20 @@ import com.codemobi.android.tvthailand.datasource.Episodes;
 import com.codemobi.android.tvthailand.datasource.Parts;
 import com.codemobi.android.tvthailand.datasource.Episodes.OnProgramChangeListener;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class EpisodeActivity extends AppCompatActivity implements OnClickListener, OnLoadDataListener, OnTapListener {
 	public static final String EXTRAS_PROGRAM = "EXTRAS_PROGRAM";
 	public static final String EXTRAS_DISABLE_OTV = "EXTRAS_DISABLE_OTV";
 
-	Toolbar toolbar;
+	@BindView(R.id.toolbar) Toolbar toolbar;
+	@BindView(R.id.image_header) ImageView imageHeader;
+	@BindView(R.id.progress_bar) ProgressBar progressBar;
+	@BindView(R.id.favorite_button) FloatingActionButton favoriteButton;
+	@BindView(R.id.rv_episode) RecyclerView mRecyclerView;
+
 	ProgressDialog progressDialog;
-	ProgressBar progressBar;
-	FloatingActionButton favoriteButton;
-	RecyclerView mRecyclerView;
 	EpisodeAdapter episodeAdapter;
 	OTVEpisodeAdapter mOTVAdapter;
 	LinearLayoutManager mLayoutManager;
@@ -75,6 +80,8 @@ public class EpisodeActivity extends AppCompatActivity implements OnClickListene
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_episode_new);
 
+		ButterKnife.bind(this);
+
         isDisableOTV = getIntent().getBooleanExtra(EXTRAS_DISABLE_OTV, false);
 
 		initProgram();
@@ -93,16 +100,12 @@ public class EpisodeActivity extends AppCompatActivity implements OnClickListene
 	}
 
 	private void initToolbar() {
-		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		toolbar.setTitle(program.getTitle());
 		setSupportActionBar(toolbar);
-		ImageView imageHeader = (ImageView) findViewById(R.id.image_header);
 		Glide.with(this).load(program.getThumbnail()).into(imageHeader);
 	}
 
 	private void initUI() {
-		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		favoriteButton = (FloatingActionButton) findViewById(R.id.favoriteButton);
 		favoriteButton.setOnClickListener(this);
 	}
 
@@ -134,8 +137,6 @@ public class EpisodeActivity extends AppCompatActivity implements OnClickListene
 			myProgramUpdateTask.execute();
 		}
 
-
-		mRecyclerView = (RecyclerView) findViewById(R.id.rvEpisode);
 		mRecyclerView.setHasFixedSize(true);
 		mLayoutManager = new LinearLayoutManager(this);
 		mRecyclerView.setLayoutManager(mLayoutManager);
@@ -316,7 +317,7 @@ public class EpisodeActivity extends AppCompatActivity implements OnClickListene
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.favoriteButton:
+		case R.id.favorite_button:
 			mMyProgram.setFav(!mMyProgram.isFav());
 			mDaoMyProgram.update(mMyProgram);
 			break;

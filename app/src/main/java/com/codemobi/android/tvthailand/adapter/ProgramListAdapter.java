@@ -13,6 +13,9 @@ import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.datasource.Program;
 import com.codemobi.android.tvthailand.datasource.Programs;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by nattapong on 9/28/15 AD.
  */
@@ -64,15 +67,13 @@ public class ProgramListAdapter extends RecyclerView.Adapter<ProgramListAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        TextView description;
-        ImageView thumbnail;
+        @BindView(R.id.title) TextView title;
+        @BindView(R.id.description) TextView description;
+        @BindView(R.id.thumbnail) ImageView thumbnail;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            title = (TextView)itemView.findViewById(R.id.title);
-            description = (TextView)itemView.findViewById(R.id.description);
-            thumbnail = (ImageView)itemView.findViewById(R.id.thumbnail);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

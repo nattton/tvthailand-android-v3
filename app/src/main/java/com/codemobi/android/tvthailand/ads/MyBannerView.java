@@ -24,6 +24,9 @@ import com.vmax.android.ads.common.VmaxAdListener;
 
 import java.util.Locale;
 
+import butterknife.BindString;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,12 +38,16 @@ import static com.facebook.ads.AdSize.*;
 public class MyBannerView extends LinearLayout {
 	private boolean autoLoad = false;
 
+	@BindView(R.id.vmaxAdView) VmaxAdView vmaxAdView;
+	@BindView(R.id.adViewContainer) RelativeLayout adViewContainer;
+	@BindView(R.id.webViewShow) WebView webViewShow;
+
+	@BindString(R.string.vmax_interstitial_ad_unit_id) String vmaxInterstitialAd;
+	@BindString(R.string.facebook_banner_ad_unit_id) String facebookBannerAd;
+
 	private LinearLayout parentView;
 	private AdView adView;
-	private VmaxAdView vmaxAdView;
 	private VmaxAdListener mAdListener;
-	private RelativeLayout adViewContainer;
-	private WebView webViewShow;
 
 	public MyBannerView(Context context) {
 		super(context);
@@ -64,9 +71,7 @@ public class MyBannerView extends LinearLayout {
 		parentView = this;
 		parentView.setVisibility(GONE);
 		View convertView = LayoutInflater.from(context).inflate(R.layout.my_banner_view, this);
-		vmaxAdView = (VmaxAdView) convertView.findViewById(R.id.vmaxAdView);
-		adViewContainer = (RelativeLayout) findViewById(R.id.adViewContainer);
-		webViewShow = (WebView) convertView.findViewById(R.id.webViewShow);
+		ButterKnife.bind(this, convertView);
 		setUpView();
 		if(autoLoad) requestAds();
 	}
@@ -127,7 +132,7 @@ public class MyBannerView extends LinearLayout {
 		adListenerInitialization();
 		try {
 			vmaxAdView.setAdListener(mAdListener);
-			vmaxAdView.setAdSpotId(getResources().getString(R.string.vmax_banner_ad_unit_id));
+			vmaxAdView.setAdSpotId(vmaxInterstitialAd);
 			vmaxAdView.setRefresh(true);
 			vmaxAdView.setRefreshRate(60);
 			vmaxAdView.loadAd();
@@ -196,7 +201,7 @@ public class MyBannerView extends LinearLayout {
 	}
 
 	private void requestFacebookAds () {
-		adView = new AdView(getContext(), getResources().getString(R.string.facebook_banner_ad_unit_id), BANNER_320_50);
+		adView = new AdView(getContext(), facebookBannerAd, BANNER_320_50);
 		adViewContainer.addView(adView);
 		adView.setAdListener(new AdListener() {
 			@Override

@@ -13,16 +13,23 @@ import com.bumptech.glide.Glide;
 import com.codemobi.android.tvthailand.R;
 import com.codemobi.android.tvthailand.database.ProgramModel;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ProgramCursorAdapter extends CursorAdapter {
 
 	public ProgramCursorAdapter(Context context) {
 		super(context, null, 0);
 	}
 
-	private static final class ViewHolder {
-		public TextView label;
-		public TextView description;
-		public ImageView thumbnail;
+	static class ViewHolder {
+		@BindView(R.id.title) TextView label;
+		@BindView(R.id.description) TextView description;
+		@BindView(R.id.thumbnail) ImageView thumbnail;
+
+		public ViewHolder(View view) {
+			ButterKnife.bind(this, view);
+		}
 	}
 
 	@Override
@@ -44,10 +51,7 @@ public class ProgramCursorAdapter extends CursorAdapter {
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		View view = LayoutInflater.from(context).inflate(
 				R.layout.whatnew_grid_item, parent, false);
-		ViewHolder viewHolder = new ViewHolder();
-		viewHolder.label = (TextView) view.findViewById(R.id.title);
-		viewHolder.description = (TextView) view.findViewById(R.id.description);
-		viewHolder.thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+		ViewHolder viewHolder = new ViewHolder(view);
 
 		view.setTag(viewHolder);
 		return view;

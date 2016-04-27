@@ -12,7 +12,6 @@ public class OTVEpisode implements Parcelable {
 	
 	private String contentId;
 	private String nameTh;
-	private String nameEn;
 	private String detail;
 	private String thumbnail;
 	private String cover;
@@ -20,11 +19,10 @@ public class OTVEpisode implements Parcelable {
 	private ArrayList<OTVPart> parts;
 	
 	
-	public OTVEpisode (String contentId, String nameTh, String nameEn, String detail, String thumbnail, String cover, String date, ArrayList<OTVPart> parts) {
+	public OTVEpisode (String contentId, String nameTh, String detail, String thumbnail, String cover, String date, ArrayList<OTVPart> parts) {
 		super();
 		this.contentId = contentId;
 		this.nameTh = nameTh;
-		this.nameEn = nameEn;
 		this.detail = detail;
 		this.thumbnail = thumbnail;
 		this.cover = cover;
@@ -47,66 +45,45 @@ public class OTVEpisode implements Parcelable {
 		return nameTh;
 	}
 
-
 	public void setNameTh(String name_th) {
 		this.nameTh = name_th;
 	}
-
-
-	public String getNameEn() {
-		return nameEn;
-	}
-
-
-	public void setNameEn(String name_en) {
-		this.nameEn = name_en;
-	}
-
 
 	public String getDetail() {
 		return detail;
 	}
 
-
 	public void setDetail(String detail) {
 		this.detail = detail;
 	}
-
 
 	public String getThumbnail() {
 		return thumbnail;
 	}
 
-
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
 	}
-
 
 	public String getCover() {
 		return cover;
 	}
 
-
 	public void setCover(String cover) {
 		this.cover = cover;
 	}
-
 
 	public String getDate() {
 		return date;
 	}
 
-
 	public void setDate(String date) {
 		this.date = String.format(dateToFormat(date));
 	}
 
-
 	public ArrayList<OTVPart> getParts() {
 		return parts;
 	}
-
 
 	public void setParts(ArrayList<OTVPart> parts) {
 		this.parts = parts;
@@ -134,7 +111,6 @@ public class OTVEpisode implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(contentId);
         dest.writeString(nameTh);
-        dest.writeString(nameEn);
         dest.writeString(detail);
         dest.writeString(thumbnail);
         dest.writeString(cover);
@@ -158,7 +134,6 @@ public class OTVEpisode implements Parcelable {
     private OTVEpisode(Parcel source) {
         this.contentId = source.readString();
         this.nameTh = source.readString();
-        this.nameEn = source.readString();
         this.detail = source.readString();
         this.thumbnail = source.readString();
         this.cover = source.readString();

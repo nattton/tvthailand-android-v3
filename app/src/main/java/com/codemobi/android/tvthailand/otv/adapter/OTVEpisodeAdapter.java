@@ -15,6 +15,9 @@ import com.codemobi.android.tvthailand.adapter.OnTapListener;
 import com.codemobi.android.tvthailand.otv.model.OTVEpisode;
 import com.codemobi.android.tvthailand.otv.model.OTVEpisodes;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by nattapong on 9/28/15 AD.
  */
@@ -71,24 +74,18 @@ public class OTVEpisodeAdapter extends RecyclerView.Adapter<OTVEpisodeAdapter.Vi
         this.onTapListener = onTapListener;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView mediaThumbnail;
-        TextView title;
-        TextView aired;
-        TextView viewCount;
-        LinearLayout layoutViewCount;
-        LinearLayout layoutParts;
-        TextView tvParts;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.media_thumbnail) ImageView mediaThumbnail;
+        @BindView(R.id.tv_label_ep) TextView title;
+        @BindView(R.id.tv_on_air_ep) TextView aired;
+        @BindView(R.id.view_count_ep) TextView viewCount;
+        @BindView(R.id.view_count_ll) LinearLayout layoutViewCount;
+        @BindView(R.id.part_updated_ll) LinearLayout layoutParts;
+        @BindView(R.id.num_part) TextView tvParts;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mediaThumbnail = (ImageView)itemView.findViewById(R.id.media_thumbnail);
-            title = (TextView)itemView.findViewById(R.id.tv_label_ep);
-            aired = (TextView)itemView.findViewById(R.id.tv_on_air_ep);
-            viewCount = (TextView)itemView.findViewById(R.id.view_count_ep);
-            layoutViewCount = (LinearLayout)itemView.findViewById(R.id.view_count_ll);
-            layoutParts = (LinearLayout)itemView.findViewById(R.id.part_updated_ll);
-            tvParts = (TextView)itemView.findViewById(R.id.num_part);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

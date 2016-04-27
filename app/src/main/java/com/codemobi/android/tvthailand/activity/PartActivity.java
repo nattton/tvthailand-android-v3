@@ -16,6 +16,9 @@ import com.codemobi.android.tvthailand.datasource.Parts;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class PartActivity extends AppCompatActivity{
 	
 	public static final String EXTRAS_TITLE = "EXTRAS_TITLE";
@@ -24,7 +27,9 @@ public class PartActivity extends AppCompatActivity{
 	public static final String EXTRAS_PASSWORD = "EXTRAS_PASSWORD";
 	public static final String EXTRAS_ICON = "EXTRAS_ICON";
 
-	Toolbar toolbar;
+	@BindView(R.id.toolbar) Toolbar toolbar;
+	@BindView(R.id.rv_part) RecyclerView mRecyclerView;
+
 	private Parts mParts;
     private ProgressDialog progressDialog;
 
@@ -38,6 +43,8 @@ public class PartActivity extends AppCompatActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_part);
+
+		ButterKnife.bind(this);
 
 		initExtras();
 		initToolbar();
@@ -54,15 +61,12 @@ public class PartActivity extends AppCompatActivity{
 	}
 
 	private void initToolbar() {
-		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		toolbar.setTitle(title);
 		setSupportActionBar(toolbar);
 	}
 
 	private void initInstances() {
 		mParts = new Parts(this, title, icon, videos, srcType, password);
-
-		RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rvPart);
 		mRecyclerView.setHasFixedSize(true);
 		LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
 		mRecyclerView.setLayoutManager(mLayoutManager);
