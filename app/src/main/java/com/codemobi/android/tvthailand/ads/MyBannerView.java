@@ -118,6 +118,8 @@ public class MyBannerView extends LinearLayout {
 			String nameLower = adItem.getName().toLowerCase(Locale.getDefault());
 			if (nameLower.contains("vserv")) {
 				requestVservAd();
+			} else if (nameLower.contains("facebook")) {
+				requestFacebookAds();
 			} else {
 				if (adItem.getUrl().length() > 0) {
 					webViewShow.loadUrl(adItem.getUrl());
@@ -152,20 +154,20 @@ public class MyBannerView extends LinearLayout {
 			}
 
 			@Override
+			public void willPresentAd(VmaxAdView vmaxAdView) {
+				Log.d("Vmax", "willPresentAd");
+			}
+
+			@Override
+			public void willDismissAd(VmaxAdView vmaxAdView) {
+				Log.d("Vmax", "willPresentAd");
+			}
+
+			@Override
 			public void adViewDidLoadAd(VmaxAdView adView) {
 				Log.d("Vmax", "adViewDidLoadAd");
 				parentView.setVisibility(VISIBLE);
 				vmaxAdView.setVisibility(VISIBLE);
-			}
-
-			@Override
-			public void willPresentOverlay(VmaxAdView adView) {
-				Log.d("Vmax", "willPresentOverlay");
-			}
-
-			@Override
-			public void willDismissOverlay(VmaxAdView adView) {
-				Log.d("Vmax", "willDismissOverlay");
 			}
 
 			@Override
@@ -194,9 +196,20 @@ public class MyBannerView extends LinearLayout {
 			}
 
 			@Override
-			public void onVideoCompleted() {
+			public void onVideoView(boolean b, int i, int i1) {
 
 			}
+
+			@Override
+			public void onAdExpand() {
+
+			}
+
+			@Override
+			public void onAdCollapsed() {
+
+			}
+
 		};
 	}
 

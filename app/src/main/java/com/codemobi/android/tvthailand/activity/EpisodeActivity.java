@@ -220,12 +220,12 @@ public class EpisodeActivity extends AppCompatActivity implements OnClickListene
 	private void sendTracker() {
 		Tracker t = ((MainApplication) getApplication()).getDefaultTracker();
 		t.setScreenName("Episode");
-		t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());
+		t.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(2, program.getTitle()).build());
 
 		if (isOTV) {
 			Tracker t2 = ((MainApplication) getApplication()).getOTVTracker();
 			t2.setScreenName("OTVShow");
-			t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(1,
+			t2.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(1,
 					program.getTitle()).build());
 		}
 	}
@@ -371,7 +371,7 @@ public class EpisodeActivity extends AppCompatActivity implements OnClickListene
 			Episode episode = mEpisodes.get(position);
 			Tracker t = ((MainApplication) getApplication()).getDefaultTracker();
 			t.setScreenName("Episode");
-			t.send(new HitBuilders.AppViewBuilder().setCustomDimension(3,
+			t.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(3,
 					episode.getTitle()).build());
 			episode.sendView();
 			if (episode.size() == 1) {

@@ -92,7 +92,7 @@ public class ProgramLoaderActivity extends AppCompatActivity implements
 			
 			 Tracker t = ((MainApplication)getApplication()).getDefaultTracker();
 			 t.setScreenName("ProgramLoader");
-			 t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());
+			 t.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(2, program.getTitle()).build());
 			 
 			 Episodes mEpisodes = new Episodes(this);
 			 

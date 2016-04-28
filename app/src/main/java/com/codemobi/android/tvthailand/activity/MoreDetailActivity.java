@@ -35,7 +35,7 @@ public class MoreDetailActivity extends Activity{
 		ImageView thumbnail_imv = (ImageView)findViewById(R.id.more_detail_thumbnail);
 		Tracker t = ((MainApplication)getApplication()).getDefaultTracker();
 		t.setScreenName("MoreDetail");
-		t.send(new HitBuilders.AppViewBuilder().build());
+		t.send(new HitBuilders.ScreenViewBuilder().build());
 	}
 	
 }

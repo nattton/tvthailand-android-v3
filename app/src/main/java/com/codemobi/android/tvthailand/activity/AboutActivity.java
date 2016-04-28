@@ -29,7 +29,7 @@ public class AboutActivity extends AppCompatActivity {
 		
 		Tracker t = ((MainApplication)getApplication()).getDefaultTracker();
 		t.setScreenName("About");
-		t.send(new HitBuilders.AppViewBuilder().build());
+		t.send(new HitBuilders.ScreenViewBuilder().build());
 		
 	}
 }

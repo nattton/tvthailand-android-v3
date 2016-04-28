@@ -48,7 +48,7 @@ public class ChannelFragment extends Fragment {
 
 				Tracker t = ((MainApplication) getActivity().getApplication()).getDefaultTracker();
 				t.setScreenName("Channel");
-				t.send(new HitBuilders.AppViewBuilder().setCustomDimension(5, channel.getTitle()).build());
+				t.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(5, channel.getTitle()).build());
 
 				Intent intent = new Intent(getActivity(), ProgramActivity.class);
 				Bundle bundle = new Bundle();

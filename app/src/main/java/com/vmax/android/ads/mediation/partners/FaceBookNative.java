@@ -106,7 +106,7 @@ public class FaceBookNative extends VmaxCustomAd implements AdListener {
 
 
             nativeAd = new NativeAd(context, placementId);
-//            AdSettings.addTestDevice("dc16ed326e1fcad3c0092aaa571c4dbb");
+            AdSettings.addTestDevice("a33fc28edcc10fa20ce0454b7a9a204a"); // put your test device id printed in logs when you make first request to facebook.
             nativeAd.setAdListener(this);
             nativeAd.loadAd(NativeAd.MediaCacheFlag.ALL);
         } catch (Exception e) {
@@ -129,6 +129,10 @@ public class FaceBookNative extends VmaxCustomAd implements AdListener {
 
             vmaxCustomAdListener.onAdClicked();
         }
+        if (vmaxCustomAdListener != null) {
+
+            vmaxCustomAdListener.onLeaveApplication();
+        }
     }
 
     /* (non-Javadoc)
@@ -137,20 +141,39 @@ public class FaceBookNative extends VmaxCustomAd implements AdListener {
     @Override
     public void onAdLoaded(Ad ad) {
         try {
+            String adChoiceIcon = null, adChoiceURl = null;
+            String coverImageURL = null;
+            int coverImageHeight = 0;
+            int coverImageWidth = 0;
+            String iconForAd = null;
+            int iconAdWidth = 0;
+            int iconAdHeight = 0;
+
             if (ad != nativeAd) {
                 return;
             }
             nativeAd.unregisterView();
             String titleForAd = nativeAd.getAdTitle();
-            String coverImageURL = nativeAd.getAdCoverImage().getUrl();
-            int coverImageHeight = nativeAd.getAdCoverImage().getHeight();
-            int coverImageWidth = nativeAd.getAdCoverImage().getWidth();
-            String iconForAd = nativeAd.getAdIcon().getUrl();
-            int iconAdHeight = nativeAd.getAdIcon().getHeight();
-            int iconAdWidth = nativeAd.getAdIcon().getWidth();
+            if (nativeAd.getAdCoverImage() != null) {
+                coverImageURL = nativeAd.getAdCoverImage().getUrl();
+                coverImageHeight = nativeAd.getAdCoverImage().getHeight();
+                coverImageWidth = nativeAd.getAdCoverImage().getWidth();
+            }
+            if (nativeAd.getAdIcon() != null) {
+                iconForAd = nativeAd.getAdIcon().getUrl();
+                iconAdHeight = nativeAd.getAdIcon().getHeight();
+                iconAdWidth = nativeAd.getAdIcon().getWidth();
+            }
             String socialContextForAd = nativeAd.getAdSocialContext();
             String titleForAdButton = nativeAd.getAdCallToAction();
             String textForAdBody = nativeAd.getAdBody();
+            if (nativeAd.getAdChoicesIcon() != null) {
+                adChoiceIcon = nativeAd.getAdChoicesIcon().getUrl();
+            }
+            if (nativeAd.getAdChoicesLinkUrl() != null) {
+                adChoiceURl = nativeAd.getAdChoicesLinkUrl();
+            }
+
 
             MediaView nativeMediaView = new MediaView(context);
             nativeAd.setMediaViewAutoplay(true);
@@ -186,6 +209,22 @@ public class FaceBookNative extends VmaxCustomAd implements AdListener {
                 fbJSON.put("COVER_IMAGE_WIDTH", coverImageWidth);
                 fbJSON.put("COVER_IMAGE_HEIGHT", coverImageHeight);
                 fbJSON.put("MEDIA_VIEW", nativeMediaView);
+                fbJSON.put("SCREENSHOT", coverImageURL);
+                fbJSON.put("SCREENSHOT_WIDTH", coverImageWidth);
+                fbJSON.put("SCREENSHOT_HEIGHT", coverImageHeight);
+                fbJSON.put("AD_CHOICE_ICON", adChoiceIcon);
+                fbJSON.put("AD_CHOICE_URL", adChoiceURl);
+                fbJSON.put("TYPE", "Media");
+                if (nativeAd.getAdIcon() != null) {
+                    fbJSON.put("ICON_DRAWABLE", nativeAd.getAdIcon());
+                }
+                if (nativeAd.getAdCoverImage() != null) {
+                    fbJSON.put("COVER_IMAGE_DRAWABLE", nativeAd.getAdCoverImage());
+                    fbJSON.put("SCREENSHOT_DRAWABLE", nativeAd.getAdCoverImage());
+                }
+                if (nativeAd.getAdChoicesIcon() != null) {
+                    fbJSON.put("AD_CHOICE_ICON_DRAWABLE", nativeAd.getAdChoicesIcon());
+                }
 
                 Object[] objArray = new Object[]{fbJSON};
                 mNativeAdListener.onAdLoaded(objArray);
@@ -285,6 +324,10 @@ public class FaceBookNative extends VmaxCustomAd implements AdListener {
     }
 
     public void onResume() {
+
+    }
+
+    public void onDestroy() {
 
     }
 

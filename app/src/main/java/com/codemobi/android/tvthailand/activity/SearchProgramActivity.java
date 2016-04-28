@@ -104,7 +104,7 @@ public class SearchProgramActivity extends AppCompatActivity implements OnLoadDa
 			
 			Tracker t = ((MainApplication)getApplication()).getDefaultTracker();
 			t.setScreenName("Search");
-			t.send(new HitBuilders.AppViewBuilder().setCustomDimension(4, query).build());
+			t.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(4, query).build());
 		} else if (intent.getAction().equals(Intent.ACTION_VIEW)) {
 			query = intent.getStringExtra(SearchManager.QUERY);
 			mPrograms.loadProgramBySearch(query, 0);
@@ -155,11 +155,11 @@ public class SearchProgramActivity extends AppCompatActivity implements OnLoadDa
 
 			Tracker t = ((MainApplication) getApplication()).getDefaultTracker();
 			t.setScreenName("Program");
-			t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());
+			t.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(2, program.getTitle()).build());
 
 			if (program.isOTV() == 1) {
 				t.setScreenName("Program");
-				t.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, program.getTitle()).build());
+				t.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(2, program.getTitle()).build());
 			}
 
 			Intent intent = new Intent(SearchProgramActivity.this, EpisodeActivity.class);

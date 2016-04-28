@@ -71,7 +71,7 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 				radio = SectionManager.getInstance().getData().getRadios().get(position);
 				Tracker t = ((MainApplication) getActivity().getApplication()).getDefaultTracker();
 				t.setScreenName("Radio");
-				t.send(new HitBuilders.AppViewBuilder().setCustomDimension(6, radio.getTitle()).build());
+				t.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(6, radio.getTitle()).build());
 				playRadio();
 			}
 		});
@@ -140,18 +140,18 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 			}
 
 			@Override
+			public void willPresentAd(VmaxAdView vmaxAdView) {
+				Log.d("Vmax", "willPresentAd");
+			}
+
+			@Override
+			public void willDismissAd(VmaxAdView vmaxAdView) {
+				Log.d("Vmax", "willPresentAd");
+			}
+
+			@Override
 			public void adViewDidLoadAd(VmaxAdView adView) {
 				Log.d("Vmax", "adViewDidLoadAd");
-			}
-
-			@Override
-			public void willPresentOverlay(VmaxAdView adView) {
-				Log.d("Vmax", "willPresentOverlay");
-			}
-
-			@Override
-			public void willDismissOverlay(VmaxAdView adView) {
-				Log.d("Vmax", "willDismissOverlay");
 			}
 
 			@Override
@@ -180,9 +180,20 @@ public class RadioFragment extends Fragment implements OnItemClickListener {
 			}
 
 			@Override
-			public void onVideoCompleted() {
+			public void onVideoView(boolean b, int i, int i1) {
 
 			}
+
+			@Override
+			public void onAdExpand() {
+
+			}
+
+			@Override
+			public void onAdCollapsed() {
+
+			}
+
 		};
 	}
 }

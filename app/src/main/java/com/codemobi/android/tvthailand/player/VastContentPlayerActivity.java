@@ -106,7 +106,7 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
     {
         Tracker t = ((MainApplication) getApplication()).getDefaultTracker();
         t.setScreenName("VasContentPlayer");
-        t.send(new HitBuilders.AppViewBuilder().build());
+        t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
@@ -239,7 +239,7 @@ public class VastContentPlayerActivity extends Activity implements AdErrorListen
             case ALL_ADS_COMPLETED:
                 Tracker t2 = ((MainApplication) getApplication()).getOTVTracker();
                 t2.setScreenName("VastPlayer");
-                t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(5, tagUrl).build());
+                t2.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(5, tagUrl).build());
 
             case SKIPPED:
                 isAdStarted = false;

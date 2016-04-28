@@ -39,6 +39,7 @@ import com.rey.material.widget.ProgressView;
 import com.vmax.android.ads.api.VmaxAdView;
 import com.vmax.android.ads.common.VmaxAdListener;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -54,6 +55,8 @@ public class ProgramActivity extends AppCompatActivity implements
 	@BindView(R.id.live_frame_ll) FrameLayout liveFrameLL;
 	@BindView(R.id.watch_live_btn) ImageButton watchLiveBtn;
 	@BindView(R.id.watch_live_txt) TextView watchLiveTxt;
+
+	@BindString(R.string.vmax_interstitial_ad_unit_id) String vmaxInterstitialAd;
 
 	public static final String EXTRAS_MODE = "EXTRAS_MODE";
     public static final String EXTRAS_ID = "EXTRAS_ID";
@@ -300,7 +303,7 @@ public class ProgramActivity extends AppCompatActivity implements
 
 	private void startAds() {
 		adListenerInitialization();
-		vmaxAdView = new VmaxAdView(this, getResources().getString(R.string.vmax_interstitial_ad_unit_id), VmaxAdView.UX_INTERSTITIAL);
+		vmaxAdView = new VmaxAdView(this, vmaxInterstitialAd, VmaxAdView.UX_INTERSTITIAL);
 		vmaxAdView.setAdListener(mAdListener);
 		vmaxAdView.setUxType(VmaxAdView.UX_INTERSTITIAL);
 		vmaxAdView.loadAd();
@@ -315,18 +318,18 @@ public class ProgramActivity extends AppCompatActivity implements
 			}
 
 			@Override
+			public void willPresentAd(VmaxAdView vmaxAdView) {
+				Log.d("Vmax", "willPresentAd");
+			}
+
+			@Override
+			public void willDismissAd(VmaxAdView vmaxAdView) {
+				Log.d("Vmax", "willPresentAd");
+			}
+
+			@Override
 			public void adViewDidLoadAd(VmaxAdView adView) {
 				Log.d("Vmax", "adViewDidLoadAd");
-			}
-
-			@Override
-			public void willPresentOverlay(VmaxAdView adView) {
-				Log.d("Vmax", "willPresentOverlay");
-			}
-
-			@Override
-			public void willDismissOverlay(VmaxAdView adView) {
-				Log.d("Vmax", "willDismissOverlay");
 			}
 
 			@Override
@@ -355,9 +358,20 @@ public class ProgramActivity extends AppCompatActivity implements
 			}
 
 			@Override
-			public void onVideoCompleted() {
+			public void onVideoView(boolean b, int i, int i1) {
 
 			}
+
+			@Override
+			public void onAdExpand() {
+
+			}
+
+			@Override
+			public void onAdCollapsed() {
+
+			}
+
 		};
 	}
 

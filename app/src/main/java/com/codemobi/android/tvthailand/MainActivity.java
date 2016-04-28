@@ -206,11 +206,11 @@ public class MainActivity extends AppCompatActivity {
 	private void sendTracker() {
 		Tracker t = ((MainApplication)getApplication()).getDefaultTracker();
         t.setScreenName("Main");
-        t.send(new HitBuilders.AppViewBuilder().build());
+        t.send(new HitBuilders.ScreenViewBuilder().build());
         
 		Tracker otvTracker = ((MainApplication)getApplication()).getOTVTracker();
 		otvTracker.setScreenName("Main");
-		otvTracker.send(new HitBuilders.AppViewBuilder().build());
+		otvTracker.send(new HitBuilders.ScreenViewBuilder().build());
 	}
 
 	@Override
@@ -309,13 +309,13 @@ public class MainActivity extends AppCompatActivity {
 			}
 
 			@Override
-			public void willPresentOverlay(VmaxAdView adView) {
-				Log.d("Vmax", "willPresentOverlay");
+			public void willPresentAd(VmaxAdView vmaxAdView) {
+				Log.d("Vmax", "willPresentAd");
 			}
 
 			@Override
-			public void willDismissOverlay(VmaxAdView adView) {
-				Log.d("Vmax", "willDismissOverlay");
+			public void willDismissAd(VmaxAdView vmaxAdView) {
+				Log.d("Vmax", "willPresentAd");
 			}
 
 			@Override
@@ -344,9 +344,20 @@ public class MainActivity extends AppCompatActivity {
 			}
 
 			@Override
-			public void onVideoCompleted() {
+			public void onVideoView(boolean b, int i, int i1) {
 
 			}
+
+			@Override
+			public void onAdExpand() {
+
+			}
+
+			@Override
+			public void onAdCollapsed() {
+
+			}
+
 		};
 	}
 }

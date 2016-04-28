@@ -137,7 +137,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 	{
 		Tracker t = ((MainApplication) getApplication()).getDefaultTracker();
 		t.setScreenName("VastPlayer");
-		t.send(new HitBuilders.AppViewBuilder().build());
+		t.send(new HitBuilders.ScreenViewBuilder().build());
 	}
 
 	@Override
@@ -214,7 +214,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
         txtSkipCount.setVisibility(View.GONE);
 
 		Tracker t2 = ((MainApplication) getApplication()).getOTVTracker();
-		t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(3, part.getNameTh()).build());
+		t2.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(3, part.getNameTh()).build());
 		
 		if (mediaCode.equals("1000")) {
 			Log.e("VAST Activity", "Playing video");
@@ -224,7 +224,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 			
 			openWithImb.setVisibility(View.VISIBLE);
 			
-			t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(6, part.getStreamUrl()).build());
+			t2.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(6, part.getStreamUrl()).build());
 		} else if (mediaCode.equals("1002")) {
 			Log.e("VAST Activity", "Playing Iframe");
 			String iframeData = Html.fromHtml(part.getStreamUrl()).toString();
@@ -240,7 +240,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 				String src = iframe.attr("src");
 				if (src != null) {
 					Log.e("VatPlayer", src);
-					t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(6, iframe.attr("src")).build());	
+					t2.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(6, iframe.attr("src")).build());
 				}
 			}
 			
@@ -337,7 +337,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 
 			Tracker t = ((MainApplication) getApplication()).getOTVTracker();
 			t.setScreenName("VastPlayer");
-			t.send(new HitBuilders.AppViewBuilder().setCustomDimension(4, tagUrl).build());
+			t.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(4, tagUrl).build());
 
 			break;
 		case COMPLETED:
@@ -347,7 +347,7 @@ public class VastPlayerActivity extends Activity implements AdErrorListener,
 		case ALL_ADS_COMPLETED:
 			Tracker t2 = ((MainApplication) getApplication()).getOTVTracker();
 			t2.setScreenName("VastPlayer");
-			t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(5, tagUrl).build());
+			t2.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(5, tagUrl).build());
 
 		case SKIPPED:
 			isAdStarted = false;

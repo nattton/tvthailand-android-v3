@@ -53,7 +53,6 @@ public class OTVPartActivity extends AppCompatActivity implements OnTapListener 
 	private void initInstances() {
 		mAdapter = new OTVPartAdapter(this, episode.getParts());
 		RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rv_part);
-		mRecyclerView.setHasFixedSize(true);
 		LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
 		mRecyclerView.setLayoutManager(mLayoutManager);
 		mRecyclerView.setAdapter(mAdapter);
@@ -66,11 +65,11 @@ public class OTVPartActivity extends AppCompatActivity implements OnTapListener 
 		if (episode != null) {
 			Tracker t = ((MainApplication) getApplication()).getDefaultTracker();
 			t.setScreenName("OTVPart");
-			t.send(new HitBuilders.AppViewBuilder().build());
+			t.send(new HitBuilders.ScreenViewBuilder().build());
 
 			Tracker t2 = ((MainApplication) getApplication()).getOTVTracker();
 			t2.setScreenName("OTVPart");
-			t2.send(new HitBuilders.AppViewBuilder().setCustomDimension(2, episode.getNameTh()).build());
+			t2.send(new HitBuilders.ScreenViewBuilder().setCustomDimension(2, episode.getNameTh()).build());
 		}
 	}
 	

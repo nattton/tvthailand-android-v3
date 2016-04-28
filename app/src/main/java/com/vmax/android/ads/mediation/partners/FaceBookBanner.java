@@ -14,8 +14,8 @@ import com.facebook.ads.AdSize;
 import com.facebook.ads.AdView;
 import com.facebook.ads.AdListener;
 
-import com.vmax.android.ads.mediation.partners.VmaxCustomAd;
-import com.vmax.android.ads.mediation.partners.VmaxCustomAdListener;
+import com.vmax.android.ads.api.VmaxAdSettings;
+import com.vmax.android.ads.api.VmaxAdSize;
 
 /*
  * Tested with facebook SDK 4.8.2.
@@ -27,6 +27,7 @@ public class FaceBookBanner extends VmaxCustomAd implements AdListener {
     private VmaxCustomAdListener mBannerListener;
     public boolean LOGS_ENABLED = true;
     private boolean isFirstAd = false;
+    private boolean isSbdSet = false;
 
     /**
      * CustomEventBanner implementation
@@ -41,6 +42,7 @@ public class FaceBookBanner extends VmaxCustomAd implements AdListener {
             // if (LOGS_ENABLED) {
             // Log.d("vmax", "Facebook showad banner.");
             // }
+            Log.d("vmax", "Inside FacebookBanner loadAd ");
             mBannerListener = customEventBannerListener;
 
             final String placementId;
@@ -71,16 +73,39 @@ public class FaceBookBanner extends VmaxCustomAd implements AdListener {
                         }
                     }
                 }
-            }
 
-            if (isTablet(context)) {
-                mFacebookBanner = new AdView(context, placementId,
-                        AdSize.BANNER_HEIGHT_90);
-            } else {
-                mFacebookBanner = new AdView(context, placementId,
-                        AdSize.BANNER_HEIGHT_50);
-            }
+                if (localExtras.containsKey(VmaxAdSettings.AdSettings_sbd)) {
+                    String tempdimension = localExtras.get(VmaxAdSettings.AdSettings_sbd).toString();
+                    if (tempdimension.equalsIgnoreCase(VmaxAdSize.AdSize_320x50)) {
+                        Log.d("vmax", "sbd is set:  "+tempdimension);
 
+                        isSbdSet = true;
+                        mFacebookBanner = new AdView(context, placementId,
+                                AdSize.BANNER_HEIGHT_50);
+                    } else if (tempdimension.equalsIgnoreCase(VmaxAdSize.AdSize_728x90)) {
+                        Log.d("vmax", "sbd is set:  "+tempdimension);
+                        isSbdSet = true;
+                        mFacebookBanner = new AdView(context, placementId,
+                                AdSize.BANNER_HEIGHT_90);
+                    } else if (tempdimension.equalsIgnoreCase(VmaxAdSize.AdSize_300x250)) {
+                        Log.d("vmax", "sbd is set:  "+tempdimension);
+                        isSbdSet = true;
+                        mFacebookBanner = new AdView(context, placementId,
+                                AdSize.RECTANGLE_HEIGHT_250);
+                    }
+                } else {
+                    isSbdSet = false;
+                }
+            }
+            if (!isSbdSet) {
+                if (isTablet(context)) {
+                    mFacebookBanner = new AdView(context, placementId,
+                            AdSize.BANNER_HEIGHT_90);
+                } else {
+                    mFacebookBanner = new AdView(context, placementId,
+                            AdSize.BANNER_HEIGHT_50);
+                }
+            }
             mFacebookBanner.setAdListener(this);
             mFacebookBanner.loadAd();
         } catch (Exception e) {

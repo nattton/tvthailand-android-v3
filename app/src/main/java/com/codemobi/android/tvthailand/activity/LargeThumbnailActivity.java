@@ -75,7 +75,7 @@ public class LargeThumbnailActivity extends Activity implements
 		
 		Tracker t = ((MainApplication)getApplication()).getDefaultTracker();
 		t.setScreenName("LargeThumbnail");
-		t.send(new HitBuilders.AppViewBuilder().build());
+		t.send(new HitBuilders.ScreenViewBuilder().build());
 
 	}
 

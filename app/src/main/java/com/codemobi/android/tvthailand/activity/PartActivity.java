@@ -101,6 +101,6 @@ public class PartActivity extends AppCompatActivity{
 
 		Tracker t = ((MainApplication)getApplication()).getDefaultTracker();
 		t.setScreenName("Part");
-		t.send(new HitBuilders.AppViewBuilder().build());
+		t.send(new HitBuilders.ScreenViewBuilder().build());
 	}
 }
