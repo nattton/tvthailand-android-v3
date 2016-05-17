@@ -104,7 +104,7 @@ public class Episodes {
 		return new Callback<JsonObject>() {
 			@Override
 			public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-				if (response.isSuccess()) {
+				if (response.isSuccessful()) {
 					if (response.body().has("info")) {
 						notifyProgramChange(response.body().getAsJsonObject("info"));
 					}

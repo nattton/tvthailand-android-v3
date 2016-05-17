@@ -30,7 +30,7 @@ public class OTVEpisodes {
 			@Override
 			public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 				clear();
-				if (response.isSuccess())
+				if (response.isSuccessful())
 					jsonMap(response.body());
 				notifyLoadFinish();
 			}

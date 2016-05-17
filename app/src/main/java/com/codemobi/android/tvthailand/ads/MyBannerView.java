@@ -42,9 +42,6 @@ public class MyBannerView extends LinearLayout {
 	@BindView(R.id.adViewContainer) RelativeLayout adViewContainer;
 	@BindView(R.id.webViewShow) WebView webViewShow;
 
-	@BindString(R.string.vmax_interstitial_ad_unit_id) String vmaxInterstitialAd;
-	@BindString(R.string.facebook_banner_ad_unit_id) String facebookBannerAd;
-
 	private LinearLayout parentView;
 	private AdView adView;
 	private VmaxAdListener mAdListener;
@@ -101,7 +98,7 @@ public class MyBannerView extends LinearLayout {
 		call.enqueue(new Callback<AdCollectionDao>() {
 			@Override
 			public void onResponse(Call<AdCollectionDao> call, Response<AdCollectionDao> response) {
-				if (response.isSuccess())
+				if (response.isSuccessful())
 					displayAds(response.body());
 			}
 
@@ -134,7 +131,7 @@ public class MyBannerView extends LinearLayout {
 		adListenerInitialization();
 		try {
 			vmaxAdView.setAdListener(mAdListener);
-			vmaxAdView.setAdSpotId(vmaxInterstitialAd);
+			vmaxAdView.setAdSpotId(getResources().getString(R.string.vmax_interstitial_ad_unit_id));
 			vmaxAdView.setRefresh(true);
 			vmaxAdView.setRefreshRate(60);
 			vmaxAdView.loadAd();
@@ -181,12 +178,14 @@ public class MyBannerView extends LinearLayout {
 			@Override
 			public VmaxAdView didFailedToLoadAd(String arg0) {
 				Log.d("VmaxAdView", "didFailedToLoadAd");
+				requestFacebookAds();
 				return null;
 			}
 
 			@Override
 			public VmaxAdView didFailedToCacheAd(String Error) {
 				Log.d("VmaxAdView", "didFailedToCacheAd");
+				requestFacebookAds();
 				return null;
 			}
 
@@ -214,7 +213,7 @@ public class MyBannerView extends LinearLayout {
 	}
 
 	private void requestFacebookAds () {
-		adView = new AdView(getContext(), facebookBannerAd, BANNER_320_50);
+		adView = new AdView(getContext(), getResources().getString(R.string.facebook_banner_ad_unit_id), AdSize.BANNER_HEIGHT_50);
 		adViewContainer.addView(adView);
 		adView.setAdListener(new AdListener() {
 			@Override
@@ -236,4 +235,10 @@ public class MyBannerView extends LinearLayout {
 		adView.loadAd();
 	}
 
+	@Override
+	protected void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
+		if (adView != null)
+			adView.destroy();
+	}
 }

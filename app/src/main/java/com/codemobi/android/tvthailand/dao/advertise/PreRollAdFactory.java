@@ -50,7 +50,7 @@ public class PreRollAdFactory {
         call.enqueue(new Callback<PreRollAdCollectionDao>() {
             @Override
             public void onResponse(Call<PreRollAdCollectionDao> call, Response<PreRollAdCollectionDao> response) {
-                if (response.isSuccess()) {
+                if (response.isSuccessful()) {
                     preRollAds.clear();
                     PreRollAdCollectionDao preRollAdCollectionDao = response.body();
                     preRollAds = preRollAdCollectionDao.ads;

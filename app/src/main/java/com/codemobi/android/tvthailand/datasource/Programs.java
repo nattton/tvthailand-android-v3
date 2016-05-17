@@ -65,7 +65,7 @@ public class Programs {
 		return new Callback<JsonObject>() {
 			@Override
 			public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-				if (response.isSuccess()) {
+				if (response.isSuccessful()) {
 					if (0 == start) {
 						clear();
 					}

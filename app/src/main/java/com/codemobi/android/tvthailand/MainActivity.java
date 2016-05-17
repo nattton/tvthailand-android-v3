@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 		call.enqueue(new Callback<SectionCollectionDao>() {
 			@Override
 			public void onResponse(Call<SectionCollectionDao> call, Response<SectionCollectionDao> response) {
-				if (response.isSuccess())
+				if (response.isSuccessful())
 					SectionManager.getInstance().setData(response.body());
 				else {
 					String errorString;

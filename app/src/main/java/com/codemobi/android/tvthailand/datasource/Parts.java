@@ -6,10 +6,6 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import android.app.Activity;
 
@@ -362,9 +358,6 @@ public class Parts {
 		if (mThaiSeperateByDefaultClip(response))
 			return;
 
-		if (mThaiParseByTagSource((response)))
-			return;
-
 		if (password.length() > 0) {
 			openMThaiVideoPassword(selectedVideoId, password);
 		} else {
@@ -426,20 +419,6 @@ public class Parts {
 			String clipUrl = response.substring(indexStart, indexEnd).replace(" ", "").replace("=", "").replace("\"", "").replace("'", "");
 			if (clipUrl.length() > 0) {
 				playVideo(clipUrl);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean mThaiParseByTagSource(String response) {
-		Document doc = Jsoup.parse(response);
-		Elements elSource = doc.getElementsByTag("source");
-		for (int i = 0; i < elSource.size(); i++) {
-			Element eSrc = elSource.get(i);
-			String videoUrl = eSrc.attr("src");
-			if (videoUrl.length() > 0) {
-				playVideo(videoUrl);
 				return true;
 			}
 		}
