@@ -3,16 +3,17 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:baselineAligned="false"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/leftLayout"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
-        <FrameLayout android:id="@+id/videoHolder"
+        <FrameLayout
+            android:id="@+id/videoHolder"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="top" />
@@ -21,7 +22,7 @@
             android:id="@+id/companionFrame"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_gravity="bottom" >
+            android:layout_gravity="bottom">
 
             <TextView
                 android:id="@+id/companionPlaceholder"
@@ -38,11 +39,11 @@
         android:layout_width="200dp"
         android:layout_height="fill_parent"
         android:layout_weight="0.1"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/requestAd"
@@ -61,7 +62,7 @@
         <LinearLayout
             android:id="@+id/buttonLayout"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <Spinner
                 android:id="@+id/tagSpinner"
@@ -74,13 +75,12 @@
         <ScrollView
             android:id="@+id/scroll"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent">
 
             <TextView
                 android:id="@+id/log"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-            </TextView>
+                android:layout_height="wrap_content"></TextView>
         </ScrollView>
     </LinearLayout>
 

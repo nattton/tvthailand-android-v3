@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.andexert.library.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rect"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="5dp"
-    app:rv_color="#ff00ddff"
-    app:rv_rippleDuration="100"
-    app:rv_type="rectangle">
+    android:padding="5dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -34,4 +30,4 @@
             android:textSize="20sp" />
 
     </RelativeLayout>
-</com.andexert.library.RippleView>
+</RelativeLayout>

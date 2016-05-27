@@ -6,21 +6,34 @@
     <integer name="ga_dispatchPeriod">300</integer>
     <string name="ga_sampleFrequency">50.0</string>
     <bool name="ga_reportUncaughtExceptions">true</bool>
-    
+
     <screenName name="com.codemobi.android.tvthailand.MainActivity">Main</screenName>
     <screenName name="com.codemobi.android.tvthailand.activity.ProgramActivity">Program</screenName>
     <screenName name="com.codemobi.android.tvthailand.activity.EpisodeActivity">EP</screenName>
     <screenName name="com.codemobi.android.tvthailand.activity.PartActivity">Part</screenName>
-    <screenName name="com.codemobi.android.tvthailand.activity.SearchProgramActivity">Search</screenName>
-    <screenName name="com.codemobi.android.tvthailand.activity.MoreDetailActivity">MoreDetail</screenName>
-    <screenName name="com.codemobi.android.tvthailand.activity.LargeThumbnailActivity">LargeThumbnail</screenName>
-    <screenName name="com.codemobi.android.tvthailand.activity.ProgramLoaderActivity">ProgramLoader</screenName>
+    <screenName name="com.codemobi.android.tvthailand.activity.SearchProgramActivity">Search
+    </screenName>
+    <screenName name="com.codemobi.android.tvthailand.activity.MoreDetailActivity">MoreDetail
+    </screenName>
+    <screenName name="com.codemobi.android.tvthailand.activity.LargeThumbnailActivity">
+        LargeThumbnail
+    </screenName>
+    <screenName name="com.codemobi.android.tvthailand.activity.ProgramLoaderActivity">
+        ProgramLoader
+    </screenName>
     <!-- Player Activity -->
-    <screenName name="com.codemobi.android.tvthailand.player.YoutubePlayerViewActivity">YoutubePlayer</screenName>
-    <screenName name="com.codemobi.android.tvthailand.player.VideoPlayerActivity">VideoPlayer</screenName>
-    <screenName name="com.codemobi.android.tvthailand.player.VastPlayerActivity">VastPlayerActivity</screenName>
+    <screenName name="com.codemobi.android.tvthailand.player.YoutubePlayerViewActivity">
+        YoutubePlayer
+    </screenName>
+    <screenName name="com.codemobi.android.tvthailand.player.VideoPlayerActivity">VideoPlayer
+    </screenName>
+    <screenName name="com.codemobi.android.tvthailand.player.VastPlayerActivity">
+        VastPlayerActivity
+    </screenName>
     <!-- OTV Activity -->
-    <screenName name="com.codemobi.android.tvthailand.otv.activity.OTVShowActivity">OTVShow</screenName>
-    <screenName name="com.codemobi.android.tvthailand.otv.activity.OTVPartActivity">OTVPart</screenName>
-    
+    <screenName name="com.codemobi.android.tvthailand.otv.activity.OTVShowActivity">OTVShow
+    </screenName>
+    <screenName name="com.codemobi.android.tvthailand.otv.activity.OTVPartActivity">OTVPart
+    </screenName>
+
 </resources>

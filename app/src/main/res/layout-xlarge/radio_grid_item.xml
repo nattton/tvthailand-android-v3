@@ -3,11 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:padding="5dp">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <com.codemobi.android.tvthailand.view.SquareImageView
             android:id="@+id/radio_image"
@@ -15,11 +15,11 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop" />
 
-<!-- 	<ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@drawable/grid_selector" /> -->
+        <!-- 	<ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@drawable/grid_selector" /> -->
     </FrameLayout>
 
     <TextView

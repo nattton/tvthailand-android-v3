@@ -6,13 +6,20 @@
     <integer name="ga_dispatchPeriod">60</integer>
     <string name="ga_sampleFrequency">50.0</string>
     <bool name="ga_reportUncaughtExceptions">true</bool>
-    
+
     <!-- Player Activity -->
-    <screenName name="com.codemobi.android.tvthailand.player.YoutubePlayerViewActivity">YoutubePlayer</screenName>
-    <screenName name="com.codemobi.android.tvthailand.player.VideoPlayerActivity">VideoPlayer</screenName>
-    <screenName name="com.codemobi.android.tvthailand.player.VastPlayerActivity">VastPlayerActivity</screenName>
+    <screenName name="com.codemobi.android.tvthailand.player.YoutubePlayerViewActivity">
+        YoutubePlayer
+    </screenName>
+    <screenName name="com.codemobi.android.tvthailand.player.VideoPlayerActivity">VideoPlayer
+    </screenName>
+    <screenName name="com.codemobi.android.tvthailand.player.VastPlayerActivity">
+        VastPlayerActivity
+    </screenName>
     <!-- OTV Activity -->
-    <screenName name="com.codemobi.android.tvthailand.otv.activity.OTVShowActivity">OTVShow</screenName>
-    <screenName name="com.codemobi.android.tvthailand.otv.activity.OTVPartActivity">OTVPart</screenName>
-    
+    <screenName name="com.codemobi.android.tvthailand.otv.activity.OTVShowActivity">OTVShow
+    </screenName>
+    <screenName name="com.codemobi.android.tvthailand.otv.activity.OTVPartActivity">OTVPart
+    </screenName>
+
 </resources>

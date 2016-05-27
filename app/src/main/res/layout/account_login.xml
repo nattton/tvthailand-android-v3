@@ -1,84 +1,84 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/bg_texture_style" >
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:layout_marginTop="40dp"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_tvthailand_120" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:textSize="18sp"
-		android:textStyle="italic"        
-        android:gravity="center_horizontal"
-        android:text="@string/get_started"
-        android:textColor="#9f9f9f" />
+    android:background="@drawable/bg_texture_style">
 
     <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="60dp" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.facebook.widget.LoginButton
-            android:id="@+id/login_fb_button"
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:layout_marginTop="40dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_tvthailand_120" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:gravity="center_horizontal"
+            android:text="@string/get_started"
+            android:textColor="#9f9f9f" />
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="3dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="60dp">
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/login_gp_button"
+            <com.facebook.widget.LoginButton
+                android:id="@+id/login_fb_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="3dp" />
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/login_gp_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone" />
+        </LinearLayout>
+
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_gravity="center_horizontal" android:visibility="gone" />
-    </LinearLayout>
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:gravity="center_horizontal"
-        android:text="@string/dont_worry"
-        android:textColor="#9f9f9f"
-        android:textStyle="italic" />
-    <!--
-         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/fb_login_btn"
-            android:layout_width="wrap_content"
+            android:layout_margin="20dp"
+            android:gravity="center_horizontal"
+            android:text="@string/dont_worry"
+            android:textColor="#9f9f9f"
+            android:textStyle="italic" />
+        <!--
+             <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_fb_login" />
-        <Button
-            android:id="@+id/gp_login_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_gp_login" />
-    </LinearLayout>
-    -->
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
 
-</LinearLayout>
+            <Button
+                android:id="@+id/fb_login_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_fb_login" />
+            <Button
+                android:id="@+id/gp_login_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_gp_login" />
+        </LinearLayout>
+        -->
+
+    </LinearLayout>
 </ScrollView>
