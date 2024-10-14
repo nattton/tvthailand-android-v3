@@ -46,8 +46,8 @@ public class AppUtility extends Application {
 	public static final String PREFS_LOGIN = "PREFLOGIN";
 	public static final String PREFS_LOGIN_ISLOGIN = "ISLOGIN";
 	public static final String PREF_NAME = "TVThailand";
-	public static final String ADMOB_ID = "aa049b7e364e4722";
-	public static final String DEVELOPER_KEY = "AIzaSyAecHtNarrTvvwlb-OjS-wRlqCRFuRUT0o";
+	public static final String ADMOB_ID = "";
+	public static final String DEVELOPER_KEY = "";
 	public static final String BASE_URL = "http://tv.makathon.com/api2";
 
 	public static final String UserAgentTablet = "Mozilla/5.0 (iPad; CPU OS 7_1_1 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Version/7.0 Mobile/11D201 Safari/9537.53";
